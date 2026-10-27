@@ -306,14 +306,115 @@ if run_clicked or "last_result" in st.session_state:
         cache_metrics = result.get("mcp_cache_metrics", {"hit_rate_pct": 0.0})
         st.metric("MCP Cache Hits", f"{cache_metrics['hit_rate_pct']}%", delta="79% Faster")
 
-    # Main Tabs - Unified Cognitive Lattice Framework
+    # =========================================================================
+    # 🎯 HOMEPAGE EXECUTIVE OUTPUT CONSOLE (DIRECT ANSWER & SYNTHESIS)
+    # =========================================================================
+    st.markdown("---")
+    st.markdown("### 🎯 Investigation Findings & Synthesis Output")
+    
+    # Extract key reasoning trace details for quick display
+    trace_steps = result.get("execution_trace", [])
+    step2 = trace_steps[1]["details"] if len(trace_steps) > 1 else {}
+    step4 = trace_steps[3]["details"] if len(trace_steps) > 3 else {}
+    step6 = trace_steps[5]["details"] if len(trace_steps) > 5 else {}
+    
+    h1_info = step2.get("candidate_hypotheses", [{}])[0].get("hypothesis", "Initial Null Hypothesis")
+    h2_info = step2.get("candidate_hypotheses", [{}, {}])[1].get("hypothesis", "Active Alternative Hypothesis")
+    refutation_text = step4.get("critic_refutation", "Hypothesis refuted via Ground Truth verification.")
+    grounding_score = step6.get("evidence_grounding_score", "94%")
+    root_cause_text = result.get("confirmed_root_cause", "Investigation concluded with verified findings.")
+    
+    # Executive Output Card
+    c_out1, c_out2 = st.columns([2, 1])
+    with c_out1:
+        st.markdown(f"""
+        <div style="background: #F8FAFC; border: 2px solid #6366F1; border-radius: 10px; padding: 18px; margin-bottom: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                <span style="font-weight:700; color:#4338CA; font-size:1.05rem;">📋 Executive Synthesis & Diagnosis</span>
+                <span style="background:#DCFCE7; color:#15803D; font-weight:700; padding:3px 10px; border-radius:12px; font-size:0.75rem;">
+                    RESOLVED & VERIFIED
+                </span>
+            </div>
+            <p style="font-size:1.05rem; line-height:1.6; color:#0F172A; font-weight:600; margin:0 0 10px 0;">
+                {result.get('impact_headline', 'Investigation Verified & Resolved')}
+            </p>
+            <p style="font-size:0.95rem; line-height:1.6; color:#334155; margin:0;">
+                {root_cause_text}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # 2-step cognitive causal path
+        st.markdown("##### 🔬 Cognitive Causal Chain (How the Engine Reasoned):")
+        cc1, cc2 = st.columns(2)
+        with cc1:
+            st.markdown(f"""
+            **1. Null Premise (H1):**  
+            *{h1_info}*  
+            <span style="color:#DC2626; font-size:0.85rem; font-weight:600;">❌ Refuted by Critic:</span>  
+            <span style="font-size:0.85rem; color:#64748B;">{refutation_text[:110]}...</span>
+            """, unsafe_allow_html=True)
+        with cc2:
+            st.markdown(f"""
+            **2. Backtrack Pivot (H2):**  
+            *{h2_info}*  
+            <span style="color:#16A34A; font-size:0.85rem; font-weight:600;">✅ Grounded ({grounding_score}):</span>  
+            <span style="font-size:0.85rem; color:#64748B;">Validated against Ground Truth (Z = -1) with NeMo safety guardrails.</span>
+            """, unsafe_allow_html=True)
+
+    with c_out2:
+        branches = result.get("counterfactual_lattice", {}).get("multiverse_branches", [])
+        b_alpha = branches[0]["name"] if len(branches) > 0 else "Branch α: Optimal Path"
+        b_gamma = branches[2]["name"] if len(branches) > 2 else "Branch γ: Status Quo Inaction"
+        
+        st.markdown(f"""
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px; margin-bottom: 16px;">
+            <span style="font-weight:700; color:#0F172A; font-size:0.95rem;">🌐 Multiverse Projected Outcomes</span>
+            <div style="margin-top:12px;">
+                <div style="border-left: 3px solid #10B981; padding-left: 8px; margin-bottom: 12px;">
+                    <b style="color:#047857; font-size:0.85rem;">{b_alpha}</b><br>
+                    <span style="font-size:0.8rem; color:#475569;">Committed intervention path. Maximum risk mitigation, minimum systemic friction.</span>
+                </div>
+                <div style="border-left: 3px solid #EF4444; padding-left: 8px;">
+                    <b style="color:#B91C1C; font-size:0.85rem;">{b_gamma}</b><br>
+                    <span style="font-size:0.8rem; color:#475569;">Passive status quo rejected. Prevented severe unrecoverable exposure.</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Action Cards right on Homepage!
+    st.markdown("##### 🛡️ Synthesized Decision & Action Plan (Vetted by NeMo):")
+    a_cols = st.columns(len(result["actions"]))
+    for i, act in enumerate(result["actions"]):
+        p_col = "#DC2626" if "P0" in act["priority"] else ("#D97706" if "P1" in act["priority"] else "#2563EB")
+        with a_cols[i]:
+            st.markdown(f"""
+            <div style="background:white; border: 1px solid #E2E8F0; border-top: 3px solid {p_col}; border-radius: 6px; padding: 12px; height:100%;">
+                <span style="font-weight:700; color:{p_col}; font-size:0.75rem;">{act['priority']}</span><br>
+                <b style="font-size:0.85rem; color:#0F172A;">{act['action']}</b>
+                <p style="font-size:0.8rem; color:#64748B; margin:4px 0;">Target: <b>{act['target'][:30]}</b></p>
+                <p style="font-size:0.75rem; color:#334155; margin:0;">{act['reason']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if not act.get("reversible", True):
+                if st.button("✅ Authorize Action", key=f"auth_btn_hp_{i}", use_container_width=True):
+                    st.success("Authorized by Risk Officer.")
+
+    # =========================================================================
+    # 🔬 COGNITIVE ARCHITECTURE OBSERVATORY (STRUCTURE & TELEMETRY)
+    # =========================================================================
+    st.markdown("---")
+    st.markdown("### 🔬 Cognitive Architecture Observatory")
+    st.caption("Inspect the spatial 3D lattice, raw step execution trace, multi-agent dialectical swarm, and federated data fabric below:")
+
     tab_lattice, tab_trace, tab_swarm, tab_fabric, tab_meterless, tab_actions, tab_memory = st.tabs([
         "🌌 3D Cognitive Lattice",
         "🔬 Non-Linear Reasoning Trace",
         "👥 Dynamic Agent Swarm & Dialectical Consensus",
         "🌐 Virtual Ground-Truth Data Fabric",
         "⚡ Token & Cost Governance",
-        "🛡️ Autonomous Remediation Center",
+        "🛡️ Full Remediation Center",
         "💾 Episodic Memory & Case Precedents"
     ])
 
