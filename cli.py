@@ -4,6 +4,7 @@ Track 3: Reasoning Architecture | Open Agent Hackathon 2026
 """
 import sys
 import time
+import argparse
 from pathlib import Path
 
 # Ensure UTF-8 stdout on Windows
@@ -20,14 +21,27 @@ from core.reasoning_engine import SynapseReasonEngine
 import config
 
 def main():
+    parser = argparse.ArgumentParser(description="SynapseReason Autonomous Reasoning CLI")
+    parser.add_argument("--incident", "-i", default="INC-4491", help="Incident ID (e.g. INC-4491 or INC-CUSTOM-001)")
+    parser.add_argument("--prompt", "-p", default=None, help="Custom enterprise incident prompt / threat description")
+    parser.add_argument("ad_hoc_prompt", nargs="*", default=[], help="Optional ad-hoc prompt tokens")
+    args = parser.parse_args()
+
+    incident_id = args.incident
+    if args.prompt:
+        alert = args.prompt
+    elif args.ad_hoc_prompt:
+        alert = " ".join(args.ad_hoc_prompt)
+        if incident_id == "INC-4491":
+            incident_id = "INC-CUSTOM-CLI"
+    else:
+        alert = "High-Volume disbursement anomaly on vendor VND-8821 with sequential rapid approvals"
+
     print("=" * 80)
     print(" [SYNAPSEREASON] AUTONOMOUS CROSS-SILO REASONING ENGINE")
     print(" Track 3: Reasoning Architecture | Open Agent Hackathon 2026")
     print(f" Mode: {'SAMPLE_MODE (Deterministic zero-key simulation)' if config.SAMPLE_MODE else 'LIVE_MODE'}")
     print("=" * 80)
-
-    incident_id = "INC-4491"
-    alert = "High-Volume disbursement anomaly on vendor VND-8821 with sequential rapid approvals"
 
     print(f"\n[!] INGESTING INCIDENT ALERT:")
     print(f"    Ticket ID: {incident_id}")

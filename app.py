@@ -143,19 +143,72 @@ with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
     st.success("🟢 Ready | 4-Stratum Lattice Online")
 
-# Top Scenario Selector
-st.markdown("#### 🚨 Select Incident Alert to Investigate")
-scenario_option = st.selectbox(
-    "Choose an Enterprise Anomaly Alert:",
-    [
-        "INC-4491: High-Volume Disbursement Anomaly on Vendor VND-8821 with sequential rapid approvals",
-        "INC-8812: API Gateway High-Frequency Authorization Spikes on Foreign Nodes",
-        "INC-1092: Discrepancy between Coupa Procurement Contract Limits and Bank Settlement Feeds"
-    ]
-)
+# Top Investigation Target Selector (Curated Benchmarks vs Custom Ad-hoc Prompts)
+st.markdown("#### 🚨 Enterprise Incident Alert & Reasoning Target")
 
-incident_id = scenario_option.split(":")[0]
-alert_description = scenario_option.split(":")[1].strip()
+col_mode1, col_mode2 = st.columns([3, 1])
+with col_mode1:
+    input_mode = st.radio(
+        "Investigation Input Mode:",
+        ["🎯 Curated Benchmark Incidents (1-Click Evaluation)", "✍️ Custom Incident Prompt (Type Your Own Alert)"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
+
+if input_mode == "🎯 Curated Benchmark Incidents (1-Click Evaluation)":
+    scenario_option = st.selectbox(
+        "Choose an Enterprise Anomaly Benchmark:",
+        [
+            "INC-4491: High-Volume Disbursement Anomaly on Vendor VND-8821 with sequential rapid approvals",
+            "INC-8812: API Gateway High-Frequency Authorization Spikes on Foreign Nodes with anomalous bearer token reuse",
+            "INC-1092: Discrepancy between Coupa Procurement Contract Limits and Bank Settlement Feeds",
+            "INC-6024: Unauthorized IAM Privilege Escalation & KMS Key Decryption Surge on dormant role"
+        ]
+    )
+    incident_id = scenario_option.split(":")[0].strip()
+    alert_description = scenario_option.split(":")[1].strip()
+else:
+    col_c1, col_c2 = st.columns([1, 3])
+    with col_c1:
+        custom_id = st.text_input(
+            "Incident Ticket ID",
+            value=st.session_state.get("custom_id_val", "INC-CUSTOM-702"),
+            help="Custom incident tracking identifier"
+        )
+    with col_c2:
+        custom_desc = st.text_area(
+            "Incident Alert & Threat Telemetry Description",
+            value=st.session_state.get(
+                "custom_desc_val",
+                "High-frequency privileged API token issuance detected across foreign egress nodes with concurrent attempts to modify clearinghouse routing tables."
+            ),
+            height=70,
+            help="Type ANY custom enterprise anomaly, threat scenario, or prompt here."
+        )
+
+    # Quick template buttons to spark ideas
+    st.markdown("💡 **Quick Enterprise Threat Templates (Click to fill):**")
+    t1, t2, t3 = st.columns(3)
+    with t1:
+        if st.button("🔑 API Token Exfiltration"):
+            st.session_state["custom_id_val"] = "INC-8812-API"
+            st.session_state["custom_desc_val"] = "API Gateway High-Frequency Authorization Spikes on Foreign Nodes with anomalous bearer token reuse."
+            st.rerun()
+    with t2:
+        if st.button("🛡️ IAM Privilege Escalation"):
+            st.session_state["custom_id_val"] = "INC-6024-IAM"
+            st.session_state["custom_desc_val"] = "Unauthorized IAM Privilege Escalation detected on service principal with abnormal KMS key decryption surge."
+            st.rerun()
+    with t3:
+        if st.button("💰 SWIFT Payroll Diversion"):
+            st.session_state["custom_id_val"] = "INC-9931-PAY"
+            st.session_state["custom_desc_val"] = "Batch payroll disbursement diverted to unverified offshore IBAN following session cookie reuse without MFA."
+            st.rerun()
+
+    incident_id = custom_id.strip() if custom_id.strip() else "INC-CUSTOM-001"
+    alert_description = custom_desc.strip() if custom_desc.strip() else "Custom anomaly prompt"
+
+st.caption(f"🎯 **Target Incident:** `{incident_id}` &mdash; *{alert_description}*")
 
 # Run Investigation Trigger
 col_btn, col_info = st.columns([1, 3])
