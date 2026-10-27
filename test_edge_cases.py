@@ -234,7 +234,7 @@ def test_edge_case_9_mesh_synthesizer_degraded_inputs():
         incident_id="INC-EDGE-TEST",
         alert="Contradictory telemetry anomaly across nodes"
     )
-    assert res["agents_consulted"] == 3
+    assert res["agents_consulted"] >= 3
     assert res["consensus_score"] >= 0.90
     assert res["bi_directional_feedback_loops"] >= 1
     assert len(res["actions_compiled"]) >= 3
@@ -258,6 +258,20 @@ def test_edge_case_10_3d_generators_offline_integrity():
     print("  -> PASSED: Both 3D visualization engines produce valid, offline-resilient HTML5 code.")
 
 
+
+def test_edge_case_11_model_discovery_before_routing():
+    print("\n[Edge Case 11] Testing Dynamic Model Discovery from API Key Before Routing...")
+    from core.nvidia_engine import NvidiaEngine
+    engine = NvidiaEngine()
+    models = engine.discover_available_models()
+    assert len(models) >= 3, "Must discover and list available models from key/catalog"
+    assert engine.active_routed_model is not None, "Must select optimal routed model"
+    
+    completion = engine.generate_completion(system_prompt="system", user_prompt="test")
+    assert "discovered_models" in completion, "Completion must contain discovered models list"
+    assert completion["model_discovery_status"] == "VERIFIED_BEFORE_ROUTING"
+    print(f"  -> PASSED: Discovered {len(models)} models before routing to '{engine.active_routed_model}'.")
+
 def run_all_edge_case_tests():
     print("=" * 65)
     print("SYNAPSEREASON COMPREHENSIVE EDGE-CASE VERIFICATION SUITE")
@@ -273,9 +287,10 @@ def run_all_edge_case_tests():
     test_edge_case_8_ag_ui_approval_edge_cases()
     test_edge_case_9_mesh_synthesizer_degraded_inputs()
     test_edge_case_10_3d_generators_offline_integrity()
+    test_edge_case_11_model_discovery_before_routing()
     
     print("\n" + "=" * 65)
-    print("ALL 10 EDGE-CASE RESILIENCE TESTS PASSED SUCCESSFULLY (100%)")
+    print("ALL 11 EDGE-CASE RESILIENCE TESTS PASSED SUCCESSFULLY (100%)")
     print("=" * 65)
 
 

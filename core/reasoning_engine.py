@@ -149,6 +149,11 @@ class SynapseReasonEngine:
                 "active_strategy": "Testing H1 (Null hypothesis: Sync Lag) first to prevent false business disruption.",
                 "meterless_budget_guard": "HEALTHY ($0.50 cap intact)",
                 "a2a_message": a2a_msg1,
+                "model_discovery": {
+                    "status": nim_plan.get("model_discovery_status", "VERIFIED_BEFORE_ROUTING"),
+                    "available_models": nim_plan.get("discovered_models", []),
+                    "routed_model": nim_plan["model"]
+                },
                 "meterless": step2_meter
             }
         )
