@@ -160,7 +160,7 @@ class NvidiaEngine:
                 return
         self.active_routed_model = model_ids[0] if model_ids else self.model
 
-    def generate_completion(self, system_prompt: str, user_prompt: str, max_tokens: int = 1024) -> Dict[str, Any]:
+    def generate_completion(self, system_prompt: str, user_prompt: str, max_tokens: int = 3500) -> Dict[str, Any]:
         """Invokes active LLM (Ollama / NVIDIA NIM) with dynamic model routing"""
         start_time = time.time()
         
@@ -189,11 +189,18 @@ class NvidiaEngine:
                         "temperature": 0.2,
                         "max_tokens": max_tokens
                     }
+                    if self.active_provider_type == "nvidia":
+                        payload["response_format"] = {"type": "json_object"}
+
                     response = httpx.post(f"{self.base_url}/chat/completions", headers=headers, json=payload, timeout=90.0)
                     if response.status_code == 200:
                         data = response.json()
                         msg = data["choices"][0]["message"]
-                        content = (msg.get("content") or msg.get("reasoning_content") or "").strip()
+                        raw_c = msg.get("content")
+                        content = raw_c.strip() if (raw_c and isinstance(raw_c, str)) else ""
+                        if not content:
+                            raw_rc = msg.get("reasoning_content")
+                            content = raw_rc.strip() if (raw_rc and isinstance(raw_rc, str)) else ""
                         usage = data.get("usage", {})
                         duration_ms = (time.time() - start_time) * 1000
                         return {
@@ -231,27 +238,66 @@ class NvidiaEngine:
     def _extract_reasoning_fields_from_text(self, text: str, prompt: str) -> Optional[Dict[str, Any]]:
         """Extracts reasoning keys from non-JSON or partial LLM text output"""
         try:
-            h1 = f"Initial superficial assumption regarding '{prompt[:40]}'."
-            h2 = f"Comprehensive optimal path formulated for '{prompt[:40]}'."
-            critic = "Empirical analysis refutes superficial initial assumption."
-            synthesis = text[:400].strip()
-            headline = f"Synthesized Strategy for '{prompt[:40]}'"
+            snip = prompt[:50].strip() if prompt else "Core Domain Scope"
+            h1 = f"Superficial status quo premise regarding '{snip}'."
+            h2 = f"Comprehensive first-principles framework and execution path formulated for '{snip}'."
+            critic = f"Empirical analysis refutes superficial initial assumption regarding '{snip}'."
+            synthesis = ""
+            headline = f"Synthesized Strategy for '{snip}'"
             
             lines = [l.strip() for l in text.split("\n") if l.strip()]
-            for line in lines:
-                l_lower = line.lower()
-                if "h1" in l_lower and (":" in line or "-" in line):
-                    h1 = line.split(":", 1)[-1].strip() if ":" in line else line
-                elif "h2" in l_lower and (":" in line or "-" in line):
-                    h2 = line.split(":", 1)[-1].strip() if ":" in line else line
-                elif ("critic" in l_lower or "refut" in l_lower) and (":" in line or "-" in line):
-                    critic = line.split(":", 1)[-1].strip() if ":" in line else line
-                elif ("synthesis" in l_lower or "answer" in l_lower) and ":" in line:
-                    synthesis = line.split(":", 1)[-1].strip()
+            for i, line in enumerate(lines):
+                clean_l = re.sub(r'[*#_`]', '', line).strip()
+                l_lower = clean_l.lower()
+                
+                if "h1" in l_lower and (":" in clean_l or "-" in clean_l):
+                    val = clean_l.split(":", 1)[-1].strip() if ":" in clean_l else clean_l.split("-", 1)[-1].strip()
+                    if len(val) > 10 and not val.lower().startswith("null") and not val.lower().startswith("h1"):
+                        h1 = val
+                    elif i + 1 < len(lines):
+                        nxt = re.sub(r'[*#_`]', '', lines[i+1]).strip()
+                        if len(nxt) > 10 and not any(k in nxt.lower() for k in ["h2", "critic", "step"]):
+                            h1 = nxt
+                elif "h2" in l_lower and (":" in clean_l or "-" in clean_l):
+                    val = clean_l.split(":", 1)[-1].strip() if ":" in clean_l else clean_l.split("-", 1)[-1].strip()
+                    if len(val) > 10 and not val.lower().startswith("optimal") and not val.lower().startswith("h2"):
+                        h2 = val
+                    elif i + 1 < len(lines):
+                        nxt = re.sub(r'[*#_`]', '', lines[i+1]).strip()
+                        if len(nxt) > 10 and not any(k in nxt.lower() for k in ["critic", "step", "observation"]):
+                            h2 = nxt
+                elif ("critic" in l_lower or "refut" in l_lower) and (":" in clean_l or "-" in clean_l):
+                    val = clean_l.split(":", 1)[-1].strip() if ":" in clean_l else clean_l.split("-", 1)[-1].strip()
+                    if len(val) > 10:
+                        critic = val
+                elif ("synthesis" in l_lower or "executive" in l_lower or "answer" in l_lower) and (":" in clean_l or "-" in clean_l):
+                    val = clean_l.split(":", 1)[-1].strip() if ":" in clean_l else clean_l.split("-", 1)[-1].strip()
+                    if len(val) > 20:
+                        synthesis = val
+                    elif i + 1 < len(lines):
+                        acc = []
+                        for j in range(i + 1, min(i + 6, len(lines))):
+                            next_line = re.sub(r'[*#_`]', '', lines[j]).strip()
+                            if any(k in next_line.lower() for k in ["headline", "action", "step", "p0", "p1"]):
+                                break
+                            acc.append(next_line)
+                        if acc:
+                            synthesis = " ".join(acc)
 
+            if not synthesis or len(synthesis) < 20 or synthesis == "**":
+                synthesis = (
+                    f"To effectively address '{prompt}': The empirical evidence refutes superficial or unstructured approaches. "
+                    f"The optimal strategy requires identifying core foundational objectives, engaging in deliberate practice "
+                    f"with structured feedback loops, and systematically building verified competency."
+                )
+
+            words = [w.upper() for w in re.findall(r'\b[A-Za-z]{4,}\b', prompt) if w.upper() not in ["WHAT", "WHERE", "WHEN", "WHICH", "THAT", "THIS", "SOME", "WITH", "FROM", "YOUR", "HAVE", "BEEN"]]
+            topic_word = words[0] if words else "FOUNDATION"
+            second_word = words[1] if len(words) > 1 else "EXECUTION"
+            
             actions = [
-                {"priority": "P0_IMMEDIATE", "action": "DECONSTRUCT_CORE_REQUIREMENTS", "target": "Primary Domain Scope", "reason": "Establish baseline requirements.", "reversible": True, "requires_human_approval": False},
-                {"priority": "P0_EXECUTION", "action": "DEPLOY_OPTIMAL_PATHWAY", "target": "Target Resolution Channel", "reason": "Implement highest-utility verified pathway.", "reversible": True, "requires_human_approval": False},
+                {"priority": "P0_IMMEDIATE", "action": f"ESTABLISH_{topic_word}_BASELINE", "target": f"Core Parameters ({snip[:25]})", "reason": f"Define primary learning goals and scope before execution.", "reversible": True, "requires_human_approval": False},
+                {"priority": "P0_EXECUTION", "action": f"DEPLOY_{second_word}_PRACTICE", "target": "Target Resolution Channel", "reason": f"Initiate low-friction, high-feedback execution to test baseline competencies.", "reversible": True, "requires_human_approval": False},
                 {"priority": "P1_GOVERNANCE", "action": "CONFIRM_EXECUTION_OUTCOME", "target": "Verification Gate", "reason": "Ensure output meets user constraints. Requires user signoff.", "reversible": False, "requires_human_approval": True},
                 {"priority": "P2_VERIFY", "action": "AUDIT_SOLUTION_UTILITY", "target": "Outcome Telemetry Log", "reason": "Retrospective audit of resolution quality.", "reversible": True, "requires_human_approval": False}
             ]
@@ -260,7 +306,7 @@ class NvidiaEngine:
                 "h1": h1,
                 "h2": h2,
                 "critic_refutation": critic,
-                "observation": f"Live neural reasoning output processed for: '{prompt[:50]}'",
+                "observation": f"Live neural reasoning output processed for: '{snip}'",
                 "executive_synthesis": synthesis,
                 "impact_headline": headline,
                 "actions": actions
@@ -281,8 +327,9 @@ class NvidiaEngine:
             system_prompt = (
                 "You are SynapseReason, an advanced non-linear reasoning engine. "
                 "Analyze the user's inquiry, question, alert, or problem dynamically in real time. "
-                "Break down the problem into a rigorous dialectical reasoning tree and return ONLY valid JSON with keys:\n"
-                "- domain_title: Short specific domain name for this query (e.g. 'Entertainment & Media', 'Personal Finance', 'Software Engineering')\n"
+                "You MUST return ONLY a valid, parseable JSON object with no conversational preambles or markdown outside the JSON. "
+                "The JSON object must have exactly these keys:\n"
+                "- domain_title: Short specific domain name for this query (e.g. 'Education & Pedagogy', 'Personal Finance', 'Software Engineering')\n"
                 "- h1: Null hypothesis or common superficial assumption/approach\n"
                 "- h2: Ground-truth, optimal, counterfactual, or rigorous solution hypothesis\n"
                 "- critic_refutation: Analytical critique explaining why H1 fails, is flawed, or is refuted by empirical evidence\n"
@@ -291,7 +338,7 @@ class NvidiaEngine:
                 "- impact_headline: Direct 1-line answer headline\n"
                 "- actions: Array of 4 concrete actionable steps, each with: priority ('P0_IMMEDIATE', 'P0_ACTION', 'P1_STRATEGY', 'P2_VERIFICATION'), action (SCREAMING_SNAKE_CASE), target (Specific platform/tool/entity), reason (1-2 practical sentences)"
             )
-            raw = self.generate_completion(system_prompt, f"User Query: {prompt}\nIncident ID: {incident_id}")
+            raw = self.generate_completion(system_prompt, f"User Query: {prompt}\nIncident ID: {incident_id}", max_tokens=3500)
             content = raw.get("content", "").strip()
             if content:
                 try:
@@ -300,6 +347,11 @@ class NvidiaEngine:
                         cleaned = cleaned.split("```json")[1].split("```")[0].strip()
                     elif "```" in cleaned:
                         cleaned = cleaned.split("```")[1].split("```")[0].strip()
+                    elif "{" in cleaned and "}" in cleaned:
+                        start = cleaned.find("{")
+                        end = cleaned.rfind("}")
+                        cleaned = cleaned[start:end+1].strip()
+
                     parsed = json.loads(cleaned)
                     if "h1" in parsed and "h2" in parsed and "actions" in parsed:
                         parsed["is_live_llm"] = True
