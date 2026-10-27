@@ -261,32 +261,10 @@ if run_clicked or "last_result" in st.session_state:
                 st.markdown(f'<span class="{badge_class}">{step_type}</span> &nbsp; <b>Time:</b> {step["timestamp"]}', unsafe_allow_html=True)
                 st.json(step["details"])
 
-    # TAB: 3D SWARM OBSERVATORY (CONCEPT 1: CYCLIC MESH)
-    with tab_3d:
-        st.markdown("#### 🌌 Concept 1: The 3D Neural Swarm Observatory (Three.js WebGL)")
-        st.info("💡 **Visualizing the Cyclic Mesh in Living 3D Space:** Central Nemotron Core at `(0,0,0)`, domain sub-agents orbiting on 3D elliptical planes, bidirectional neon particle streams, and an animated **cyclic refutation counter-pulse (laser beam)** disproving conflicting hypotheses in flight. Click any agent node in the 3D space to inspect its holographic A2A card!")
-        
-        # Embed interactive Three.js 3D Swarm Observatory
-        components.html(generate_swarm_observatory_html(height=600), height=615)
-
-    # TAB: BI-DIRECTIONAL MESH & SIMULTANEOUS ARBITER
-    with tab_mesh:
-        st.markdown("#### 🕸️ Bi-Directional Multi-Agent Mesh with Simultaneous Synthesis")
-        st.info("💡 **Unlike traditional architectures where data flows one way (DAG or Linear Chains)**, this architecture broadcasts tasks across multiple agents in parallel, employs a simultaneous arbiter tool to cross-examine outputs in flight, and routes bi-directional feedback loops *backward* to refute hypotheses without restarting.")
-
-        st.markdown("##### 📐 Bi-Directional Mesh Topology (Non-DAG):")
-        st.code("""
-flowchart LR
-    User(["👤 Human Risk Officer"]) <-->|AG-UI Full Duplex| Arbiter{{"⚖️ Simultaneous Consensus Arbiter"}}
-    
-    Arbiter <-->|A2A Task / Feedback| SRE["💻 SRE Agent (Replication Health)"]
-    Arbiter <-->|A2A Task / Feedback| SEC["🛡️ Security Agent (IAM & Tor Access)"]
-    Arbiter <-->|A2A Task / Feedback| FIN["💰 FinOps Agent (Contracts & Routing)"]
-    
-    SRE <-->|MCP Federated Queries| Zetaris[("🌐 Zetaris Data Fabric")]
-    SEC <-->|MCP Federated Queries| Zetaris
-    FIN <-->|MCP OSINT Scrapes| BrightData[("🌐 Bright Data Network")]
-        """, language="mermaid")
+    # TAB: DYNAMIC AGENT SWARM & DIALECTICAL CONSENSUS (Z = 0)
+    with tab_swarm:
+        st.markdown("#### 👥 Dynamic Multi-Agent Swarm with Simultaneous Synthesis & A2A Collaboration")
+        st.info("💡 **Transcend Rigid Linear Chains:** Tasks broadcast dynamically across specialized domain agents in parallel, an autonomous Arbiter cross-examines outputs in flight, and routes dialectical feedback backward to refute hypotheses without restarting.")
 
         # Live Mesh Execution
         zetaris_mesh = ZetarisFederator()
@@ -300,13 +278,13 @@ flowchart LR
 
         col_m1, col_m2, col_m3 = st.columns(3)
         with col_m1:
-            st.metric("Agents Fanned Out", mesh_res["agents_consulted"])
+            st.metric("Active Swarm Agents", mesh_res["agents_consulted"])
         with col_m2:
-            st.metric("Bi-Directional Loops", f"{mesh_res['bi_directional_feedback_loops']} loop(s)")
+            st.metric("Dialectical Feedback Loops", f"{mesh_res['bi_directional_feedback_loops']} loop(s)")
         with col_m3:
-            st.metric("Consensus Score", f"{int(mesh_res['consensus_score'] * 100)}%")
+            st.metric("Consensus Confidence", f"{int(mesh_res['consensus_score'] * 100)}%")
 
-        st.markdown("##### 👥 Parallel Fanned-Out Agent Perspectives:")
+        st.markdown("##### 👥 Parallel Swarm Agent Perspectives:")
         c_p1, c_p2, c_p3 = st.columns(3)
         with c_p1:
             p_sre = mesh_res["agent_perspectives"][0]
@@ -327,77 +305,32 @@ flowchart LR
             st.write(f"*Hypothesis:* {p_fin['hypothesis']}")
             st.write(f"*Confidence:* **{int(p_fin['initial_confidence']*100)}%**")
 
-        st.markdown("##### 🔄 Bi-Directional Disproving Feedback Loops (Backward Flow):")
+        st.markdown("##### 🔄 Dialectical Backward Disproving Feedback (Thesis ↔ Antithesis):")
         for fb in mesh_res["bi_directional_feedback"]:
             st.warning(f"**Backward Feedback $\\rightarrow$ `{fb['target_agent']}`**: {fb['feedback_type']} | {fb['counter_evidence']}")
 
         st.markdown("##### 🏆 Compiled Unified Consensus Decision:")
         st.success(mesh_res["unified_root_cause"])
-        st.markdown("**Synthesized Action Plan:**")
-        st.dataframe(pd.DataFrame(mesh_res["actions_compiled"]), use_container_width=True)
 
-    # TAB 2: TRI-PROTOCOL STACK (MCP + A2A + AG-UI)
-    with tab_protocols:
-        st.markdown("#### 🌐 The GenAI Works 2026 Protocol Stack Implementation")
-        st.markdown("SynapseReason adopts all three industry standards to eliminate linear silos:")
-        
-        p_col1, p_col2, p_col3 = st.columns(3)
-        
-        # MCP Box
-        with p_col1:
-            st.markdown("""
-            <div class="protocol-card" style="border-top: 4px solid #F97316;">
-                <h4 style="color:#C2410C; margin:0;">🟠 MCP (Model Context Protocol)</h4>
-                <p style="font-size:0.85rem; color:#64748B;"><b>Author:</b> Anthropic / Linux Foundation<br>
-                <b>Role:</b> Connects agents to tools and data fabric.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            st.markdown("##### Registered MCP Tools:")
-            for tool in result["protocols"]["mcp_tools"]:
-                st.code(f"{tool['uri']}\n-> {tool['name']}", language="text")
+        st.markdown("##### 🪪 Signed Agent Cards (A2A Cryptographic Verification):")
+        ac_c1, ac_c2, ac_c3 = st.columns(3)
+        agent_cards = result["protocols"]["a2a_agent_cards"]
+        card_items = list(agent_cards.items())
+        if len(card_items) >= 3:
+            with ac_c1:
+                st.caption(f"**{card_items[0][1]['name']}**")
+                st.code(f"Fingerprint: {card_items[0][1]['fingerprint'][:16]}...", language="text")
+            with ac_c2:
+                st.caption(f"**{card_items[1][1]['name']}**")
+                st.code(f"Fingerprint: {card_items[1][1]['fingerprint'][:16]}...", language="text")
+            with ac_c3:
+                st.caption(f"**{card_items[2][1]['name']}**")
+                st.code(f"Fingerprint: {card_items[2][1]['fingerprint'][:16]}...", language="text")
 
-        # A2A Box
-        with p_col2:
-            st.markdown("""
-            <div class="protocol-card" style="border-top: 4px solid #3B82F6;">
-                <h4 style="color:#1D4ED8; margin:0;">🔵 A2A (Agent2Agent Protocol)</h4>
-                <p style="font-size:0.85rem; color:#64748B;"><b>Author:</b> Google / Agentic AI Foundation<br>
-                <b>Role:</b> Inter-agent language with Signed Agent Cards.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            st.markdown("##### Active Signed Agent Cards:")
-            for k, card in result["protocols"]["a2a_agent_cards"].items():
-                with st.expander(f"🪪 {card['name']} ({card['role']})"):
-                    st.caption(f"Fingerprint: `{card['fingerprint']}`")
-                    st.caption(f"Signature: `{card['agent_card_signature']}`")
-                    st.write(f"Capabilities: {', '.join(card['capabilities'])}")
-
-        # AG-UI Box
-        with p_col3:
-            st.markdown("""
-            <div class="protocol-card" style="border-top: 4px solid #8B5CF6;">
-                <h4 style="color:#6D28D9; margin:0;">🟣 AG-UI (Agent-User Interaction)</h4>
-                <p style="font-size:0.85rem; color:#64748B;"><b>Author:</b> CopilotKit / Google ADK / AWS<br>
-                <b>Role:</b> Live thought stream & Human-in-the-Loop gates.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            st.markdown("##### Interactive HITL Gate:")
-            st.warning("⚠️ **P1 SWIFT Wire Clawback ($591,500.00)** requires officer confirmation!")
-            c_app, c_rej = st.columns(2)
-            with c_app:
-                if st.button("✅ Authorize Clawback", use_container_width=True):
-                    st.success("Authorized: SWIFT recall dispatched to clearinghouse.")
-            with c_rej:
-                if st.button("❌ Hold for Review", use_container_width=True):
-                    st.info("Placed on 24-hour compliance hold.")
-
-        st.markdown("##### 📜 A2A Inter-Agent Message Log:")
-        st.dataframe(pd.DataFrame(result["protocols"]["a2a_messages"])[["message_id", "timestamp", "intent", "cryptographic_proof"]], use_container_width=True)
-
-    # TAB 3: ZETARIS DATA FABRIC
-    with tab_zetaris:
-        st.markdown("#### Zetaris Networked Data Virtualization")
-        st.write("Zetaris enables zero-copy federated queries across 3 heterogeneous silos without data ingestion delays:")
+    # TAB: VIRTUAL GROUND-TRUTH DATA FABRIC (Z = -1)
+    with tab_fabric:
+        st.markdown("#### 🌐 Ground-Truth Virtual Data Fabric (Zetaris Zero-Copy Federation)")
+        st.write("Zetaris anchors the bottom stratum of the 3D Cognitive Lattice ($Z = -1$), providing immutable ground truth across distributed silos without data movement:")
         
         zetaris_instance = ZetarisFederator()
         
@@ -415,7 +348,7 @@ flowchart LR
             st.caption("Origin: Coupa Procurement Vault")
             st.code("Columns: vendor_id, legal_name, single_tx_limit_usd, routing...", language="text")
 
-        st.markdown("##### 🔍 Cross-Silo Zero-Copy Federated SQL Executed via MCP:")
+        st.markdown("##### 🔍 Cross-Silo Zero-Copy Federated SQL Query:")
         st.code("""
 SELECT 
     tx.tx_id, tx.timestamp, tx.vendor_name, tx.amount_usd, tx.bank_routing AS tx_bank_routing,

@@ -15,12 +15,35 @@ from core.protocols.a2a_agent_cards import A2AOrchestrator
 from core.meterless_governor import MeterlessGovernor
 
 class BiDirectionalMeshSynthesizer:
-    """Orchestrates parallel multi-agent generation and simultaneous synthesis."""
+    """Orchestrates dynamic N-agent parallel swarms and simultaneous synthesis."""
     def __init__(self, mcp: MCPToolRegistry, a2a: A2AOrchestrator, meterless: MeterlessGovernor):
         self.mcp = mcp
         self.a2a = a2a
         self.meterless = meterless
         self.mesh_events: List[Dict[str, Any]] = []
+        self.agent_registry = [
+            self._agent_sre_perspective,
+            self._agent_security_perspective,
+            self._agent_finops_perspective,
+            self._agent_osint_compliance_perspective
+        ]
+
+    def register_swarm_agent(self, agent_fn):
+        """Allows dynamically attaching new domain agents to the Z=0 mesh."""
+        self.agent_registry.append(agent_fn)
+
+    def _agent_osint_compliance_perspective(self, incident_id: str, alert: str) -> Dict[str, Any]:
+        """OSINT & International Sanctions Compliance Agent Perspective"""
+        time.sleep(0.04)
+        return {
+            "agent_id": "agt_osint_compliance",
+            "name": "OSINT & Regulatory Compliance Agent",
+            "domain": "Jurisdiction & Beneficial Ownership Screening",
+            "hypothesis": "Sanctions & shell risk: Vendor beneficial ownership traced to offshore nominee registry.",
+            "evidence_found": "Bright Data verified Acrobatics Logistics LLC is a Cyprus entity with Seychelles proxy routing.",
+            "initial_confidence": 0.91,
+            "recommended_focus": "Flag transaction for compliance review and freeze counterparty profile."
+        }
 
     def _agent_sre_perspective(self, incident_id: str, alert: str) -> Dict[str, Any]:
         """SRE & System Reliability Agent Perspective"""
@@ -105,19 +128,11 @@ class BiDirectionalMeshSynthesizer:
         self.mesh_events = []
 
         # -------------------------------------------------------------
-        # STEP 1: PARALLEL MULTI-AGENT BROADCAST (FAN-OUT)
+        # STEP 1: PARALLEL N-AGENT BROADCAST (DYNAMIC SWARM FAN-OUT)
         # -------------------------------------------------------------
-        # Unlike traditional linear chains, tasks are broadcast simultaneously
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-            future_sre = executor.submit(self._agent_sre_perspective, incident_id, alert)
-            future_sec = executor.submit(self._agent_security_perspective, incident_id, alert)
-            future_fin = executor.submit(self._agent_finops_perspective, incident_id, alert)
-
-            agent_outputs = [
-                future_sre.result(),
-                future_sec.result(),
-                future_fin.result()
-            ]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max(4, len(self.agent_registry))) as executor:
+            futures = [executor.submit(agent_fn, incident_id, alert) for agent_fn in self.agent_registry]
+            agent_outputs = [f.result() for f in futures]
 
         # -------------------------------------------------------------
         # STEP 2: SIMULTANEOUS ARBITER (CROSS-EXAMINATION & DEBATE)

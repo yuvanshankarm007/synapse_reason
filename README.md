@@ -1,8 +1,8 @@
-# 🧠 SynapseReason: Autonomous Cross-Silo Reasoning & Incident Remediation Architecture
+# 🧠 SynapseReason: 3D Cognitive Lattice Architecture & Autonomous Remediation
 ### Built for Open Agent Hackathon 2026 — Track 3: Reasoning Architecture (GenAI Works)
 
 [![Track 3: Reasoning Architecture](https://img.shields.io/badge/Track-3%3A%20Reasoning%20Architecture-8A2BE2.svg)](#)
-[![Protocol Stack: MCP + A2A + AG--UI](https://img.shields.io/badge/Protocols-MCP%20%7C%20A2A%20%7C%20AG--UI-blueviolet.svg)](#-the-2026-tri-protocol-stack-eliminating-linear-architectures)
+[![Architecture: 3D Cognitive Lattice](https://img.shields.io/badge/Architecture-3D%20Cognitive%20Lattice-38BDF8.svg)](#-the-3d-cognitive-lattice-architecture-non-linear-spatial-reasoning)
 [![Zetaris Data Fabric](https://img.shields.io/badge/Data%20Fabric-Zetaris%20Federation-00C7B7.svg)](SPONSORS.md#1-zetaris)
 [![Meterless Token Governance](https://img.shields.io/badge/Cost%20Governance-Meterless.io-FF6B6B.svg)](SPONSORS.md#2-meterless)
 [![NVIDIA NIM & NeMo](https://img.shields.io/badge/Reasoning%20Core-NVIDIA%20NIM%20%26%20NeMo-76B900.svg)](SPONSORS.md#3-nvidia)
@@ -14,25 +14,22 @@
 
 ## 📌 Executive Summary
 
-Modern enterprise risk management, cybersecurity incident response, and financial forensics suffer from a critical failure mode: **linear, fragile agent pipelines**. When an alert fires (e.g. an unexpected spike in vendor disbursements), traditional agents follow a rigid sequence (`Planner -> Writer -> Summarizer`). When their initial hypothesis is wrong, they fail catastrophically or hallucinate without evidence verification.
+Modern enterprise risk management, cybersecurity incident response, and financial forensics suffer from a critical failure mode: **linear, fragile agent pipelines and flat 2D meshes**. When an alert fires (e.g. an unexpected spike in vendor disbursements), traditional agents follow rigid linear steps (`Planner -> Writer -> Summarizer`). When their initial hypothesis is wrong, they fail catastrophically or hallucinate without ground-truth verification.
 
-### The Solution: SynapseReason
-**SynapseReason** is an autonomous reasoning engine designed from the ground up for **Track 3: Reasoning Architecture**. Built on the **GenAI Works 2026 Tri-Protocol Stack (MCP + A2A + AG-UI)**, it turns fragmented data, episodic memory, and critical evaluation into reliable, cost-governed decisions:
-1. **Non-Linear Reasoning Graph:** Dynamic **Planner <-> Executor <-> Evaluator/Critic** state machine with automated hypothesis branching, refutation, and backtracking.
-2. **Tri-Protocol Foundation (MCP + A2A + AG-UI):** 
-   - **MCP (Anthropic):** Universal port for tools & data (Zetaris Data Fabric & Bright Data).
-   - **A2A (Google):** Inter-agent collaboration with cryptographic Signed Agent Cards.
-   - **AG-UI (CopilotKit):** Live thought feed and Human-in-the-Loop (HITL) approval gates.
-3. **Zero-Copy Data Virtualization (Zetaris):** Executes federated SQL joins across distributed enterprise silos (SAP ERP, AWS CloudTrail, Coupa Contracts) without data movement.
-4. **Step-by-Step Cost & Token Governance (Meterless):** Real-time token metering, per-step cost attribution, and hard budget cap enforcement ($0.50 ceiling).
-5. **Cognitive Backbone & Safety (NVIDIA NIM & NeMo):** Strategic multi-step reasoning via NVIDIA NIM paired with NeMo Guardrails for evidence grounding verification and action reversibility.
+### The Solution: SynapseReason 3D Cognitive Lattice
+**SynapseReason** introduces a **3D Cognitive Lattice** that maps reasoning into physical spatial strata:
+1. **Z = +2 (Counterfactual Multiverse Simulator):** Projects future world-state branches (Branch α vs β vs γ) before any irreversible action commits.
+2. **Z = +1 (Meta-Cognitive Arbiter & Governance):** NeMo Guardrails and Meterless cost ceilings observe the entire stack simultaneously with zero chat hops.
+3. **Z = 0 (Dynamic Multi-Agent Swarm):** Open, parallel swarm of domain agents (SRE, Security/IAM, FinOps, OSINT, Compliance) operating with bi-directional dialectical feedback.
+4. **Z = -1 (Ground Truth Virtual Data Fabric):** Zetaris zero-copy tables (SAP ERP, AWS CloudTrail, Coupa Contracts) serving as the immutable mathematical Meet ($\wedge$) anchor.
+5. **Universal Protocol Nervous System:** Connects data via MCP ($Z=-1$), agent collaboration via A2A ($Z=0$), and human governance via AG-UI ($Z=+1$).
 6. **Zero-Config Instant Evaluation:** Built-in `SAMPLE_MODE=true` enables judges to clone and run the full non-linear investigation in seconds without private API keys.
 
 ---
 
-## 🌐 The 2026 Tri-Protocol Stack: Eliminating Linear Architectures
+## 🌐 Underlying Protocol Nervous System (MCP + A2A + AG-UI)
 
-As highlighted by **GenAI Works** in October 2026, building cutting-edge agents requires mastering all three protocol layers:
+The 3D Cognitive Lattice operates across the industry-standard protocol triad as its underlying communication nervous system:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
