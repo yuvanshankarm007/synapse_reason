@@ -3,12 +3,14 @@ SynapseReason - Interactive Cognitive Reasoning & Governance Console
 Track 3: Reasoning Architecture | Open Agent Hackathon 2026
 Built with Streamlit, Zetaris Data Fabric, Meterless Governance, and Protocol Substrate (MCP + A2A + AG-UI).
 """
-import streamlit as st
+import os
+import sys
 import time
 import json
+import httpx
+import streamlit as st
 import pandas as pd
 from pathlib import Path
-import sys
 
 # Ensure core is on path
 BASE_DIR = Path(__file__).resolve().parent
