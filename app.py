@@ -17,7 +17,7 @@ sys.path.insert(0, str(BASE_DIR))
 from core.reasoning_engine import SynapseReasonEngine
 from core.zetaris_federator import ZetarisFederator
 from core.mesh_synthesizer import BiDirectionalMeshSynthesizer
-from core.render_3d_lattice import generate_3d_lattice_html
+from core.render_swarm_observatory import generate_swarm_observatory_html
 from core.protocols.mcp_server import MCPToolRegistry
 from core.protocols.a2a_agent_cards import A2AOrchestrator
 from core.meterless_governor import MeterlessGovernor
@@ -189,7 +189,7 @@ if run_clicked or "last_result" in st.session_state:
     # Main Tabs
     tab_trace, tab_3d, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
         "🔬 Cognitive Trace & Backtracking Graph",
-        "🌌 3D Holographic Cognitive Lattice",
+        "🌌 3D Swarm Observatory (Concept 1: Cyclic Mesh)",
         "🕸️ Bi-Directional Mesh & Consensus Arbiter",
         "🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)",
         "🌐 Zetaris Data Fabric Virtualization",
@@ -217,13 +217,13 @@ if run_clicked or "last_result" in st.session_state:
                 st.markdown(f'<span class="{badge_class}">{step_type}</span> &nbsp; <b>Time:</b> {step["timestamp"]}', unsafe_allow_html=True)
                 st.json(step["details"])
 
-    # TAB: 3D HOLOGRAPHIC COGNITIVE LATTICE
+    # TAB: 3D SWARM OBSERVATORY (CONCEPT 1: CYCLIC MESH)
     with tab_3d:
-        st.markdown("#### 🌌 3D Holographic Cognitive Lattice (Spatial Multi-Agent Graph)")
-        st.info("💡 **Moving Beyond 2D Flat Graphs:** In a 3D cognitive architecture, the **Z-Axis** represents **Meta-Cognitive Abstraction & Time Horizons** (Z-1: Ground Truth Data Silos $\\leftrightarrow$ Z0: Domain Agent Consensus Mesh $\\leftrightarrow$ Z+1: Meta-Arbiter & Guardrails). Drag your mouse on the 3D canvas to rotate and inspect the spatial topology in real time.")
+        st.markdown("#### 🌌 Concept 1: The 3D Neural Swarm Observatory (Three.js WebGL)")
+        st.info("💡 **Visualizing the Cyclic Mesh in Living 3D Space:** Central Nemotron Core at `(0,0,0)`, domain sub-agents orbiting on 3D elliptical planes, bidirectional neon particle streams, and an animated **cyclic refutation counter-pulse (laser beam)** disproving conflicting hypotheses in flight. Click any agent node in the 3D space to inspect its holographic A2A card!")
         
-        # Embed interactive HTML5 / Canvas 3D Lattice
-        components.html(generate_3d_lattice_html(height=520), height=530)
+        # Embed interactive Three.js 3D Swarm Observatory
+        components.html(generate_swarm_observatory_html(height=600), height=615)
 
     # TAB: BI-DIRECTIONAL MESH & SIMULTANEOUS ARBITER
     with tab_mesh:
