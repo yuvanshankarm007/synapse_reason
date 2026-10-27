@@ -3,50 +3,53 @@
 
 **Target Duration:** 2 minutes 30 seconds (Requirement: 1-4 minutes)  
 **Tools to Record:** Loom, OBS Studio, or Windows Game Bar (`Win + Alt + R`).  
-**Preparation:** Open your browser to `http://localhost:8501` (`streamlit run app.py`).
+**Preparation:** Open your browser to `http://localhost:8501` or `http://localhost:8502` (`streamlit run app.py`).
 
 ---
 
-### [0:00 - 0:25] Introduction & The Problem
-**Visual:** Show the Streamlit landing page with the header "🧠 SynapseReason" and the scenario selector.
+### [0:00 - 0:25] Act 1: Introduction & The Problem (Linear Failure)
+**Visual:** Show the Streamlit landing page with the header "🧠 SynapseReason", subtitle "3D Cognitive Lattice Architecture & Autonomous Remediation", and the scenario selector.
 > **Voiceover:**  
 > *"Hello judges! Welcome to SynapseReason, built for Track 3: Reasoning Architecture in the Open Agent Hackathon 2026.  
-> As GenAI Works recently highlighted, building real-world enterprise agents requires breaking away from rigid linear pipelines. Simple chains fail whenever initial assumptions are wrong.  
-> SynapseReason introduces a true non-linear reasoning architecture powered by the 2026 Tri-Protocol Stack: Model Context Protocol (MCP) for tools, Agent2Agent (A2A) with Signed Agent Cards for multi-agent collaboration, and AG-UI for Human-in-the-Loop decision governance."*
+> As GenAI Works highlighted for Track 3, enterprise risk agents suffer from a fatal flaw: rigid linear execution pipelines. When an unexpected payout alert fires, linear agents hallucinate or fail catastrophically because they cannot refute initial assumptions or cross-examine siloed data.  
+> SynapseReason breaks away from flat pipelines by introducing the **3D Cognitive Lattice**—a non-linear spatial reasoning architecture that maps reasoning into physical 3D strata."*
 
 ---
 
-### [0:25 - 0:50] 1-Click Launch & Non-Linear Backtracking
-**Visual:** Select `INC-4491` and click the blue **"🚀 Run Non-Linear Reasoning Loop"** button. Switch to the **"🔬 Cognitive Trace & Backtracking Graph"** tab.
+### [0:25 - 0:55] Act 2: The 3D Cognitive Lattice in Living Space
+**Visual:** Click the red **"🚀 Run Non-Linear Reasoning Loop"** button. Point to the KPI metrics ($443,000 protected, 0.0082 USD cost), then interact with the **"🌌 3D Cognitive Lattice"** tab (rotate and zoom the 3D WebGL canvas).
 > **Voiceover:**  
-> *"Let's trigger our investigation into an anomalous high-volume payout alert.  
-> Notice what happened: our Planner first recalled historical precedents from Episodic Memory and formulated two competing hypotheses: H1, database sync lag, and H2, an unauthorized credential hijack.  
-> Rather than assuming the worst, it tested H1 first via Zetaris. But the Evaluator detected zero replication delay.  
-> Through an authenticated A2A dispute message, the Critic refuted H1, pruned the branch, and dynamically backtracked to H2. This is dynamic, self-correcting non-linear reasoning in action."*
+> *"Let's trigger our investigation into Alert INC-4491.  
+> Immediately, look at our 3D Cognitive Lattice:  
+> At **Z = -1**, the Ground Truth Virtual Data Fabric anchors immutable enterprise data via Zetaris.  
+> At **Z = 0**, our tactical multi-agent swarm operates across SRE, Security, and FinOps domains.  
+> At **Z = +1**, the Meta-Cognitive Arbiter enforces NeMo Guardrails and Meterless cost governance with zero chat hops.  
+> And at **Z = +2**, the Multiverse Simulator projects counterfactual branches before irreversible actions execute."*
 
 ---
 
-### [0:50 - 1:25] The Tri-Protocol Stack in Action (MCP | A2A | AG-UI)
-**Visual:** Click on the **"🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)"** tab.
+### [0:55 - 1:30] Act 3: Dynamic Backtracking & Branch Pruning
+**Visual:** Switch to the **"🔬 Non-Linear Reasoning Trace"** tab. Scroll through the branching timeline.
 > **Voiceover:**  
-> *"Here in our Tri-Protocol Inspector, you can see all three layers:  
-> First, MCP—developed by Anthropic—acts as our universal data port, executing zero-copy SQL queries across Zetaris and scraping registries via Bright Data.  
-> Second, A2A—standardized by Google—powers our specialized sub-agents. Each agent holds a cryptographically verifiable Signed Agent Card to prove identity and delegate tasks.  
-> Third, AG-UI—built by CopilotKit—provides a live streaming feed and interactive Human-in-the-Loop approval gates. While reversible actions are auto-authorized, high-risk irreversible actions—like this $591,000 SWIFT wire recall—are paused for officer sign-off right here in the UI."*
+> *"Now let's examine the non-linear reasoning trace:  
+> The Planner first recalled historical precedent EP-2025-089 and formulated two competing branches: Hypothesis H1 (DB replication lag) and Hypothesis H2 (credential fraud).  
+> It tested H1 first via a Zetaris federated query. The Critic detected 0ms replication lag, proving the database was completely healthy.  
+> Through an authenticated A2A dispute message, the Critic refuted H1, pruned the branch, and executed a dynamic backtracking pivot to H2.  
+> It then launched speculative concurrent tool calls: joining ERP and CloudTrail data via Zetaris, while simultaneously running a Bright Data OSINT scrape that unmasked an 89% probability shell company."*
 
 ---
 
-### [1:25 - 1:55] Sponsor Technologies: Zetaris, Bright Data & NeMo
-**Visual:** Click on the **"🌐 Zetaris Data Fabric Virtualization"** tab.
+### [1:30 - 2:05] Act 4: Dialectical Swarm Consensus & Zetaris Virtualization
+**Visual:** Switch to the **"👥 Dynamic Agent Swarm & Dialectical Consensus"** tab, show the backward feedback and signed agent cards, then briefly click the **"🌐 Virtual Ground-Truth Data Fabric"** tab.
 > **Voiceover:**  
-> *"Our data layer is powered by Zetaris Networked Data Fabric. Enterprise data is notoriously fragmented across SAP ERP tables, AWS CloudTrail logs, and Coupa contract vaults. Zetaris allows our agent to execute a zero-copy federated join across all three silos in a single query.  
-> The agent discovered that approver USR-9912 logged in from an unauthorized Tor exit node in Seychelles without MFA, approved payments 4 times higher than contract caps, and altered bank routing.  
-> Bright Data's scraping tool confirmed the vendor is an 89% probability shell company. NVIDIA NeMo Guardrails then validated the evidence with a 94% grounding score."*
+> *"In our Dynamic Agent Swarm tab, you can see dialectical feedback in action: when the Security agent discovered writes originating from a Seychelles Tor exit node, the Arbiter routed a corrective signal backward to the SRE agent, reaching 96% consensus.  
+> In our Ground-Truth Data Fabric tab, Zetaris executes a zero-copy federated join across SAP ERP, AWS CloudTrail, and Coupa contract vaults in a single query—completely eliminating data warehouse ingestion delays."*
 
 ---
 
-### [1:55 - 2:30] Cost Governance & Conclusion
-**Visual:** Switch to the **"⚡ Meterless Token & Cost Telemetry"** tab and pan back to the top summary.
+### [2:05 - 2:30] Act 5: Meterless Governance, AG-UI Human Signoff & Conclusion
+**Visual:** Switch to the **"⚡ Token & Cost Governance"** tab and the **"🛡️ Autonomous Remediation Center"** tab. Click "Authorize Clawback".
 > **Voiceover:**  
-> *"Finally, Meterless governance meters every step in real time. The entire multi-agent investigation completed in 2,846 tokens, costing just $0.0082 USD against our $0.50 budget ceiling, while protecting $443,000 in fraudulent payouts.  
-> SynapseReason runs out of the box with `SAMPLE_MODE=true` for instant zero-key testing. Thank you for your consideration!"*
+> *"Finally, Meterless governance enforces strict budget ceilings. This entire multi-agent non-linear investigation executed in 2,846 tokens, costing just $0.00824 USD against our $0.50 budget ceiling, while protecting $443,000 in fraudulent payouts.  
+> High-risk irreversible actions—like this SWIFT wire clawback—are held at an AG-UI Human-in-the-Loop gate for officer authorization.  
+> SynapseReason comes pre-configured with `SAMPLE_MODE=true` for 1-click zero-key evaluation. Thank you for your consideration!"*

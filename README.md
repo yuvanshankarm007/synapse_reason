@@ -168,7 +168,7 @@ flowchart TD
 | Track 3 Requirement | Traditional Linear Agent | SynapseReason Cognitive Architecture |
 |---|---|---|
 | **Pipeline Flow** | Fixed sequence (`Planner -> Writer`) | **Dynamic Planner <-> Executor <-> Evaluator state graph** |
-| **Protocol Stack** | Monolithic closed scripts | **Tri-Protocol: MCP (Tools) + A2A (Agents) + AG-UI (Humans)** |
+| **Communication Substrate** | Monolithic closed scripts | **Universal Protocols: MCP (Tools) + A2A (Agents) + AG-UI (Humans)** |
 | **Error Handling** | Crashes or repeats failed prompt | **Dynamic Backtracking:** Refutes H1, prunes branch, pivots to H2 |
 | **Memory System** | Ephemeral or single context window | **Dual Memory:** Active Working Scratchpad + Persistent Episodic Cases |
 | **Data Access** | Requires copying data to central lake | **Zetaris Virtual Data Fabric:** Zero-copy cross-silo SQL federation |
@@ -197,7 +197,7 @@ pip install -r requirements.txt
 ```bash
 python -m streamlit run app.py
 ```
-*Open your browser to `http://localhost:8501`. Click **"🚀 Run Non-Linear Reasoning Loop"** to explore the dynamic trace visualizer, Tri-Protocol inspector, Zetaris virtual query console, Meterless cost burn charts, and remediation action center.*
+*Open your browser to `http://localhost:8501`. Click **"🚀 Run Non-Linear Reasoning Loop"** to explore the 3D Cognitive Lattice, dynamic trace visualizer, dialectical swarm consensus, Zetaris virtual query console, Meterless cost burn charts, and remediation action center.*
 
 ### 4. Or Run via Standalone Terminal CLI
 ```bash
@@ -260,7 +260,7 @@ synapse_reason/
     ├── mesh_synthesizer.py    # Bi-Directional Multi-Agent Mesh & Consensus Arbiter
     ├── render_swarm_observatory.py # Concept 1: Three.js WebGL 3D Swarm Observatory
     ├── render_3d_lattice.py   # Concept 2: 4-Stratum Cognitive Lattice Engine
-    └── protocols/             # The GenAI Works 2026 Tri-Protocol Stack
+    └── protocols/             # Universal Protocol Substrate (MCP + A2A + AG-UI)
         ├── mcp_server.py      # Anthropic Model Context Protocol (MCP) tool registry
         ├── a2a_agent_cards.py # Google Agent2Agent (A2A) with Signed Agent Cards
         └── ag_ui_stream.py    # CopilotKit Agent-User Interaction Protocol (AG-UI)
@@ -271,7 +271,7 @@ synapse_reason/
 ## 🌟 Core Architectural Strengths & Real-World Impact
 
 - **Business Impact:** Prevents catastrophic enterprise fraud by immediately freezing **$443,000 USD** in unauthorized disbursements within 5 seconds, stopping irreversible SWIFT wire transfers before settlement.
-- **Technical Rigor:** True non-linear architecture featuring speculative concurrency, dynamic hypothesis branching, automated refutation, negative delta memory, and the full Tri-Protocol Stack (MCP + A2A + AG-UI).
+- **Technical Rigor:** True non-linear architecture featuring speculative concurrency, dynamic hypothesis branching, automated refutation, negative delta memory, and the unified MCP + A2A + AG-UI protocol substrate.
 - **Novel Innovation:** First reasoning architecture to synthesize zero-copy data fabric virtualization (Zetaris) with real-time financial agent governance (Meterless) and verifiable Signed Agent Cards (A2A).
 - **Interactive Experience:** Live Streamlit dashboard featuring the 3D Swarm Observatory (Three.js WebGL), 4-Stratum Lattice with time-scrubbing, live thought streams, and 1-click evaluation.
 - **Enterprise Product & UX:** Production-grade security console with status telemetry, reversible action vetting, and Human-in-the-Loop approval gates.

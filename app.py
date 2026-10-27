@@ -1,7 +1,7 @@
 """
 SynapseReason - Interactive Cognitive Reasoning & Governance Console
 Track 3: Reasoning Architecture | Open Agent Hackathon 2026
-Built with Streamlit, Zetaris Data Fabric, Meterless Governance, and the 2026 Tri-Protocol Stack (MCP + A2A + AG-UI).
+Built with Streamlit, Zetaris Data Fabric, Meterless Governance, and Protocol Substrate (MCP + A2A + AG-UI).
 """
 import streamlit as st
 import time
@@ -101,16 +101,25 @@ st.markdown("""
 # Sidebar Controls
 with st.sidebar:
     st.image("https://img.shields.io/badge/Track_3-Reasoning_Architecture-blueviolet?style=for-the-badge", use_container_width=True)
-    st.title("Control & Protocols")
+    st.title("Lattice Control")
     st.markdown("**Open Agent Hackathon 2026**")
     st.caption("Organized by GenAI Works")
     
     st.markdown("---")
-    st.subheader("🌐 2026 Tri-Protocol Stack")
+    st.subheader("🌌 4-Stratum Lattice Space")
     st.markdown("""
-    - **MCP (Anthropic):** Universal port for tools & data (Zetaris & Bright Data)
-    - **A2A (Google):** Inter-agent language with Signed Agent Cards
-    - **AG-UI (CopilotKit):** Live thought feed & Human-in-the-Loop approvals
+    - **Z = +2**: Multiverse Simulator (Branching)
+    - **Z = +1**: Meta-Cognitive Arbiter (NeMo/Gov)
+    - **Z = 0**: Tactical Swarm (A2A Consensus)
+    - **Z = -1**: Ground Truth Fabric (Zetaris)
+    """)
+
+    st.markdown("---")
+    st.subheader("🔌 Protocol Substrate")
+    st.markdown("""
+    - **MCP**: Zero-copy tools & data port
+    - **A2A**: Signed Agent Cards & dispute loops
+    - **AG-UI**: Full-duplex human approval gates
     """)
 
     st.markdown("---")
@@ -129,10 +138,10 @@ with st.sidebar:
 col_h1, col_h2 = st.columns([3, 1])
 with col_h1:
     st.markdown('<div class="main-header">🧠 SynapseReason</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Non-Linear Reasoning Architecture & Tri-Protocol Incident Engine</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">3D Cognitive Lattice Architecture & Autonomous Remediation</div>', unsafe_allow_html=True)
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
-    st.success("🟢 Ready | Tri-Protocols Active")
+    st.success("🟢 Ready | 4-Stratum Lattice Online")
 
 # Top Scenario Selector
 st.markdown("#### 🚨 Select Incident Alert to Investigate")

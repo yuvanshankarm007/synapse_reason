@@ -1,6 +1,6 @@
 """
 SynapseReason Cognitive Engine (Track 3: Reasoning Architecture)
-Governed by the 2026 Tri-Protocol Stack (GenAI Works Foundation):
+Operating over the Universal Protocol Substrate (MCP + A2A + AG-UI):
 1. MCP (Model Context Protocol): Universal port connecting agents to tools & data with query memoization.
 2. A2A (Agent2Agent Protocol): Non-linear collaboration via signed Agent Cards, delegation, and disputes.
 3. AG-UI (Agent-User Interaction Protocol): Live thought feed and Human-in-the-Loop (HITL) approval gates.
@@ -28,7 +28,7 @@ class SynapseReasonEngine:
         self.nvidia = NvidiaEngine()
         self.brightdata = BrightDataScraper()
         
-        # Tri-Protocol Stack with In-Memory Query Memoization
+        # Universal Protocol Substrate with In-Memory Query Memoization
         self.mcp = MCPToolRegistry(self.zetaris, self.brightdata)
         self.a2a = A2AOrchestrator()
         self.ag_ui = AGUIEventStream()
@@ -55,7 +55,7 @@ class SynapseReasonEngine:
     ) -> Dict[str, Any]:
         """
         Executes the non-linear reasoning loop with Planner, Executor, Evaluator,
-        Dynamic Backtracking, Speculative Tool Concurrency, and Tri-Protocol Stack.
+        Dynamic Backtracking, Speculative Tool Concurrency, and Protocol Substrate.
         """
         self.execution_trace = []
         working_memory = WorkingMemory(incident_id=incident_id, trigger_alert=alert_description)

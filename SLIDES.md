@@ -20,7 +20,7 @@
 
 ---
 
-## Slide 3: The 2026 Tri-Protocol Stack (MCP + A2A + AG-UI)
+## Slide 3: The Universal Protocol Nervous System (MCP + A2A + AG-UI)
 *Adopting the October 2026 standard endorsed by GenAI Works:*
 1. **MCP (Anthropic / Linux Foundation):** Universal tool & data port. Wraps Zetaris Data Fabric (`mcp://zetaris/federated_sql`) and Bright Data (`mcp://brightdata/scrape_vendor`).
 2. **A2A (Google / Agentic AI Foundation):** Inter-agent communication using **Signed Agent Cards** (Planner, Fabric, Critic, and Intel agents negotiate and dispute findings).
@@ -90,7 +90,7 @@
 
 ## Slide 8: Summary & Roadmap
 - **Track 3 Core Criteria Met:** Non-linear Planner-Executor-Evaluator graph, dynamic backtracking, dual-layer memory, and complete inspectable trace viewer.
-- **Tri-Protocol Mastery:** Full implementation of MCP, A2A (Signed Agent Cards), and AG-UI (HITL gates).
+- **Protocol Substrate Mastery:** Full implementation of MCP (Tools), A2A (Signed Agent Cards), and AG-UI (HITL gates).
 - **100% Sponsor Integration:** Zetaris, Meterless, NVIDIA NIM, Bright Data, and Cursor.
 - **Zero-Key Out-of-the-Box:** Runs with 1-click via `SAMPLE_MODE=true` for instant judge evaluation.
 - **Try it now:** `python -m streamlit run app.py` or `python cli.py`
