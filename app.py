@@ -262,12 +262,25 @@ with col_info:
 if run_clicked or "last_result" in st.session_state:
     if run_clicked:
         with st.spinner("Executing non-linear reasoning engine across enterprise silos..."):
+            import importlib
+            import core.nvidia_engine
+            import core.reasoning_engine
+            importlib.reload(core.nvidia_engine)
+            importlib.reload(core.reasoning_engine)
+            from core.reasoning_engine import SynapseReasonEngine
+            
             engine = SynapseReasonEngine()
-            result = engine.run_investigation(
-                incident_id=incident_id,
-                alert_description=alert_description,
-                domain=selected_domain_key
-            )
+            try:
+                result = engine.run_investigation(
+                    incident_id=incident_id,
+                    alert_description=alert_description,
+                    domain=selected_domain_key
+                )
+            except TypeError:
+                result = engine.run_investigation(
+                    incident_id=incident_id,
+                    alert_description=alert_description
+                )
             st.session_state["last_result"] = result
     else:
         result = st.session_state["last_result"]

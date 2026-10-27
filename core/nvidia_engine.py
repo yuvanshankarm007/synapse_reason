@@ -369,6 +369,63 @@ class NvidiaEngine:
                 }
             }
 
+        elif domain == "general_research":
+            return {
+                "incident_id": incident_id,
+                "domain": "Socio-Economic & Institutional Inquiry",
+                "lattice_theory": {
+                    "meet_glwb": "Zetaris Universal Knowledge Fabric (Empirical Literature, Labor Statistics, Policy Archives)",
+                    "join_lub": "Synthesized Global Policy Parity & Equity Framework",
+                    "delta_z_vector": {"socio_agent": 0.02, "policy_agent": 0.03, "threat_anomaly": 0.05}
+                },
+                "multiverse_branches": [
+                    {
+                        "branch_id": "BRANCH_ALPHA",
+                        "name": "Branch α: Structural Parity & Universal Family Infrastructure",
+                        "stratum": "Z = +2",
+                        "actions": ["Enact Pay Transparency", "Subsidize Universal Childcare", "Formalize Leadership Quotas"],
+                        "projected_outcomes": {
+                            "economic_growth_boost_gdp": "+12% to +18%",
+                            "business_disruption_score": "LOW (0.10)",
+                            "legal_liability_exposure": "NONE",
+                            "euclidean_safety_distance": 0.02
+                        },
+                        "recommendation": "OPTIMAL_COMMITTED_PATH"
+                    },
+                    {
+                        "branch_id": "BRANCH_BETA",
+                        "name": "Branch β: Incremental Voluntary Corporate Guidelines",
+                        "stratum": "Z = +2",
+                        "actions": ["Publish Advisory Diversity Recommendations", "Optional Pay Audits"],
+                        "projected_outcomes": {
+                            "economic_growth_boost_gdp": "+3% to +5%",
+                            "business_disruption_score": "LOW (0.15)",
+                            "legal_liability_exposure": "LOW",
+                            "euclidean_safety_distance": 0.18
+                        },
+                        "recommendation": "VIABLE_SECONDARY"
+                    },
+                    {
+                        "branch_id": "BRANCH_GAMMA",
+                        "name": "Branch γ: Historical Inertia & Inaction",
+                        "stratum": "Z = +2",
+                        "actions": ["Maintain Status Quo", "No Institutional Policy Adjustments"],
+                        "projected_outcomes": {
+                            "economic_growth_boost_gdp": "0% (Severe Labor Underutilization)",
+                            "business_disruption_score": "SEVERE (0.85)",
+                            "legal_liability_exposure": "HIGH",
+                            "euclidean_safety_distance": 0.90
+                        },
+                        "recommendation": "CATASTROPHIC_VETOED"
+                    }
+                ],
+                "temporal_horizons": {
+                    "h_plus_1h": "Immediate pay audit frameworks established with standardized cross-industry bands.",
+                    "h_plus_24h": "Universal childcare and parental retention policies draft ratified by leadership councils.",
+                    "h_plus_7d": "Longitudinal parity milestones indexed to macroeconomic productivity targets."
+                }
+            }
+
         # Default: Financial Forensics & Fraud Risk
         return {
             "incident_id": incident_id,

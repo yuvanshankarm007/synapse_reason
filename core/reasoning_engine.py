@@ -48,17 +48,19 @@ class SynapseReasonEngine:
         return entry
 
     def _resolve_domain(self, domain: str, incident_id: str, alert_description: str) -> str:
-        if domain and domain.lower() in ("cybersecurity", "sre", "supply_chain", "finance_fraud"):
+        if domain and domain.lower() in ("cybersecurity", "sre", "supply_chain", "finance_fraud", "general_research"):
             return domain.lower()
         desc_lower = alert_description.lower()
         inc_lower = incident_id.lower()
-        if any(k in inc_lower for k in ["sec", "iam"]) or any(k in desc_lower for k in ["privilege", "kms", "sts", "lateral", "exfiltration", "tor", "vpn", "mfa", "ransomware", "credential", "zero-trust"]):
+        if any(k in inc_lower for k in ["sec", "iam"]) or any(k in desc_lower for k in ["privilege", "kms", "sts", "lateral", "exfiltration", "tor", "vpn", "mfa", "ransomware", "credential", "zero-trust", "cve"]):
             return "cybersecurity"
         if any(k in inc_lower for k in ["sre", "infra"]) or any(k in desc_lower for k in ["kafka", "microservice", "kubernetes", "pod", "node", "cpu", "memory leak", "outage", "latency", "crash", "cluster", "prometheus"]):
             return "sre"
         if any(k in inc_lower for k in ["log", "sc", "ship"]) or any(k in desc_lower for k in ["customs", "freight", "semiconductor", "supplier", "cargo", "warehouse", "port", "shipment"]):
             return "supply_chain"
-        return "finance_fraud"
+        if any(k in inc_lower for k in ["fin", "erp", "pay", "wire", "4491"]) or any(k in desc_lower for k in ["disbursement", "ach", "swift", "invoice", "vendor", "payout", "ledger", "coupa", "fraud", "reconciliation"]):
+            return "finance_fraud"
+        return "general_research"
 
     def run_investigation(
         self,
@@ -123,7 +125,10 @@ class SynapseReasonEngine:
         budget_healthy = self.meterless.check_budget_ok()
         
         desc_lower = alert_description.lower()
-        if "api" in desc_lower or "token" in desc_lower or "gateway" in desc_lower:
+        if active_domain == "general_research":
+            h1_desc = f"Null / Skeptical Hypothesis: Marginal institutional change with persistent structural inertia regarding '{alert_description[:50]}'"
+            h2_desc = f"Transformative Dialectical Paradigm: Profound structural transformation across social, legal, and economic spheres regarding '{alert_description[:50]}'"
+        elif "api" in desc_lower or "token" in desc_lower or "gateway" in desc_lower:
             h1_desc = f"Null Hypothesis: Benign API gateway rate-limit spikes or automated retry floods for {incident_id}"
             h2_desc = f"Active Threat: Unauthorized bearer token exfiltration & credential abuse targeting foreign ingress nodes"
         elif "iam" in desc_lower or "privilege" in desc_lower or "kms" in desc_lower:
@@ -136,8 +141,8 @@ class SynapseReasonEngine:
             h1_desc = "Database replication lag or telemetry sync delay causing false transaction alerts"
             h2_desc = "Compromised credentials / unauthorized session hijack with routing diversion"
         else:
-            h1_desc = f"Null Hypothesis: Benign infrastructure telemetry sync lag / transient retry jitter for {incident_id}"
-            h2_desc = f"Active Threat: Malicious compromise or policy violation regarding: {alert_description[:60]}"
+            h1_desc = f"Null Hypothesis: Benign baseline inertia / transient status quo for {incident_id}"
+            h2_desc = f"Active Structural Dynamics: Measurable paradigm shift regarding: {alert_description[:60]}"
 
         h1 = working_memory.add_hypothesis(
             h_id="H1",
@@ -501,6 +506,47 @@ class SynapseReasonEngine:
             capital_saved_usd = 850000.00
             capital_at_risk_recall_usd = 0.00
             impact_headline = "Cascading Outage Halted (99.99% SLA Preserved)"
+
+        elif active_domain == "general_research":
+            final_actions = [
+                {
+                    "priority": "P0_POLICY",
+                    "action": "ENACT_PAY_TRANSPARENCY_PARITY",
+                    "target": "Labor & Organizational Equity Standards",
+                    "reversible": True,
+                    "reason": "Mandate transparent salary bands to systematically close structural gender wage gaps.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P0_INFRASTRUCTURE",
+                    "action": "EXPAND_UNIVERSAL_FAMILY_SUPPORT",
+                    "target": "Enterprise & Public Childcare Infrastructure",
+                    "reversible": True,
+                    "reason": "Provide subsidized parental leave and childcare to ensure workforce career continuity.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P1_GOVERNANCE",
+                    "action": "INSTITUTIONALIZE_LEADERSHIP_PARITY_PIPELINES",
+                    "target": "Boardroom & Executive Governance Structures",
+                    "reversible": False,
+                    "reason": "Formalize merit-based diversity nomination standards across senior decision-making bodies.",
+                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
+                },
+                {
+                    "priority": "P2_OBSERVABILITY",
+                    "action": "ESTABLISH_LONGITUDINAL_EQUITY_MONITOR",
+                    "target": "Socio-Economic & Intersectional Observatories",
+                    "reversible": True,
+                    "reason": "Continuously audit multi-generational equity outcomes and publication metrics.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                }
+            ]
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Executive Governance Parity Policy"
+            agui_gate_action = "INSTITUTIONALIZE_LEADERSHIP_PARITY_PIPELINES"
+            capital_saved_usd = 0.00
+            capital_at_risk_recall_usd = 0.00
+            impact_headline = "Societal Equity & Institutional Transformation Synthesized"
 
         elif active_domain == "supply_chain":
             final_actions = [
