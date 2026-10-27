@@ -1,14 +1,9 @@
 """
 SynapseReason Cognitive Engine (Track 3: Reasoning Architecture)
-Implements a Non-Linear Planner <-> Executor <-> Evaluator/Critic Graph
-Featuring:
-- Dynamic Hypothesis Generation & Testing
-- Branch Backtracking & Self-Correction
-- Cross-Silo Data Virtualization (Zetaris)
-- Token & Cost Governance (Meterless)
-- Deep Reasoning & Guardrail Verification (NVIDIA NIM & NeMo)
-- External Intelligence Fact-Checking (Bright Data)
-- Dual Working & Episodic Memory
+Governed by the 2026 Tri-Protocol Stack (GenAI Works Foundation):
+1. MCP (Model Context Protocol): Universal port connecting agents to tools & data (Zetaris & Bright Data).
+2. A2A (Agent2Agent Protocol): Non-linear collaboration via signed Agent Cards, delegation, and disputes.
+3. AG-UI (Agent-User Interaction Protocol): Live thought feed and Human-in-the-Loop (HITL) approval gates.
 """
 import time
 from typing import Dict, Any, List, Optional, Callable
@@ -17,6 +12,9 @@ from core.zetaris_federator import ZetarisFederator
 from core.meterless_governor import MeterlessGovernor
 from core.nvidia_engine import NvidiaEngine
 from core.brightdata_tool import BrightDataScraper
+from core.protocols.mcp_server import MCPToolRegistry
+from core.protocols.a2a_agent_cards import A2AOrchestrator
+from core.protocols.ag_ui_stream import AGUIEventStream
 
 class SynapseReasonEngine:
     """Non-linear reasoning engine designed for complex cross-silo decision making."""
@@ -27,6 +25,12 @@ class SynapseReasonEngine:
         self.meterless = MeterlessGovernor()
         self.nvidia = NvidiaEngine()
         self.brightdata = BrightDataScraper()
+        
+        # Tri-Protocol Stack (MCP + A2A + AG-UI)
+        self.mcp = MCPToolRegistry(self.zetaris, self.brightdata)
+        self.a2a = A2AOrchestrator()
+        self.ag_ui = AGUIEventStream()
+        
         self.execution_trace: List[Dict[str, Any]] = []
 
     def _log_trace_step(self, step_type: str, title: str, details: Dict[str, Any], status: str = "COMPLETED"):
@@ -49,7 +53,7 @@ class SynapseReasonEngine:
     ) -> Dict[str, Any]:
         """
         Executes the non-linear reasoning loop with Planner, Executor, Evaluator,
-        and Backtracking recovery.
+        Dynamic Backtracking, and the Tri-Protocol Stack (MCP + A2A + AG-UI).
         """
         self.execution_trace = []
         working_memory = WorkingMemory(incident_id=incident_id, trigger_alert=alert_description)
@@ -58,14 +62,18 @@ class SynapseReasonEngine:
         # STEP 1: INITIALIZE WORKING MEMORY & RECALL EPISODIC PRECEDENTS
         # -------------------------------------------------------------
         t0 = time.time()
-        similar_cases = self.episodic_memory.recall_similar_cases(alert_description, limit=2)
+        self.ag_ui.emit_event(
+            event_type="THOUGHT",
+            title="Ingesting Alert & Checking Precedent Archive",
+            content=f"Analyzing {incident_id}: {alert_description}"
+        )
         
+        similar_cases = self.episodic_memory.recall_similar_cases(alert_description, limit=2)
         precedent_summary = [
             {"case_id": c["case_id"], "type": c["incident_type"], "indicators": c["key_indicators"]}
             for c in similar_cases
         ]
 
-        # Meterless token recording
         step1_meter = self.meterless.record_usage(
             step_name="Step 1: Episodic Precedent Retrieval",
             model="Local Vector/Case Memory",
@@ -80,16 +88,16 @@ class SynapseReasonEngine:
             details={
                 "trigger_alert": alert_description,
                 "recalled_precedents": precedent_summary,
-                "meterless": step1_meter
+                "meterless": step1_meter,
+                "protocol": "AG-UI Event Dispatched"
             }
         )
         if callback: callback(trace_step1)
 
         # -------------------------------------------------------------
-        # STEP 2: HYPOTHESIS FORMULATION (PLANNER)
+        # STEP 2: HYPOTHESIS FORMULATION (PLANNER VIA A2A)
         # -------------------------------------------------------------
         t0 = time.time()
-        # Formulate initial competing hypotheses
         h1 = working_memory.add_hypothesis(
             h_id="H1",
             description="Database replication lag or telemetry sync delay causing false transaction alerts",
@@ -101,7 +109,14 @@ class SynapseReasonEngine:
             confidence=0.55
         )
 
-        # NVIDIA NIM prompt call for plan tree
+        # A2A Handoff: Planner informs Data Fabric Agent
+        a2a_msg1 = self.a2a.send_a2a_message(
+            sender_id="planner",
+            receiver_id="data_fabric",
+            intent="DELEGATE_NULL_HYPOTHESIS_CHECK",
+            payload={"test_hypothesis": "H1", "query_focus": "check_replication_lag"}
+        )
+
         nim_plan = self.nvidia.generate_completion(
             system_prompt="You are an autonomous SRE and Financial Forensics Lead Architect.",
             user_prompt=f"Formulate an initial investigation tree for alert: {alert_description}. Precedents: {precedent_summary}"
@@ -116,28 +131,31 @@ class SynapseReasonEngine:
 
         trace_step2 = self._log_trace_step(
             step_type="PLANNER",
-            title="Formulated Competing Hypotheses Tree",
+            title="Formulated Competing Hypotheses Tree (A2A Delegated)",
             details={
                 "candidate_hypotheses": [
                     {"id": "H1", "hypothesis": h1.description, "initial_prob": "45%"},
                     {"id": "H2", "hypothesis": h2.description, "initial_prob": "55%"}
                 ],
                 "active_strategy": "Testing H1 (Null hypothesis: Sync Lag) first to prevent false business disruption.",
+                "a2a_message": a2a_msg1,
                 "meterless": step2_meter
             }
         )
         if callback: callback(trace_step2)
 
         # -------------------------------------------------------------
-        # STEP 3: EXECUTOR - TESTING HYPOTHESIS H1 VIA ZETARIS
+        # STEP 3: EXECUTOR - TESTING HYPOTHESIS H1 VIA MCP (ZETARIS)
         # -------------------------------------------------------------
         t0 = time.time()
-        # Query Zetaris for replication lag indicators
         h1_sql = "SELECT tx_id, timestamp, status FROM zetaris.erp_transactions WHERE status = 'PENDING_SETTLEMENT'"
-        zetaris_h1 = self.zetaris.execute_federated_query(h1_sql)
+        
+        # Invoke via Model Context Protocol (MCP) tool standard
+        mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": h1_sql})
+        zetaris_h1 = mcp_call1["output"]
 
         step3_meter = self.meterless.record_usage(
-            step_name="Step 3: H1 Zetaris Verification Query",
+            step_name="Step 3: H1 Zetaris Verification Query (MCP)",
             model="Zetaris Virtual Fabric",
             prompt_tokens=95,
             completion_tokens=65,
@@ -147,9 +165,10 @@ class SynapseReasonEngine:
 
         trace_step3 = self._log_trace_step(
             step_type="EXECUTOR",
-            title="Executing Zetaris Federated Query for Hypothesis H1",
+            title="MCP Tool Call: Zetaris Federated Query for Hypothesis H1",
             details={
-                "target_hypothesis": "H1",
+                "protocol": "MCP (Model Context Protocol)",
+                "tool_uri": "mcp://zetaris/federated_sql",
                 "sql_executed": h1_sql,
                 "federated_result": zetaris_h1,
                 "observation": "ERP transactions show active pending settlements; timestamps are recent and sequential. No pipeline replication backlog found.",
@@ -159,11 +178,23 @@ class SynapseReasonEngine:
         if callback: callback(trace_step3)
 
         # -------------------------------------------------------------
-        # STEP 4: EVALUATOR / CRITIC - REFUTATION & BACKTRACKING
+        # STEP 4: EVALUATOR / CRITIC - A2A DISPUTE & BACKTRACKING PIVOT
         # -------------------------------------------------------------
         t0 = time.time()
-        # The Evaluator examines evidence against H1
         rejection_reason = "Evaluator Refutation: Transaction queue shows active real-time write operations with 0ms CDC delay. H1 (Replication Lag) cannot account for high-value settlement requests."
+        
+        # A2A Dispute: Critic Agent refutes Planner's H1 hypothesis
+        a2a_dispute = self.a2a.send_a2a_message(
+            sender_id="critic",
+            receiver_id="planner",
+            intent="REFUTE_AND_DISPUTE_HYPOTHESIS",
+            payload={
+                "rejected_branch": "H1",
+                "refutation": rejection_reason,
+                "command": "PIVOT_TO_HYPOTHESIS_H2"
+            }
+        )
+
         working_memory.record_backtrack(
             rejected_h_id="H1",
             reason=rejection_reason,
@@ -171,7 +202,7 @@ class SynapseReasonEngine:
         )
 
         step4_meter = self.meterless.record_usage(
-            step_name="Step 4: Evaluator Critique & Pivot",
+            step_name="Step 4: Evaluator Critique & Pivot (A2A Dispute)",
             model="NVIDIA NeMo Critic",
             prompt_tokens=220,
             completion_tokens=110,
@@ -180,10 +211,12 @@ class SynapseReasonEngine:
 
         trace_step4 = self._log_trace_step(
             step_type="BACKTRACK",
-            title="Critic Refutation & Dynamic Backtracking Pivot",
+            title="A2A Critic Refutation & Dynamic Backtracking Pivot",
             details={
+                "protocol": "A2A Protocol (Agent Dispute & Negotiation)",
                 "rejected_branch": "H1 (Replication Lag)",
                 "critic_refutation": rejection_reason,
+                "a2a_dispute_message": a2a_dispute,
                 "backtrack_action": "Branch pruned. Immediate pivot to Hypothesis H2 (Unauthorized Credential Compromise).",
                 "active_hypothesis": "H2",
                 "meterless": step4_meter
@@ -192,10 +225,9 @@ class SynapseReasonEngine:
         if callback: callback(trace_step4)
 
         # -------------------------------------------------------------
-        # STEP 5: EXECUTOR - DEEP CROSS-SILO FEDERATION (TESTING H2)
+        # STEP 5: EXECUTOR - DEEP CROSS-SILO FEDERATION VIA MCP (ZETARIS)
         # -------------------------------------------------------------
         t0 = time.time()
-        # Zetaris Cross-Silo Virtual Join across ERP, CloudWatch Logs, and Vendor Contracts
         deep_federated_sql = """
         SELECT 
             tx.tx_id, 
@@ -220,11 +252,12 @@ class SynapseReasonEngine:
         WHERE tx.vendor_id = 'VND-8821'
         ORDER BY tx.timestamp ASC
         """
-        zetaris_deep = self.zetaris.execute_federated_query(deep_federated_sql)
-        working_memory.add_evidence("Zetaris Cross-Silo Fabric", zetaris_deep["data"], "Critical correlation of IP, MFA, and Bank Routing")
+        mcp_call2 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": deep_federated_sql})
+        zetaris_deep = mcp_call2["output"]
+        working_memory.add_evidence("Zetaris Cross-Silo Fabric (via MCP)", zetaris_deep["data"], "Correlation of IP, MFA, and Bank Routing")
 
         step5_meter = self.meterless.record_usage(
-            step_name="Step 5: Cross-Silo Zetaris Join",
+            step_name="Step 5: Cross-Silo Zetaris Join (MCP)",
             model="Zetaris Virtual Fabric",
             prompt_tokens=420,
             completion_tokens=280,
@@ -234,9 +267,10 @@ class SynapseReasonEngine:
 
         trace_step5 = self._log_trace_step(
             step_type="EXECUTOR",
-            title="Zetaris 3-Silo Federated Join (ERP + CloudTrail + Contracts)",
+            title="MCP Tool Call: Zetaris 3-Silo Federated Join",
             details={
-                "sql_executed": deep_federated_sql.strip(),
+                "protocol": "MCP (Model Context Protocol)",
+                "tool_uri": "mcp://zetaris/federated_sql",
                 "silos_joined": zetaris_deep["silos_accessed"],
                 "records_correlated": len(zetaris_deep["data"]),
                 "anomalies_detected": [
@@ -251,17 +285,18 @@ class SynapseReasonEngine:
         if callback: callback(trace_step5)
 
         # -------------------------------------------------------------
-        # STEP 6: EXTERNAL INTELLIGENCE SCRAPING (BRIGHT DATA)
+        # STEP 6: EXTERNAL INTELLIGENCE SCRAPING VIA MCP (BRIGHT DATA)
         # -------------------------------------------------------------
         t0 = time.time()
-        vendor_intel = self.brightdata.check_vendor_intelligence(
-            vendor_name="Acrobatics Logistics LLC",
-            jurisdiction="Cyprus"
-        )
-        working_memory.add_evidence("Bright Data Web Intelligence", vendor_intel, "Verification of vendor corporate legitimacy")
+        mcp_call3 = self.mcp.call_tool("mcp://brightdata/scrape_vendor", {
+            "vendor_name": "Acrobatics Logistics LLC",
+            "jurisdiction": "Cyprus"
+        })
+        vendor_intel = mcp_call3["output"]
+        working_memory.add_evidence("Bright Data Web Intelligence (via MCP)", vendor_intel, "Corporate registry verification")
 
         step6_meter = self.meterless.record_usage(
-            step_name="Step 6: Bright Data External Intel",
+            step_name="Step 6: Bright Data External Intel (MCP)",
             model="Bright Data Web Network",
             prompt_tokens=210,
             completion_tokens=140,
@@ -270,9 +305,10 @@ class SynapseReasonEngine:
 
         trace_step6 = self._log_trace_step(
             step_type="EXECUTOR",
-            title="External Entity Intelligence via Bright Data",
+            title="MCP Tool Call: Bright Data OSINT & Corporate Scrape",
             details={
-                "target_entity": "Acrobatics Logistics LLC",
+                "protocol": "MCP (Model Context Protocol)",
+                "tool_uri": "mcp://brightdata/scrape_vendor",
                 "findings": vendor_intel,
                 "shell_company_probability": "89%",
                 "meterless": step6_meter
@@ -302,6 +338,17 @@ class SynapseReasonEngine:
         h2.status = "CONFIRMED"
         h2.critic_notes = nemo_critique["critique"]
 
+        # A2A Handoff: Critic authorizes remediation
+        a2a_auth = self.a2a.send_a2a_message(
+            sender_id="critic",
+            receiver_id="planner",
+            intent="AUTHORIZE_REMEDIATION",
+            payload={
+                "evidence_grounding_score": f"{int(nemo_critique['grounding_score'] * 100)}%",
+                "safety_recommendation": nemo_critique["safety_recommendation"]
+            }
+        )
+
         trace_step7 = self._log_trace_step(
             step_type="EVALUATOR_CRITIC",
             title="NVIDIA NeMo Guardrail Verification & Action Vetting",
@@ -311,13 +358,14 @@ class SynapseReasonEngine:
                 "passed_guardrail": nemo_critique["passed_guardrail"],
                 "critique_summary": nemo_critique["critique"],
                 "safety_recommendation": nemo_critique["safety_recommendation"],
+                "a2a_authorization": a2a_auth,
                 "meterless": step7_meter
             }
         )
         if callback: callback(trace_step7)
 
         # -------------------------------------------------------------
-        # STEP 8: AUTONOMOUS ACTION SYNTHESIS & GOVERNANCE RECEIPT
+        # STEP 8: AG-UI HUMAN-IN-THE-LOOP APPROVAL & REMEDIATION
         # -------------------------------------------------------------
         final_actions = [
             {
@@ -325,30 +373,47 @@ class SynapseReasonEngine:
                 "action": "REVOKE_IAM_SESSION",
                 "target": "USR-9912 (r.chen@enterprise.internal)",
                 "reversible": True,
-                "reason": "Compromised Tor/VPN session detected; MFA bypassed."
+                "reason": "Compromised Tor/VPN session detected; MFA bypassed.",
+                "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
             },
             {
                 "priority": "P0_IMMEDIATE",
                 "action": "HALT_ACH_SETTLEMENT",
                 "target": "TX-90219 ($245,000.00) & TX-90221 ($198,000.00)",
                 "reversible": True,
-                "reason": "Prevent unrecoverable capital outflow to unauthorized routing 021000021."
+                "reason": "Prevent unrecoverable capital outflow to unauthorized routing 021000021.",
+                "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
             },
             {
                 "priority": "P1_GOVERNANCE",
                 "action": "INITIATE_CLAWBACK_PROCESS",
                 "target": "TX-90214, TX-90215, TX-90216 (Total: $591,500.00)",
                 "reversible": False,
-                "reason": "Engage beneficiary bank for emergency SWIFT/Fedwire recall."
+                "reason": "Engage beneficiary bank for emergency SWIFT/Fedwire recall.",
+                "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
             },
             {
                 "priority": "P2_VENDOR_QUARANTINE",
                 "action": "FREEZE_VENDOR_CONTRACT",
                 "target": "VND-8821 (Acrobatics Logistics LLC)",
                 "reversible": True,
-                "reason": "Bright Data indicated 89% shell company probability + contract cap breach."
+                "reason": "Bright Data indicated 89% shell company probability + contract cap breach.",
+                "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
             }
         ]
+
+        # AG-UI Emit HITL Approval Gate for the high-risk clawback
+        agui_gate = self.ag_ui.emit_event(
+            event_type="HITL_APPROVAL_GATE",
+            title="Human-in-the-Loop Sign-Off Required for Irreversible SWIFT Wire Recall",
+            content={
+                "action": "INITIATE_CLAWBACK_PROCESS",
+                "amount_usd": 591500.00,
+                "target_disbursements": ["TX-90214", "TX-90215", "TX-90216"],
+                "officer_action_needed": "Dual authorization required prior to SWIFT recall dispatch."
+            },
+            requires_human_approval=True
+        )
 
         # Consolidate into Episodic Memory
         self.episodic_memory.record_new_case({
@@ -364,11 +429,12 @@ class SynapseReasonEngine:
 
         trace_step8 = self._log_trace_step(
             step_type="GOVERNANCE",
-            title="Final Remediation Decisions & Meterless Governance Audit",
+            title="Final Remediation Decisions & AG-UI Human Approval Gate",
             details={
                 "confirmed_root_cause": "Credential hijacking on approver USR-9912 used to push fraudulent disbursements to shell entity VND-8821 with altered routing.",
                 "actions_ordered": final_actions,
-                "capital_saved_usd": 443000.00,  # Sum of pending halted transactions ($245k + $198k)
+                "ag_ui_approval_gate": agui_gate,
+                "capital_saved_usd": 443000.00,
                 "capital_at_risk_recall_usd": 591500.00,
                 "meterless_governance_receipt": meterless_receipt
             }
@@ -381,5 +447,11 @@ class SynapseReasonEngine:
             "working_memory": working_memory.get_summary_state(),
             "execution_trace": self.execution_trace,
             "actions": final_actions,
-            "meterless_audit": meterless_receipt
+            "meterless_audit": meterless_receipt,
+            "protocols": {
+                "mcp_tools": self.mcp.list_tools(),
+                "a2a_agent_cards": self.a2a.get_agent_cards(),
+                "a2a_messages": self.a2a.message_history,
+                "ag_ui_events": self.ag_ui.get_feed()
+            }
         }

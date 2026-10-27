@@ -1,26 +1,34 @@
 # 📑 SynapseReason Slide Deck
-### Presentation for Open Agent Hackathon 2026 — Track 3: Reasoning Architecture
+### Presentation for Open Agent Hackathon 2026 — Track 3: Reasoning Architecture (GenAI Works)
 
 ---
 
 ## Slide 1: Title & Vision
 **SynapseReason: Autonomous Cross-Silo Reasoning & Incident Remediation Architecture**
 - **Track:** Track 3 (Reasoning Architecture)
-- **Problem Domain:** Enterprise Financial Forensics & SRE Anomaly Remediation
+- **Protocol Stack:** MCP (Tools) | A2A (Agents) | AG-UI (Humans)
+- **Sponsors:** Zetaris Data Fabric | Meterless Governance | NVIDIA NIM & NeMo | Bright Data | Cursor
 - **Builder:** Yuvan (Solo Builder)
-- **Core Technologies:** Zetaris Data Fabric | Meterless Governance | NVIDIA NIM & NeMo | Bright Data | Cursor
-- **One-Liner:** Turning fragmented enterprise silos, episodic memory, and non-linear reasoning into reliable, cost-governed autonomous decisions.
+- **One-Liner:** Turning fragmented enterprise data, episodic memory, and non-linear multi-agent reasoning into reliable, cost-governed autonomous decisions.
 
 ---
 
-## Slide 2: The Core Problem — Why Linear Agents Fail
-- **The Linear Pipeline Trap:** Typical agent systems follow simple sequential chains (`Planner -> Executor -> Summarizer`). When the initial assumption is wrong, they fail catastrophically or hallucinate.
+## Slide 2: The Core Problem — Why Linear Pipelines Fail
+- **The Linear Trap:** Typical agent systems follow simple sequential chains (`Planner -> Writer -> Summarizer`). When the initial assumption is wrong, they fail catastrophically or hallucinate.
 - **Data Fragmentation:** Enterprise truth is scattered across SAP ERP databases, AWS IAM audit logs, and procurement contract vaults. Traditional ETL data movement takes hours.
 - **Runaway Costs & Safety Risks:** Without real-time token metering and safety guardrails, autonomous agents can execute unbounded retry loops or make irreversible destructive changes.
 
 ---
 
-## Slide 3: The Architecture — Non-Linear Reasoning Graph
+## Slide 3: The 2026 Tri-Protocol Stack (MCP + A2A + AG-UI)
+*Adopting the October 2026 standard endorsed by GenAI Works:*
+1. **MCP (Anthropic / Linux Foundation):** Universal tool & data port. Wraps Zetaris Data Fabric (`mcp://zetaris/federated_sql`) and Bright Data (`mcp://brightdata/scrape_vendor`).
+2. **A2A (Google / Agentic AI Foundation):** Inter-agent communication using **Signed Agent Cards** (Planner, Fabric, Critic, and Intel agents negotiate and dispute findings).
+3. **AG-UI (CopilotKit / Google ADK / AWS):** Live thought feed with **Human-in-the-Loop (HITL)** approval gates for high-risk irreversible actions.
+
+---
+
+## Slide 4: Non-Linear Reasoning Graph & Dynamic Backtracking
 ```
         [Enterprise Incident Alert]
                     │
@@ -29,39 +37,32 @@
                     │
                     ▼
           ┌───────────────────┐
-          │   PLANNER (NIM)   │ ◄───────┐ (Dynamic
+          │   PLANNER (NIM)   │ ◄───────┐ (A2A Dynamic
           │ Formulates H1, H2 │         │  Backtrack
           └─────────┬─────────┘         │  Pivot)
                     │                   │
                     ▼                   │
           ┌───────────────────┐         │
-          │  EXECUTOR (Tools) │         │
+          │  EXECUTOR (MCP)   │         │
           │  Zetaris / Bright │         │
           └─────────┬─────────┘         │
                     │                   │
                     ▼                   │
           ┌───────────────────┐         │
-          │  EVALUATOR/CRITIC ├─────────┘
-          │  NeMo Guardrails  │ (H1 Refuted: 0ms CDC delay)
+          │  NE-MO CRITIC     ├─────────┘
+          │  A2A Dispute Gate │ (H1 Refuted: 0ms CDC delay)
           └─────────┬─────────┘
                     │ (H2 Conclusive: 94% Confidence)
                     ▼
-      [Meterless Cost Governance Receipt]
+      [AG-UI Human-in-the-Loop Approval Gate]
                     │
                     ▼
-     [Verified Actions: Halt $443k ACH Outflow]
+      [Meterless Cost Governance Receipt]
 ```
 
 ---
 
-## Slide 4: Key Innovation #1 — Dynamic Branching & Backtracking
-- **Hypothesis H1 (Sync Lag):** Engine first tests the null hypothesis to prevent false business disruption.
-- **Critic Refutation:** The Evaluator inspects Zetaris logs, refutes H1 (no database replication delay), prunes the branch, and logs the critique in Working Memory.
-- **Dynamic Pivot to H2 (Session Hijack):** Pivots seamlessly to investigate credential compromise without human restart.
-
----
-
-## Slide 5: Key Innovation #2 — Zero-Copy Data Virtualization (Zetaris)
+## Slide 5: Key Innovation #1 — Zero-Copy Data Virtualization (Zetaris)
 - **Zero-Copy Federation:** The agent executes virtual SQL joins across 3 heterogeneous nodes without data movement:
   - `zetaris.erp_transactions` (SAP Finance)
   - `zetaris.cloud_audit_logs` (AWS CloudTrail / Okta)
@@ -70,7 +71,7 @@
 
 ---
 
-## Slide 6: Key Innovation #3 — Cost Governance & Safety (Meterless & NVIDIA)
+## Slide 6: Key Innovation #2 — Cost Governance & Safety (Meterless & NVIDIA)
 - **Meterless Telemetry:** Real-time token metering per reasoning step with budget caps ($0.50 ceiling).
   - Investigation completed in **2,846 tokens** costing only **$0.00824 USD** (1.65% budget utilization).
 - **NVIDIA NeMo Guardrails:**
@@ -89,6 +90,7 @@
 
 ## Slide 8: Summary & Roadmap
 - **Track 3 Core Criteria Met:** Non-linear Planner-Executor-Evaluator graph, dynamic backtracking, dual-layer memory, and complete inspectable trace viewer.
+- **Tri-Protocol Mastery:** Full implementation of MCP, A2A (Signed Agent Cards), and AG-UI (HITL gates).
 - **100% Sponsor Integration:** Zetaris, Meterless, NVIDIA NIM, Bright Data, and Cursor.
 - **Zero-Key Out-of-the-Box:** Runs with 1-click via `SAMPLE_MODE=true` for instant judge evaluation.
 - **Try it now:** `streamlit run app.py` or `python cli.py`

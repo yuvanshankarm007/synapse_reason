@@ -1,7 +1,7 @@
 """
 SynapseReason - Interactive Cognitive Reasoning & Governance Console
 Track 3: Reasoning Architecture | Open Agent Hackathon 2026
-Built with Streamlit, Zetaris Data Fabric, Meterless Governance, and NVIDIA NIM.
+Built with Streamlit, Zetaris Data Fabric, Meterless Governance, and the 2026 Tri-Protocol Stack (MCP + A2A + AG-UI).
 """
 import streamlit as st
 import time
@@ -39,13 +39,6 @@ st.markdown("""
         font-size: 1.05rem;
         color: #64748B;
         margin-bottom: 20px;
-    }
-    .metric-card {
-        background-color: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 14px;
-        text-align: center;
     }
     .badge-planner {
         background-color: #DBEAFE;
@@ -87,18 +80,33 @@ st.markdown("""
         font-weight: 600;
         font-size: 0.8rem;
     }
+    .protocol-card {
+        background-color: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # Sidebar Controls
 with st.sidebar:
     st.image("https://img.shields.io/badge/Track_3-Reasoning_Architecture-blueviolet?style=for-the-badge", use_container_width=True)
-    st.title("Control & Sponsors")
+    st.title("Control & Protocols")
     st.markdown("**Open Agent Hackathon 2026**")
+    st.caption("Organized by GenAI Works")
     
     st.markdown("---")
+    st.subheader("🌐 2026 Tri-Protocol Stack")
+    st.markdown("""
+    - **MCP (Anthropic):** Universal port for tools & data (Zetaris & Bright Data)
+    - **A2A (Google):** Inter-agent language with Signed Agent Cards
+    - **AG-UI (CopilotKit):** Live thought feed & Human-in-the-Loop approvals
+    """)
+
+    st.markdown("---")
     st.subheader("⚙️ Runtime Parameters")
-    
     execution_mode = st.radio(
         "Execution Mode",
         ["SAMPLE_MODE (Zero-Keys / Judge Instant)", "LIVE_MODE (NVIDIA NIM Live API)"],
@@ -108,25 +116,15 @@ with st.sidebar:
     
     budget_cap = st.slider("Meterless Budget Cap ($ USD)", min_value=0.10, max_value=2.00, value=0.50, step=0.05)
     config.METERLESS_BUDGET_CAP_USD = budget_cap
-    
-    st.markdown("---")
-    st.subheader("🧩 Integrated Sponsor Tech")
-    st.markdown("""
-    - **Zetaris:** Virtualized Cross-Silo Data Fabric
-    - **Meterless:** Token & Cost Governance Engine
-    - **NVIDIA NIM:** Llama-3.1-70B & NeMo Critic
-    - **Bright Data:** Live Web Intelligence Scraper
-    - **Cursor:** System Prompting & Architecture
-    """)
 
 # Header Banner
 col_h1, col_h2 = st.columns([3, 1])
 with col_h1:
     st.markdown('<div class="main-header">🧠 SynapseReason</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Autonomous Cross-Silo Reasoning & Incident Remediation Architecture</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">Non-Linear Reasoning Architecture & Tri-Protocol Incident Engine</div>', unsafe_allow_html=True)
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
-    st.success("🟢 Ready | All Silos Connected")
+    st.success("🟢 Ready | Tri-Protocols Active")
 
 # Top Scenario Selector
 st.markdown("#### 🚨 Select Incident Alert to Investigate")
@@ -145,7 +143,7 @@ alert_description = scenario_option.split(":")[1].strip()
 # Run Investigation Trigger
 col_btn, col_info = st.columns([1, 3])
 with col_btn:
-    run_clicked = st.button("🚀 Run Autonomous Reasoning Loop", type="primary", use_container_width=True)
+    run_clicked = st.button("🚀 Run Non-Linear Reasoning Loop", type="primary", use_container_width=True)
 with col_info:
     st.caption("Executes dynamic Planner <-> Executor <-> Evaluator/Critic state graph with Zetaris virtual queries, Meterless cost tracking, and automatic branch backtracking.")
 
@@ -179,8 +177,9 @@ if run_clicked or "last_result" in st.session_state:
         st.metric("Backtrack Pivots", f"{result['working_memory']['backtracks']} branch(es)")
 
     # Main Tabs
-    tab_trace, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
+    tab_trace, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
         "🔬 Cognitive Trace & Backtracking Graph",
+        "🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)",
         "🌐 Zetaris Data Fabric Virtualization",
         "⚡ Meterless Token & Cost Telemetry",
         "🛡️ Remediation Action Center",
@@ -190,7 +189,7 @@ if run_clicked or "last_result" in st.session_state:
     # TAB 1: COGNITIVE TRACE
     with tab_trace:
         st.markdown("#### Dynamic Step-by-Step Reasoning Flow")
-        st.info("💡 **Key Reasoning Architectural Pattern**: Notice that the engine did not take a naive linear path. It initially formulated Hypothesis H1 (Database sync lag), tested it via Zetaris, refuted it via Evaluator critique, backtracked to Hypothesis H2 (Session Hijack + Shell Vendor), gathered cross-silo proof, and verified with NeMo Guardrails.")
+        st.info("💡 **Why This Isn't Linear**: The engine formulated Hypothesis H1 (Sync lag), queried Zetaris via MCP, was refuted by the NeMo Critic via A2A dispute, automatically backtracked to H2, correlated 3 silos, and gated irreversible actions with AG-UI human approval.")
         
         for step in result["execution_trace"]:
             step_type = step["step_type"]
@@ -206,13 +205,70 @@ if run_clicked or "last_result" in st.session_state:
                 st.markdown(f'<span class="{badge_class}">{step_type}</span> &nbsp; <b>Time:</b> {step["timestamp"]}', unsafe_allow_html=True)
                 st.json(step["details"])
 
-    # TAB 2: ZETARIS DATA FABRIC
+    # TAB 2: TRI-PROTOCOL STACK (MCP + A2A + AG-UI)
+    with tab_protocols:
+        st.markdown("#### 🌐 The GenAI Works 2026 Protocol Stack Implementation")
+        st.markdown("SynapseReason adopts all three industry standards to eliminate linear silos:")
+        
+        p_col1, p_col2, p_col3 = st.columns(3)
+        
+        # MCP Box
+        with p_col1:
+            st.markdown("""
+            <div class="protocol-card" style="border-top: 4px solid #F97316;">
+                <h4 style="color:#C2410C; margin:0;">🟠 MCP (Model Context Protocol)</h4>
+                <p style="font-size:0.85rem; color:#64748B;"><b>Author:</b> Anthropic / Linux Foundation<br>
+                <b>Role:</b> Connects agents to tools and data fabric.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            st.markdown("##### Registered MCP Tools:")
+            for tool in result["protocols"]["mcp_tools"]:
+                st.code(f"{tool['uri']}\n-> {tool['name']}", language="text")
+
+        # A2A Box
+        with p_col2:
+            st.markdown("""
+            <div class="protocol-card" style="border-top: 4px solid #3B82F6;">
+                <h4 style="color:#1D4ED8; margin:0;">🔵 A2A (Agent2Agent Protocol)</h4>
+                <p style="font-size:0.85rem; color:#64748B;"><b>Author:</b> Google / Agentic AI Foundation<br>
+                <b>Role:</b> Inter-agent language with Signed Agent Cards.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            st.markdown("##### Active Signed Agent Cards:")
+            for k, card in result["protocols"]["a2a_agent_cards"].items():
+                with st.expander(f"🪪 {card['name']} ({card['role']})"):
+                    st.caption(f"Fingerprint: `{card['fingerprint']}`")
+                    st.caption(f"Signature: `{card['agent_card_signature']}`")
+                    st.write(f"Capabilities: {', '.join(card['capabilities'])}")
+
+        # AG-UI Box
+        with p_col3:
+            st.markdown("""
+            <div class="protocol-card" style="border-top: 4px solid #8B5CF6;">
+                <h4 style="color:#6D28D9; margin:0;">🟣 AG-UI (Agent-User Interaction)</h4>
+                <p style="font-size:0.85rem; color:#64748B;"><b>Author:</b> CopilotKit / Google ADK / AWS<br>
+                <b>Role:</b> Live thought stream & Human-in-the-Loop gates.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            st.markdown("##### Interactive HITL Gate:")
+            st.warning("⚠️ **P1 SWIFT Wire Clawback ($591,500.00)** requires officer confirmation!")
+            c_app, c_rej = st.columns(2)
+            with c_app:
+                if st.button("✅ Authorize Clawback", use_container_width=True):
+                    st.success("Authorized: SWIFT recall dispatched to clearinghouse.")
+            with c_rej:
+                if st.button("❌ Hold for Review", use_container_width=True):
+                    st.info("Placed on 24-hour compliance hold.")
+
+        st.markdown("##### 📜 A2A Inter-Agent Message Log:")
+        st.dataframe(pd.DataFrame(result["protocols"]["a2a_messages"])[["message_id", "timestamp", "intent", "cryptographic_proof"]], use_container_width=True)
+
+    # TAB 3: ZETARIS DATA FABRIC
     with tab_zetaris:
         st.markdown("#### Zetaris Networked Data Virtualization")
         st.write("Zetaris enables zero-copy federated queries across 3 heterogeneous silos without data ingestion delays:")
         
         zetaris_instance = ZetarisFederator()
-        catalog = zetaris_instance.list_catalog()
         
         c_cat1, c_cat2, c_cat3 = st.columns(3)
         with c_cat1:
@@ -228,7 +284,7 @@ if run_clicked or "last_result" in st.session_state:
             st.caption("Origin: Coupa Procurement Vault")
             st.code("Columns: vendor_id, legal_name, single_tx_limit_usd, routing...", language="text")
 
-        st.markdown("##### 🔍 Cross-Silo Zero-Copy Federated SQL Executed by Agent:")
+        st.markdown("##### 🔍 Cross-Silo Zero-Copy Federated SQL Executed via MCP:")
         st.code("""
 SELECT 
     tx.tx_id, tx.timestamp, tx.vendor_name, tx.amount_usd, tx.bank_routing AS tx_bank_routing,
@@ -241,7 +297,6 @@ WHERE tx.vendor_id = 'VND-8821'
 ORDER BY tx.timestamp ASC;
         """, language="sql")
         
-        # Live query execution display
         live_res = zetaris_instance.execute_federated_query("""
         SELECT tx.tx_id, tx.amount_usd, log.source_ip, log.geo_country, log.is_vpn_or_tor, vc.single_tx_limit_usd, tx.bank_routing, vc.verified_bank_routing
         FROM erp_transactions tx
@@ -252,7 +307,7 @@ ORDER BY tx.timestamp ASC;
         st.markdown("##### 📋 Resulting Federated Dataset:")
         st.dataframe(pd.DataFrame(live_res["data"]), use_container_width=True)
 
-    # TAB 3: METERLESS COST & TOKEN TELEMETRY
+    # TAB 4: METERLESS COST & TOKEN TELEMETRY
     with tab_meterless:
         st.markdown("#### Meterless.io Real-Time Token & Cost Governance")
         st.write("Meterless meters token consumption per reasoning step, tracks latency, and ensures the agent never exceeds financial budget ceilings.")
@@ -273,7 +328,7 @@ ORDER BY tx.timestamp ASC;
         st.markdown("##### Detailed Step Billing Ledger:")
         st.dataframe(breakdown_df, use_container_width=True)
 
-    # TAB 4: REMEDIATION ACTION CENTER
+    # TAB 5: REMEDIATION ACTION CENTER
     with tab_actions:
         st.markdown("#### 🛡️ Autonomous Remediation Orders (NVIDIA NeMo Vetted)")
         st.write("Actions synthesized by the Planner and vetted for safety and reversibility by NVIDIA NeMo Guardrails:")
@@ -288,11 +343,11 @@ ORDER BY tx.timestamp ASC;
             st.markdown(f"""
             - **Priority:** <span style="color:{priority_color}; font-weight:700;">{act['priority']}</span> | **Action:** `{act['action']}`
               - **Target:** {act['target']}
-              - **Reversible:** {'✅ Yes' if act['reversible'] else '⚠️ No (Requires dual authorization)'}
+              - **Reversible:** {'✅ Yes (Auto-Authorized)' if act['reversible'] else '⚠️ No (Gated by AG-UI Human-in-the-Loop Sign-off)'}
               - **Grounding Reason:** {act['reason']}
             """, unsafe_allow_html=True)
 
-    # TAB 5: DUAL MEMORY & CASE RECALL
+    # TAB 6: DUAL MEMORY & CASE RECALL
     with tab_memory:
         st.markdown("#### 💾 Dual Memory Architecture")
         col_wm, col_em = st.columns(2)
@@ -308,4 +363,4 @@ ORDER BY tx.timestamp ASC;
                 st.json(cases)
 
 st.markdown("---")
-st.caption("SynapseReason | Built for Track 3: Reasoning Architecture | Open Agent Hackathon 2026")
+st.caption("SynapseReason | Built for Track 3: Reasoning Architecture | Open Agent Hackathon 2026 (GenAI Works)")
