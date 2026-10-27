@@ -14,13 +14,20 @@ DATA_DIR = BASE_DIR / "data"
 load_dotenv(BASE_DIR / ".env")
 
 # Runtime Execution Mode
-# If SAMPLE_MODE is True or NVIDIA_API_KEY is not set, use high-fidelity local reasoning simulator
-SAMPLE_MODE = os.getenv("SAMPLE_MODE", "true").lower() in ("true", "1", "yes")
+# If SAMPLE_MODE is True, use high-fidelity benchmark simulator for automated tests
+SAMPLE_MODE = os.getenv("SAMPLE_MODE", "false").lower() in ("true", "1", "yes")
 
 # Sponsor API Configurations
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY", "")
 NVIDIA_BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
 NVIDIA_MODEL = os.getenv("NVIDIA_MODEL", "meta/llama-3.1-70b-instruct")
+
+# Ollama Local LLM Configuration (Real-time dynamic generation, zero keys required)
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434/v1")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
+
+# Active LLM Provider Selection: "auto", "ollama", "nvidia", "custom"
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "auto")
 
 # Zetaris Networked Data Virtualization / Fabric Endpoint
 ZETARIS_ENDPOINT = os.getenv("ZETARIS_ENDPOINT", "https://fabric.zetaris.cloud/api/v1")

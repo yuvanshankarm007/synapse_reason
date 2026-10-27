@@ -136,14 +136,14 @@
   {
     "case_id": "EP-2026-CUSTOM-CLI",
     "incident_type": "SYSTEMIC_STRUCTURAL_ALIGNMENT",
-    "description": "Resolved anomaly for INC-CUSTOM-CLI: what is the best strategy to organize a hackathon team",
+    "description": "Resolved anomaly for INC-CUSTOM-CLI: where should I go to watch latest movies",
     "key_indicators": [
       "domain_general_research",
       "backtrack_verified",
       "nemo_grounded"
     ],
     "resolution_playbook": "AUTONOMOUS_GENERAL_RESEARCH_PLAYBOOK",
-    "confirmed_root_cause": "In direct response to 'what is the best strategy to organize a hackathon team': The optimal approach is to break down your core constraints (time, bud"
+    "confirmed_root_cause": "To watch the latest movies, you must identify the release stage. For brand-new blockbusters, visit a local cinema. For movies that just left theaters,"
   },
   {
     "case_id": "EP-2026-INV-101",

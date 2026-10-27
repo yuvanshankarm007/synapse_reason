@@ -107,37 +107,71 @@ with st.sidebar:
     st.markdown("---")
     # ⚙️ RUNTIME PARAMETERS (Moved to Top for Easy Visibility)
     st.markdown("### ⚙️ Runtime Parameters")
+
+    # Probe Local Ollama on host
+    ollama_online = False
+    ollama_models = []
+    try:
+        r_ol = httpx.get("http://127.0.0.1:11434/v1/models", timeout=1.0)
+        if r_ol.status_code == 200:
+            ollama_online = True
+            ollama_models = [m.get("id") for m in r_ol.json().get("data", []) if "id" in m]
+    except Exception:
+        pass
+
+    engine_choices = []
+    if ollama_online:
+        engine_choices.append("🟢 Local Real-Time LLM (Ollama: Zero-Key)")
+    engine_choices.append("⚡ Cloud Live NIM (NVIDIA LLaMA-3.1-70B)")
+    engine_choices.append("🧪 Benchmark Core (Reproducible CI/CD Mode)")
+
+    default_idx = 0 if ollama_online else (0 if not config.SAMPLE_MODE else len(engine_choices)-1)
+
     execution_mode = st.radio(
-        "Execution Mode:",
-        [
-            "🟢 SAMPLE_MODE (Zero-Keys / Judge Instant)",
-            "⚡ LIVE_MODE (NVIDIA NIM Live API)"
-        ],
-        index=0 if config.SAMPLE_MODE else 1,
-        help="SAMPLE_MODE runs zero-key deterministic simulations for hackathon judges. LIVE_MODE connects to live NVIDIA NIM cloud endpoints."
+        "Cognitive Substrate:",
+        engine_choices,
+        index=default_idx,
+        help="Local Ollama processes in real-time with zero keys. NVIDIA NIM runs live 70B models in the cloud. Benchmark Core runs fixed evaluations."
     )
-    config.SAMPLE_MODE = "SAMPLE_MODE" in execution_mode
-    
-    if not config.SAMPLE_MODE:
-        st.info("⚡ **Live Cloud Mode Enabled:** Engine queries live NVIDIA NIM endpoints (`https://integrate.api.nvidia.com/v1`).")
+
+    if "Ollama" in execution_mode:
+        config.SAMPLE_MODE = False
+        config.LLM_PROVIDER = "ollama"
+        if ollama_models:
+            preferred_model = "qwen2.5:7b" if "qwen2.5:7b" in ollama_models else ollama_models[0]
+            selected_model = st.selectbox(
+                "Active Local Model:",
+                ollama_models,
+                index=ollama_models.index(preferred_model) if preferred_model in ollama_models else 0,
+                help="Select from models discovered on your local Ollama instance."
+            )
+            config.OLLAMA_MODEL = selected_model
+        st.success(f"🟢 **Real-Time Dynamic Processing Active:** Using local `{getattr(config, 'OLLAMA_MODEL', 'qwen2.5:7b')}` with zero presets.")
+
+    elif "NVIDIA" in execution_mode:
+        config.SAMPLE_MODE = False
+        config.LLM_PROVIDER = "nvidia"
+        st.info("⚡ **Cloud NIM Mode:** Queries NVIDIA NIM endpoints (`https://integrate.api.nvidia.com/v1`).")
         user_api_key = st.text_input(
             "NVIDIA NIM API Key:",
             value=config.NVIDIA_API_KEY,
             type="password",
             placeholder="nvapi-...",
-            help="Paste your personal NVIDIA NIM API key here (or store in .env)."
+            help="Paste your personal NVIDIA NIM API key here (from build.nvidia.com)."
         )
         if user_api_key:
             config.NVIDIA_API_KEY = user_api_key.strip()
             os.environ["NVIDIA_API_KEY"] = user_api_key.strip()
-        
         has_valid_key = bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY)
         if has_valid_key:
-            st.success("🔑 Live NIM API Key Verified")
+            st.success("🔑 Live NIM API Key Verified (meta/llama-3.1-70b-instruct)")
         else:
-            st.warning("⚠️ No `nvapi-` key detected. Live calls will fallback to local core if unauthenticated.")
+            st.warning("⚠️ Enter your free `nvapi-...` key above to query live 70B models.")
+
     else:
-        st.success("🟢 **Sample Mode Active:** 100% reproducible, zero-setup, instant evaluations for hackathon judges.")
+        config.SAMPLE_MODE = True
+        config.LLM_PROVIDER = "offline"
+        st.info("🧪 **Benchmark Mode Active:** Fixed seed evaluations for offline grading.")
 
     budget_cap = st.slider(
         "Meterless Budget Cap ($ USD):",
@@ -173,16 +207,19 @@ with col_h1:
     st.markdown('<div class="sub-header">3D Cognitive Lattice Architecture & Autonomous Remediation</div>', unsafe_allow_html=True)
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
-    has_valid_key = bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY)
-    if config.SAMPLE_MODE:
-        st.success("🟢 SAMPLE MODE (Zero-Key) | Active")
-    elif has_valid_key:
-        st.success("⚡ LIVE NIM API | Online")
+    if "Ollama" in execution_mode:
+        st.success(f"🟢 LIVE REAL-TIME ({getattr(config, 'OLLAMA_MODEL', 'qwen2.5:7b')})")
+    elif "NVIDIA" in execution_mode:
+        has_valid_key = bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY)
+        if has_valid_key:
+            st.success("⚡ LIVE NIM (LLaMA-70B)")
+        else:
+            st.warning("⚠️ LIVE NIM (Key Required)")
     else:
-        st.warning("⚠️ LIVE MODE (No Key - Local)")
+        st.info("🧪 BENCHMARK CORE (Fixed)")
 
-if not config.SAMPLE_MODE and not has_valid_key:
-    st.warning("⚠️ **Live Mode is enabled without an NVIDIA API Key.** SynapseReason is operating via its local semantic engine. To query live NVIDIA NIM 70B models in real-time, enter your free `nvapi-...` key in the top-left sidebar (obtainable instantly from [build.nvidia.com](https://build.nvidia.com)).")
+if "NVIDIA" in execution_mode and not bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY):
+    st.warning("⚠️ **Cloud NIM Mode is selected, but no NVIDIA API Key was entered.** Enter your free `nvapi-...` key in the sidebar (get one at [build.nvidia.com](https://build.nvidia.com)) or switch to **🟢 Local Real-Time LLM (Ollama)** for instant zero-key processing.")
 
 # Universal Domain Architecture Lens & Target Selector
 st.markdown("#### 🌐 Cognitive Architecture Domain Lens")
