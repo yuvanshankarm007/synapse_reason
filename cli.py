@@ -22,6 +22,7 @@ import config
 
 def main():
     parser = argparse.ArgumentParser(description="SynapseReason Autonomous Reasoning CLI")
+    parser.add_argument("--domain", "-d", default="auto", choices=["auto", "cybersecurity", "sre", "supply_chain", "finance_fraud", "custom"], help="Operating Domain Lens")
     parser.add_argument("--incident", "-i", default="INC-4491", help="Incident ID (e.g. INC-4491 or INC-CUSTOM-001)")
     parser.add_argument("--prompt", "-p", default=None, help="Custom enterprise incident prompt / threat description")
     parser.add_argument("ad_hoc_prompt", nargs="*", default=[], help="Optional ad-hoc prompt tokens")
@@ -38,8 +39,9 @@ def main():
         alert = "High-Volume disbursement anomaly on vendor VND-8821 with sequential rapid approvals"
 
     print("=" * 80)
-    print(" [SYNAPSEREASON] AUTONOMOUS CROSS-SILO REASONING ENGINE")
+    print(" [SYNAPSEREASON] UNIVERSAL 3D COGNITIVE LATTICE REASONING ENGINE")
     print(" Track 3: Reasoning Architecture | Open Agent Hackathon 2026")
+    print(f" Operating Domain: {args.domain.upper()}")
     print(f" Mode: {'SAMPLE_MODE (Deterministic zero-key simulation)' if config.SAMPLE_MODE else 'LIVE_MODE'}")
     print("=" * 80)
 
@@ -52,7 +54,7 @@ def main():
 
     print("[*] Commencing Investigation Trace...\n" + "-" * 80)
     
-    result = engine.run_investigation(incident_id=incident_id, alert_description=alert)
+    result = engine.run_investigation(incident_id=incident_id, alert_description=alert, domain=args.domain)
 
     for step in result["execution_trace"]:
         print(f"\n>>> STEP {step['step_number']} [{step['step_type']}]: {step['title']}")
@@ -74,7 +76,7 @@ def main():
         time.sleep(0.05)
 
     print("\n" + "=" * 80)
-    print(" [DECISION] FINAL REMEDIATION PLAN:")
+    print(f" [DECISION] FINAL REMEDIATION PLAN ({result.get('impact_headline', 'Impact Mitigated')}):")
     print("=" * 80)
     for act in result["actions"]:
         print(f"  [{act['priority']}] {act['action']} -> {act['target']}")

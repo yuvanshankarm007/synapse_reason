@@ -190,15 +190,189 @@ class NvidiaEngine:
         self,
         incident_id: str,
         alert: str,
-        evidence: List[Dict[str, Any]]
+        evidence: List[Dict[str, Any]],
+        domain: str = "finance_fraud"
     ) -> Dict[str, Any]:
         """
-        3D Cognitive Lattice Multiverse Simulation Engine:
-        Projects hypothetical future branches at Z = +2 across multiple temporal horizons (+1h, +24h, +7d).
-        Calculates Euclidean safety distance and Lattice Meet/Join formalisms.
+        Universal 3D Cognitive Lattice Multiverse Simulation Engine:
+        Projects hypothetical future branches at Z = +2 across multiple temporal horizons (+1h, +24h, +7d)
+        dynamically customized for the target domain (Cybersecurity, SRE, Supply Chain, Finance, or Custom).
         """
+        if domain == "cybersecurity":
+            return {
+                "incident_id": incident_id,
+                "domain": "Cybersecurity Threat Hunting & Zero-Trust Defense",
+                "lattice_theory": {
+                    "meet_glwb": "Zetaris Data Fabric Invariants (CrowdStrike EDR, AWS CloudTrail, Okta Directory)",
+                    "join_lub": "Synthesized Global Remediation State (Quarantine Container + Rotate KMS + Revoke STS)",
+                    "delta_z_vector": {"sec_agent": 0.02, "net_agent": 0.03, "threat_anomaly": 0.96}
+                },
+                "multiverse_branches": [
+                    {
+                        "branch_id": "BRANCH_ALPHA",
+                        "name": "Branch α: Immediate Zero-Trust Isolation",
+                        "stratum": "Z = +2",
+                        "actions": ["Quarantine Pod", "Revoke STS Session Token", "Rotate KMS Key"],
+                        "projected_outcomes": {
+                            "data_breach_loss_usd": 0,
+                            "business_disruption_score": "LOW (0.08)",
+                            "legal_liability_exposure": "NONE",
+                            "euclidean_safety_distance": 0.03
+                        },
+                        "recommendation": "OPTIMAL_COMMITTED_PATH"
+                    },
+                    {
+                        "branch_id": "BRANCH_BETA",
+                        "name": "Branch β: Challenge & Honey-Token Routing",
+                        "stratum": "Z = +2",
+                        "actions": ["Force Push MFA", "Route Egress to Canaries", "Inspect Ingress"],
+                        "projected_outcomes": {
+                            "data_breach_loss_usd": 0,
+                            "business_disruption_score": "MEDIUM (0.28)",
+                            "legal_liability_exposure": "MINIMAL",
+                            "euclidean_safety_distance": 0.09
+                        },
+                        "recommendation": "VIABLE_SECONDARY"
+                    },
+                    {
+                        "branch_id": "BRANCH_GAMMA",
+                        "name": "Branch γ: Unchecked Passive Observation",
+                        "stratum": "Z = +2",
+                        "actions": ["Log Flow Telemetry", "Defer to Scheduled Security Audit"],
+                        "projected_outcomes": {
+                            "data_breach_loss_usd": 2400000,
+                            "business_disruption_score": "SEVERE (0.92)",
+                            "legal_liability_exposure": "CRITICAL (Full S3 Data Exfiltration)",
+                            "euclidean_safety_distance": 0.94
+                        },
+                        "recommendation": "CATASTROPHIC_VETOED"
+                    }
+                ],
+                "temporal_horizons": {
+                    "h_plus_1h": "Compromised STS token revoked; container quarantined before lateral movement to production database.",
+                    "h_plus_24h": "Forensic memory dump confirms zero persistence mechanisms or backdoors installed.",
+                    "h_plus_7d": "Zero-trust policy updated with automated KMS decryption rate limiting."
+                }
+            }
+
+        elif domain == "sre":
+            return {
+                "incident_id": incident_id,
+                "domain": "Cloud Infrastructure & Autonomous SRE Resilience",
+                "lattice_theory": {
+                    "meet_glwb": "Zetaris Data Fabric Invariants (Kubernetes API, Prometheus Metrics, GitOps Ledgers)",
+                    "join_lub": "Synthesized Global Remediation State (Canary Rollback + Drain Kafka Consumer Group)",
+                    "delta_z_vector": {"sre_agent": 0.02, "db_agent": 0.03, "threat_anomaly": 0.91}
+                },
+                "multiverse_branches": [
+                    {
+                        "branch_id": "BRANCH_ALPHA",
+                        "name": "Branch α: Automated Canary Rollback & Group Drain",
+                        "stratum": "Z = +2",
+                        "actions": ["Rollback Deployment to v2.4.1", "Reset Kafka Consumer Offset", "Trip Circuit Breaker"],
+                        "projected_outcomes": {
+                            "outage_sla_penalties_usd": 0,
+                            "business_disruption_score": "LOW (0.05)",
+                            "legal_liability_exposure": "NONE",
+                            "euclidean_safety_distance": 0.02
+                        },
+                        "recommendation": "OPTIMAL_COMMITTED_PATH"
+                    },
+                    {
+                        "branch_id": "BRANCH_BETA",
+                        "name": "Branch β: Node Scaling & Heap Doubling",
+                        "stratum": "Z = +2",
+                        "actions": ["Scale Node Pool 2x", "Restart Crashing Pods", "Increase JVM Heap"],
+                        "projected_outcomes": {
+                            "outage_sla_penalties_usd": 25000,
+                            "business_disruption_score": "MEDIUM (0.42)",
+                            "legal_liability_exposure": "LOW",
+                            "euclidean_safety_distance": 0.14
+                        },
+                        "recommendation": "VIABLE_SECONDARY"
+                    },
+                    {
+                        "branch_id": "BRANCH_GAMMA",
+                        "name": "Branch γ: Unchecked Microservice Cascading Outage",
+                        "stratum": "Z = +2",
+                        "actions": ["Leave Autoscale Disabled", "Wait for Manual On-Call Triaging"],
+                        "projected_outcomes": {
+                            "outage_sla_penalties_usd": 850000,
+                            "business_disruption_score": "CATASTROPHIC (0.98)",
+                            "legal_liability_exposure": "CRITICAL (Complete SLA Breach across Tier-1 Services)",
+                            "euclidean_safety_distance": 0.96
+                        },
+                        "recommendation": "CATASTROPHIC_VETOED"
+                    }
+                ],
+                "temporal_horizons": {
+                    "h_plus_1h": "Canary rollback complete; Kafka lag recovers to 0ms with zero message drops.",
+                    "h_plus_24h": "Postmortem verifies root cause as thread deadlock in newly deployed auth middleware.",
+                    "h_plus_7d": "Automated chaos engineering test added to CI/CD pre-merge gating."
+                }
+            }
+
+        elif domain == "supply_chain":
+            return {
+                "incident_id": incident_id,
+                "domain": "Supply Chain & Global Logistics Disruption",
+                "lattice_theory": {
+                    "meet_glwb": "Zetaris Data Fabric Invariants (Customs Manifests, Carrier Bills of Lading, ERP Inventory)",
+                    "join_lub": "Synthesized Global Remediation State (Air Freight Diversion + Activate Safety Buffer)",
+                    "delta_z_vector": {"logistics_agent": 0.03, "customs_agent": 0.04, "threat_anomaly": 0.89}
+                },
+                "multiverse_branches": [
+                    {
+                        "branch_id": "BRANCH_ALPHA",
+                        "name": "Branch α: Critical Component Air Freight Diversion",
+                        "stratum": "Z = +2",
+                        "actions": ["Divert Wafers via Air Express", "Allocate Austin Safety Buffer", "File Expedited Customs Bond"],
+                        "projected_outcomes": {
+                            "production_downtime_loss_usd": 0,
+                            "business_disruption_score": "LOW (0.15)",
+                            "legal_liability_exposure": "NONE",
+                            "euclidean_safety_distance": 0.05
+                        },
+                        "recommendation": "OPTIMAL_COMMITTED_PATH"
+                    },
+                    {
+                        "branch_id": "BRANCH_BETA",
+                        "name": "Branch β: Secondary Regional Carrier Re-routing",
+                        "stratum": "Z = +2",
+                        "actions": ["Engage Secondary Port Terminal", "Stagger Delivery Batches"],
+                        "projected_outcomes": {
+                            "production_downtime_loss_usd": 120000,
+                            "business_disruption_score": "MEDIUM (0.45)",
+                            "legal_liability_exposure": "LOW",
+                            "euclidean_safety_distance": 0.22
+                        },
+                        "recommendation": "VIABLE_SECONDARY"
+                    },
+                    {
+                        "branch_id": "BRANCH_GAMMA",
+                        "name": "Branch γ: Unchecked Wait in Congested Port Queue",
+                        "stratum": "Z = +2",
+                        "actions": ["Maintain Sea Freight Schedule", "Wait for Customs Backlog Clearance"],
+                        "projected_outcomes": {
+                            "production_downtime_loss_usd": 1200000,
+                            "business_disruption_score": "SEVERE (0.94)",
+                            "legal_liability_exposure": "CRITICAL (Automotive Factory Line Stoppage)",
+                            "euclidean_safety_distance": 0.93
+                        },
+                        "recommendation": "CATASTROPHIC_VETOED"
+                    }
+                ],
+                "temporal_horizons": {
+                    "h_plus_1h": "Air express carrier dispatched to secure essential semiconductor wafers.",
+                    "h_plus_24h": "Austin plant receives critical inventory without assembly line idle time.",
+                    "h_plus_7d": "Dual-sourcing supplier routing policies permanently updated in ERP master data."
+                }
+            }
+
+        # Default: Financial Forensics & Fraud Risk
         return {
             "incident_id": incident_id,
+            "domain": "Enterprise Financial Risk & Fraud Forensics",
             "lattice_theory": {
                 "meet_glwb": "Zetaris Data Fabric Invariants (SAP ERP, IAM, Coupa Contracts)",
                 "join_lub": "Synthesized Global Remediation State (Halt Wire + Rotate USR-9912)",

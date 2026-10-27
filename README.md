@@ -25,6 +25,16 @@ Modern enterprise risk management, cybersecurity incident response, and financia
 5. **Universal Protocol Nervous System:** Connects data via MCP ($Z=-1$), agent collaboration via A2A ($Z=0$), and human governance via AG-UI ($Z=+1$).
 6. **Zero-Config Instant Evaluation:** Built-in `SAMPLE_MODE=true` enables judges to clone and run the full non-linear investigation in seconds without private API keys.
 
+### 🌐 Universal Multi-Domain Adaptability Matrix
+SynapseReason is a foundational spatial reasoning architecture, not a narrow point solution. The 4 physical strata map seamlessly across multiple high-stakes enterprise domains:
+
+| Operating Domain | $Z = -1$ Ground Truth (Meet $\wedge$) | $Z = 0$ Tactical Swarm | $Z = +1$ Arbiter & Governance | $Z = +2$ Multiverse Branches | Primary Impact |
+|---|---|---|---|---|---|
+| **🛡️ Cybersecurity & Zero-Trust** | EDR Telemetry (CrowdStrike) ⨝ AWS CloudTrail ⨝ Okta Directory | Threat Intel ⟷ IAM Security ⟷ Network Forensics | NeMo Zero-Trust Guardrails + Budget Cap | Quarantine Pod vs Force Push MFA vs Passive Exfiltration | **$2.4M Breach Avoidance** |
+| **💻 Cloud SRE & Infra** | Kubernetes API ⨝ Prometheus Time-Series ⨝ GitOps Ledgers | SRE Lead ⟷ DB Replication ⟷ Traffic Routing | Blast-Radius Governor + SRE Safety Guardrails | Canary Rollback vs Scale Node 2x vs Total Cluster Outage | **99.99% Cluster SLA Preserved** |
+| **📦 Supply Chain & Logistics** | Customs Manifests ⨝ Carrier Bill of Lading ⨝ Warehouse ERP | Logistics Lead ⟷ Customs Officer ⟷ Supplier Arbiter | Tariff Cost Governor + Contract Penalty Monitor | Air Freight Diversion vs Secondary Port vs Line Stoppage | **$1.2M Idle Line Loss Saved** |
+| **💰 Financial Risk & Forensics** | SAP ERP Ledgers ⨝ Cloud Audit Logs ⨝ Coupa Contract Vault | SRE Health ⟷ Threat Intelligence ⟷ FinOps Treasury | NeMo Fraud Guardrails + Meterless Budget Cap | Kill Tor Session vs OOB Re-auth vs Fraudulent Wire Outflow | **$443K Protected Pre-Settlement** |
+
 ---
 
 ## 🌐 Underlying Protocol Nervous System (MCP + A2A + AG-UI)

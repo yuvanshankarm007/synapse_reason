@@ -47,17 +47,32 @@ class SynapseReasonEngine:
         self.execution_trace.append(entry)
         return entry
 
+    def _resolve_domain(self, domain: str, incident_id: str, alert_description: str) -> str:
+        if domain and domain.lower() in ("cybersecurity", "sre", "supply_chain", "finance_fraud"):
+            return domain.lower()
+        desc_lower = alert_description.lower()
+        inc_lower = incident_id.lower()
+        if any(k in inc_lower for k in ["sec", "iam"]) or any(k in desc_lower for k in ["privilege", "kms", "sts", "lateral", "exfiltration", "tor", "vpn", "mfa", "ransomware", "credential", "zero-trust"]):
+            return "cybersecurity"
+        if any(k in inc_lower for k in ["sre", "infra"]) or any(k in desc_lower for k in ["kafka", "microservice", "kubernetes", "pod", "node", "cpu", "memory leak", "outage", "latency", "crash", "cluster", "prometheus"]):
+            return "sre"
+        if any(k in inc_lower for k in ["log", "sc", "ship"]) or any(k in desc_lower for k in ["customs", "freight", "semiconductor", "supplier", "cargo", "warehouse", "port", "shipment"]):
+            return "supply_chain"
+        return "finance_fraud"
+
     def run_investigation(
         self,
         incident_id: str,
         alert_description: str,
-        callback: Optional[Callable[[Dict[str, Any]], None]] = None
+        callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+        domain: str = "auto"
     ) -> Dict[str, Any]:
         """
         Executes the non-linear reasoning loop with Planner, Executor, Evaluator,
         Dynamic Backtracking, Speculative Tool Concurrency, and Protocol Substrate.
         """
         self.execution_trace = []
+        active_domain = self._resolve_domain(domain, incident_id, alert_description)
         working_memory = WorkingMemory(incident_id=incident_id, trigger_alert=alert_description)
 
         # -------------------------------------------------------------
@@ -400,55 +415,183 @@ class SynapseReasonEngine:
         # -------------------------------------------------------------
         # STEP 7.5: 3D COGNITIVE LATTICE COUNTERFACTUAL MULTIVERSE SIMULATION (Z = +2)
         # -------------------------------------------------------------
-        lattice_sim = self.nvidia.simulate_counterfactual_lattice(incident_id, alert_description, working_memory.accumulated_evidence)
+        lattice_sim = self.nvidia.simulate_counterfactual_lattice(incident_id, alert_description, working_memory.accumulated_evidence, domain=active_domain)
 
         # -------------------------------------------------------------
         # STEP 8: AG-UI HUMAN-IN-THE-LOOP APPROVAL & REMEDIATION
         # -------------------------------------------------------------
-        final_actions = [
-            {
-                "priority": "P0_IMMEDIATE",
-                "action": "REVOKE_IAM_SESSION",
-                "target": "USR-9912 (r.chen@enterprise.internal)",
-                "reversible": True,
-                "reason": "Compromised Tor/VPN session detected; MFA bypassed.",
-                "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-            },
-            {
-                "priority": "P0_IMMEDIATE",
-                "action": "HALT_ACH_SETTLEMENT",
-                "target": "TX-90219 ($245,000.00) & TX-90221 ($198,000.00)",
-                "reversible": True,
-                "reason": "Prevent unrecoverable capital outflow to unauthorized routing 021000021.",
-                "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-            },
-            {
-                "priority": "P1_GOVERNANCE",
-                "action": "INITIATE_CLAWBACK_PROCESS",
-                "target": "TX-90214, TX-90215, TX-90216 (Total: $591,500.00)",
-                "reversible": False,
-                "reason": "Engage beneficiary bank for emergency SWIFT/Fedwire recall.",
-                "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-            },
-            {
-                "priority": "P2_VENDOR_QUARANTINE",
-                "action": "FREEZE_VENDOR_CONTRACT",
-                "target": "VND-8821 (Acrobatics Logistics LLC)",
-                "reversible": True,
-                "reason": "Bright Data indicated 89% shell company probability + contract cap breach.",
-                "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-            }
-        ]
+        if active_domain == "cybersecurity":
+            final_actions = [
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "REVOKE_STS_SESSION",
+                    "target": "iam-role/prod-service-principal",
+                    "reversible": True,
+                    "reason": "Compromised STS session token detected from Tor exit node; MFA bypassed.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "QUARANTINE_K8S_POD",
+                    "target": "pod/auth-gateway-node-7b",
+                    "reversible": True,
+                    "reason": "Isolate container to prevent lateral network reconnaissance across VPC.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P1_GOVERNANCE",
+                    "action": "ROTATE_KMS_MASTER_KEY",
+                    "target": "kms/key-prod-root-vault",
+                    "reversible": False,
+                    "reason": "Surge in decryption calls indicates cryptographic key exposure.",
+                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
+                },
+                {
+                    "priority": "P2_ZERO_TRUST",
+                    "action": "RESTRICT_VPC_SECURITY_GROUP",
+                    "target": "sg-09214b (Zero-Trust Egress Rules)",
+                    "reversible": True,
+                    "reason": "Enforce strict outbound whitelisting on production subnet.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                }
+            ]
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Irreversible Root KMS Key Rotation"
+            agui_gate_action = "ROTATE_KMS_MASTER_KEY"
+            capital_saved_usd = 2400000.00
+            capital_at_risk_recall_usd = 0.00
+            impact_headline = "Data Breach Avoided ($2.4M Risk Protected)"
 
-        # AG-UI Emit HITL Approval Gate for the high-risk clawback
+        elif active_domain == "sre":
+            final_actions = [
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "ROLLBACK_CANARY_DEPLOYMENT",
+                    "target": "service/auth-gateway:v2.5.0 -> v2.4.1",
+                    "reversible": True,
+                    "reason": "Memory leak and thread deadlock detected in newly deployed canary.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "DRAIN_KAFKA_PARTITIONS",
+                    "target": "topic/telemetry-events (Offset Reset)",
+                    "reversible": True,
+                    "reason": "Reset consumer group offset to eliminate 15k message processing backlog.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P1_GOVERNANCE",
+                    "action": "FORCE_CLUSTER_DRAIN_REBALANCE",
+                    "target": "node-pool/prod-us-east-1",
+                    "reversible": False,
+                    "reason": "Evacuate degraded worker nodes to restore 99.99% cluster SLA.",
+                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
+                },
+                {
+                    "priority": "P2_RELIABILITY",
+                    "action": "TRIP_CIRCUIT_BREAKER",
+                    "target": "gateway/downstream-payment-bridge",
+                    "reversible": True,
+                    "reason": "Prevent cascading retry storm during node drainage.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                }
+            ]
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Production Node Pool Drain & Rebalance"
+            agui_gate_action = "FORCE_CLUSTER_DRAIN_REBALANCE"
+            capital_saved_usd = 850000.00
+            capital_at_risk_recall_usd = 0.00
+            impact_headline = "Cascading Outage Halted (99.99% SLA Preserved)"
+
+        elif active_domain == "supply_chain":
+            final_actions = [
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "DIVERT_CARGO_TO_AIR_HUB",
+                    "target": "manifest/MNF-88214 (Frankfurt Air Logistics)",
+                    "reversible": True,
+                    "reason": "Maritime port customs bottleneck threatens assembly line continuity.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "ALLOCATE_SAFETY_BUFFER_INVENTORY",
+                    "target": "warehouse/WH-04-AUSTIN",
+                    "reversible": True,
+                    "reason": "Release 48-hour semiconductor reserve to prevent production stoppage.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P1_GOVERNANCE",
+                    "action": "INVOKE_FORCE_MAJEURE_PENALTY_WAIVER",
+                    "target": "contract/CTR-TIER1-SEMI",
+                    "reversible": False,
+                    "reason": "Declare documented logistics bottleneck to legally waive delayed delivery penalties.",
+                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
+                },
+                {
+                    "priority": "P2_LOGISTICS",
+                    "action": "QUARANTINE_SECONDARY_CARRIER",
+                    "target": "carrier/PACIFIC-VOYAGER-9",
+                    "reversible": True,
+                    "reason": "Unreliable transshipment routing violated procurement SLA.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                }
+            ]
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Contract Force Majeure Penalty Waiver"
+            agui_gate_action = "INVOKE_FORCE_MAJEURE_PENALTY_WAIVER"
+            capital_saved_usd = 1200000.00
+            capital_at_risk_recall_usd = 0.00
+            impact_headline = "Assembly Line Idle Prevented ($1.2M Saved)"
+
+        else: # finance_fraud
+            final_actions = [
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "REVOKE_IAM_SESSION",
+                    "target": "USR-9912 (r.chen@enterprise.internal)",
+                    "reversible": True,
+                    "reason": "Compromised Tor/VPN session detected; MFA bypassed.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P0_IMMEDIATE",
+                    "action": "HALT_ACH_SETTLEMENT",
+                    "target": "TX-90219 ($245,000.00) & TX-90221 ($198,000.00)",
+                    "reversible": True,
+                    "reason": "Prevent unrecoverable capital outflow to unauthorized routing 021000021.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                },
+                {
+                    "priority": "P1_GOVERNANCE",
+                    "action": "INITIATE_CLAWBACK_PROCESS",
+                    "target": "TX-90214, TX-90215, TX-90216 (Total: $591,500.00)",
+                    "reversible": False,
+                    "reason": "Engage beneficiary bank for emergency SWIFT/Fedwire recall.",
+                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
+                },
+                {
+                    "priority": "P2_VENDOR_QUARANTINE",
+                    "action": "FREEZE_VENDOR_CONTRACT",
+                    "target": "VND-8821 (Acrobatics Logistics LLC)",
+                    "reversible": True,
+                    "reason": "Bright Data indicated 89% shell company probability + contract cap breach.",
+                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
+                }
+            ]
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Irreversible SWIFT Wire Recall"
+            agui_gate_action = "INITIATE_CLAWBACK_PROCESS"
+            capital_saved_usd = 443000.00
+            capital_at_risk_recall_usd = 591500.00
+            impact_headline = "Capital Protected: $443,000 USD (Halted Live)"
+
+        # AG-UI Emit HITL Approval Gate
         agui_gate = self.ag_ui.emit_event(
             event_type="HITL_APPROVAL_GATE",
-            title="Human-in-the-Loop Sign-Off Required for Irreversible SWIFT Wire Recall",
+            title=agui_gate_title,
             content={
-                "action": "INITIATE_CLAWBACK_PROCESS",
-                "amount_usd": 591500.00,
-                "target_disbursements": ["TX-90214", "TX-90215", "TX-90216"],
-                "officer_action_needed": "Dual authorization required prior to SWIFT recall dispatch."
+                "action": agui_gate_action,
+                "domain": active_domain,
+                "officer_action_needed": "Dual authorization required prior to dispatch."
             },
             requires_human_approval=True
         )
@@ -487,6 +630,10 @@ class SynapseReasonEngine:
 
         return {
             "incident_id": incident_id,
+            "domain": active_domain,
+            "impact_headline": impact_headline,
+            "capital_saved_usd": capital_saved_usd,
+            "capital_at_risk_recall_usd": capital_at_risk_recall_usd,
             "status": "RESOLVED_VERIFIED",
             "working_memory": working_memory.get_summary_state(),
             "execution_trace": self.execution_trace,

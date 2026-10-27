@@ -143,31 +143,73 @@ with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
     st.success("🟢 Ready | 4-Stratum Lattice Online")
 
-# Top Investigation Target Selector (Curated Benchmarks vs Custom Ad-hoc Prompts)
-st.markdown("#### 🚨 Enterprise Incident Alert & Reasoning Target")
+# Universal Domain Architecture Lens & Target Selector
+st.markdown("#### 🌐 Cognitive Architecture Domain Lens")
 
-col_mode1, col_mode2 = st.columns([3, 1])
-with col_mode1:
-    input_mode = st.radio(
-        "Investigation Input Mode:",
-        ["🎯 Curated Benchmark Incidents (1-Click Evaluation)", "✍️ Custom Incident Prompt (Type Your Own Alert)"],
-        horizontal=True,
-        label_visibility="collapsed"
-    )
+domain_selection = st.radio(
+    "Select Operating Domain:",
+    [
+        "🛡️ Cybersecurity & Zero-Trust Defense",
+        "💻 Cloud Infrastructure & Autonomous SRE",
+        "📦 Supply Chain & Global Logistics",
+        "💰 Enterprise Financial Forensics & Risk",
+        "✍️ Universal Custom Domain (Type Anything)"
+    ],
+    horizontal=True,
+    index=3
+)
 
-if input_mode == "🎯 Curated Benchmark Incidents (1-Click Evaluation)":
-    scenario_option = st.selectbox(
-        "Choose an Enterprise Anomaly Benchmark:",
-        [
-            "INC-4491: High-Volume Disbursement Anomaly on Vendor VND-8821 with sequential rapid approvals",
-            "INC-8812: API Gateway High-Frequency Authorization Spikes on Foreign Nodes with anomalous bearer token reuse",
-            "INC-1092: Discrepancy between Coupa Procurement Contract Limits and Bank Settlement Feeds",
-            "INC-6024: Unauthorized IAM Privilege Escalation & KMS Key Decryption Surge on dormant role"
-        ]
-    )
-    incident_id = scenario_option.split(":")[0].strip()
-    alert_description = scenario_option.split(":")[1].strip()
-else:
+# Map radio option to engine domain key
+domain_key_map = {
+    "🛡️ Cybersecurity & Zero-Trust Defense": "cybersecurity",
+    "💻 Cloud Infrastructure & Autonomous SRE": "sre",
+    "📦 Supply Chain & Global Logistics": "supply_chain",
+    "💰 Enterprise Financial Forensics & Risk": "finance_fraud",
+    "✍️ Universal Custom Domain (Type Anything)": "custom"
+}
+selected_domain_key = domain_key_map[domain_selection]
+
+if selected_domain_key == "cybersecurity":
+    sec_options = [
+        "SEC-701: Lateral Privilege Escalation & KMS Key Decrypt Surge via Dormant Service Principal",
+        "SEC-409: Foreign Tor Egress and Session Cookie Replay Bypassing MFA on Cloud Console",
+        "SEC-902: Unauthorized AWS STS Token Minting and Direct S3 Bucket Exfiltration Spike"
+    ]
+    sec_choice = st.selectbox("Choose a Cybersecurity Threat Scenario Benchmark:", sec_options)
+    incident_id = sec_choice.split(":")[0].strip()
+    alert_description = sec_choice.split(":")[1].strip()
+
+elif selected_domain_key == "sre":
+    sre_options = [
+        "SRE-502: Cascading Microservice Crash Loops & Kafka Partition Consumer Lag on Primary Node",
+        "SRE-204: Database Connection Pool Exhaustion and Telemetry Pipeline Ingestion Stall",
+        "SRE-811: Kubernetes Ingress Controller 504 Gateway Timeout Surge with Node Memory Pressure"
+    ]
+    sre_choice = st.selectbox("Choose a Cloud SRE Infrastructure Benchmark:", sre_options)
+    incident_id = sre_choice.split(":")[0].strip()
+    alert_description = sre_choice.split(":")[1].strip()
+
+elif selected_domain_key == "supply_chain":
+    log_options = [
+        "LOG-304: Critical Tier-1 Semiconductor Shipment Routing Discrepancy & Port Customs Hold",
+        "LOG-102: Cross-Border Air Cargo Delay with Safety Stock Depletion in Austin Assembly Plant",
+        "LOG-605: Supplier Bill of Lading Discrepancy and Counterparty Warehouse Insolvency Alert"
+    ]
+    log_choice = st.selectbox("Choose a Supply Chain & Logistics Benchmark:", log_options)
+    incident_id = log_choice.split(":")[0].strip()
+    alert_description = log_choice.split(":")[1].strip()
+
+elif selected_domain_key == "finance_fraud":
+    fin_options = [
+        "INC-4491: High-Volume Disbursement Anomaly on Vendor VND-8821 with sequential rapid approvals",
+        "INC-8812: API Gateway High-Frequency Authorization Spikes on Foreign Nodes with bearer token reuse",
+        "INC-1092: Discrepancy between Coupa Procurement Contract Limits and Bank Settlement Feeds"
+    ]
+    fin_choice = st.selectbox("Choose a Financial Risk & Fraud Forensics Benchmark:", fin_options)
+    incident_id = fin_choice.split(":")[0].strip()
+    alert_description = fin_choice.split(":")[1].strip()
+
+else: # Universal Custom Domain
     col_c1, col_c2 = st.columns([1, 3])
     with col_c1:
         custom_id = st.text_input(
@@ -208,7 +250,7 @@ else:
     incident_id = custom_id.strip() if custom_id.strip() else "INC-CUSTOM-001"
     alert_description = custom_desc.strip() if custom_desc.strip() else "Custom anomaly prompt"
 
-st.caption(f"🎯 **Target Incident:** `{incident_id}` &mdash; *{alert_description}*")
+st.caption(f"🎯 **Target Incident [{domain_selection}]:** `{incident_id}` &mdash; *{alert_description}*")
 
 # Run Investigation Trigger
 col_btn, col_info = st.columns([1, 3])
@@ -223,7 +265,8 @@ if run_clicked or "last_result" in st.session_state:
             engine = SynapseReasonEngine()
             result = engine.run_investigation(
                 incident_id=incident_id,
-                alert_description=alert_description
+                alert_description=alert_description,
+                domain=selected_domain_key
             )
             st.session_state["last_result"] = result
     else:
@@ -238,7 +281,8 @@ if run_clicked or "last_result" in st.session_state:
     with m1:
         st.metric("Reasoning Status", "VERIFIED & RESOLVED", delta="Conclusive")
     with m2:
-        st.metric("Capital Protected", "$443,000 USD", delta="Halted Live")
+        impact_text = result.get("impact_headline", "Verified & Resolved")
+        st.metric("Domain Impact", impact_text[:28] + ("..." if len(impact_text) > 28 else ""), delta="Mitigated")
     with m3:
         st.metric("Total Tokens Metered", f"{meterless_data['total_tokens']:,}")
     with m4:
@@ -302,6 +346,46 @@ if run_clicked or "last_result" in st.session_state:
               `{lattice_meta.get('join_lub', 'Synthesized Global Remediation State')}`
             * **Epistemic Distance Vectors ($\\Delta Z$)**:  
               SRE: `0.03` | SEC: `0.02` | FIN: `0.04` | Anomaly: `0.94 (Critical)`
+
+        st.markdown("---")
+        st.markdown("##### 🌐 Universal Multi-Domain Adaptability Matrix")
+        st.caption("SynapseReason is a foundational spatial reasoning architecture. The 4 physical strata map seamlessly to any high-stakes enterprise domain:")
+        
+        matrix_df = pd.DataFrame([
+            {
+                "Operating Domain": "🛡️ Cybersecurity & Zero-Trust",
+                "Z = -1 Ground Truth (Meet ∧)": "EDR Telemetry (CrowdStrike) ⨝ AWS CloudTrail ⨝ Okta Directory",
+                "Z = 0 Swarm Specialists": "Threat Intel ⟷ IAM Security ⟷ Network Forensics",
+                "Z = +1 Arbiter & Governance": "NeMo Policy Guardrails + Zero-Trust Budget Cap",
+                "Z = +2 Multiverse Branching": "Quarantine Pod vs Force Push MFA vs Passive Exfiltration",
+                "Impact Scope": "$2.4M Breach Avoidance"
+            },
+            {
+                "Operating Domain": "💻 Cloud SRE & Infrastructure",
+                "Z = -1 Ground Truth (Meet ∧)": "Kubernetes API ⨝ Prometheus Time-Series ⨝ GitOps Commit Ledgers",
+                "Z = 0 Swarm Specialists": "SRE Lead ⟷ DB Replication Specialist ⟷ Traffic Routing",
+                "Z = +1 Arbiter & Governance": "Blast-Radius Governor + SRE Safety Guardrails",
+                "Z = +2 Multiverse Branching": "Canary Rollback vs Node Scale 2x vs Total Cluster Outage",
+                "Impact Scope": "99.99% SLA Preserved"
+            },
+            {
+                "Operating Domain": "📦 Supply Chain & Logistics",
+                "Z = -1 Ground Truth (Meet ∧)": "Customs Manifests ⨝ Carrier Bill of Lading ⨝ Warehouse ERP",
+                "Z = 0 Swarm Specialists": "Logistics Lead ⟷ Customs Compliance ⟷ Supplier Arbiter",
+                "Z = +1 Arbiter & Governance": "Tariff Cost Governor + Contract Penalty Monitor",
+                "Z = +2 Multiverse Branching": "Air Freight Diversion vs Secondary Port vs Line Stoppage",
+                "Impact Scope": "$1.2M Idle Line Saved"
+            },
+            {
+                "Operating Domain": "💰 Enterprise Financial Forensics",
+                "Z = -1 Ground Truth (Meet ∧)": "SAP ERP Ledgers ⨝ Cloud Audit Access ⨝ Coupa Contract Vault",
+                "Z = 0 Swarm Specialists": "SRE Health ⟷ Threat Intelligence ⟷ FinOps Treasury",
+                "Z = +1 Arbiter & Governance": "NeMo Fraud Guardrails + Meterless Budget Cap",
+                "Z = +2 Multiverse Branching": "Kill Tor Session vs OOB Re-auth vs Fraudulent Wire Outflow",
+                "Impact Scope": "$443K Protected Live"
+            }
+        ])
+        st.dataframe(matrix_df, use_container_width=True, hide_index=True)
             """)
 
     # TAB 1: COGNITIVE TRACE
