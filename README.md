@@ -8,7 +8,7 @@
 [![NVIDIA NIM & NeMo](https://img.shields.io/badge/Reasoning%20Core-NVIDIA%20NIM%20%26%20NeMo-76B900.svg)](SPONSORS.md#3-nvidia)
 [![Bright Data Intelligence](https://img.shields.io/badge/Web%20Intelligence-Bright%20Data-0070F3.svg)](SPONSORS.md#4-bright-data)
 [![IDE: Developed with Cursor](https://img.shields.io/badge/Built%20With-Cursor%20AI-blue.svg)](.cursorrules)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE)
 
 ---
 
@@ -70,9 +70,9 @@ Unlike traditional agent pipelines where information flows strictly one way (suc
 flowchart LR
     User(["👤 Human Risk Officer"]) <-->|AG-UI Full-Duplex Stream| Arbiter{{"⚖️ Simultaneous Consensus Arbiter"}}
     
-    Arbiter <-->|A2A Broadcast / Backward Feedback| SRE["💻 SRE Agent<br><i>Replication & DB Health</i>"]
-    Arbiter <-->|A2A Broadcast / Backward Feedback| SEC["🛡️ Security Agent<br><i>IAM & Tor Access</i>"]
-    Arbiter <-->|A2A Broadcast / Backward Feedback| FIN["💰 FinOps Agent<br><i>Contracts & Routing</i>"]
+    Arbiter <-->|A2A Broadcast / Backward Feedback| SRE["💻 SRE Agent - Replication & DB Health"]
+    Arbiter <-->|A2A Broadcast / Backward Feedback| SEC["🛡️ Security Agent - IAM & Tor Access"]
+    Arbiter <-->|A2A Broadcast / Backward Feedback| FIN["💰 FinOps Agent - Contracts & Routing"]
     
     SRE <-->|MCP Federated SQL| Zetaris[("🌐 Zetaris Data Fabric")]
     SEC <-->|MCP Federated SQL| Zetaris
@@ -131,38 +131,36 @@ flowchart TD
     classDef backtrack fill:#FEE2E2,stroke:#DC2626,stroke-width:2px;
     classDef gov fill:#DCFCE7,stroke:#16A34A,stroke-width:2px;
 
-    Alert["🚨 Enterprise Incident Alert<br><b>INC-4491: High-Volume Disbursement Spike</b>"] --> Step1
+    Alert["Enterprise Incident Alert: INC-4491 High-Volume Disbursement Spike"] --> Step1
     
-    subgraph S1 ["Step 1: Context Seeding"]
-        Step1["🧠 Episodic Memory Recall<br><i>Matches past precedent EP-2025-089</i>"]:::memory
-    end
+    Step1["Step 1: Context Seeding - Episodic Memory Recall (Precedent EP-2025-089)"]:::memory
+    Step1 --> Step2
     
-    subgraph S2 ["Step 2: Tree Formulation"]
-        Step1 --> Step2["📋 Planner (NVIDIA NIM via A2A)<br>Formulate Competing Hypotheses Tree<br><b>H1: DB Sync Lag | H2: Session Hijack</b>"]:::planner
-    end
+    Step2["Step 2: Tree Formulation - Planner (NVIDIA NIM via A2A) H1 vs H2"]:::planner
+    Step2 -->|A2A Task Delegation| Step3
     
-    subgraph S3 ["Step 3: Null Hypothesis Execution"]
-        Step2 -->|A2A Task Delegation| Step3["⚡ Executor: Zetaris Query via MCP<br><i>mcp://zetaris/federated_sql</i>"]:::executor
-    end
+    Step3["Step 3: Null Hypothesis Execution - Zetaris MCP Query (mcp://zetaris/federated_sql)"]:::executor
+    Step3 --> Step4
     
-    subgraph S4 ["Step 4: Critique & Backtracking"]
-        Step3 --> Step4["🔍 NeMo Critic Agent (A2A Dispute)<br><b>H1 Refuted: 0ms CDC delay</b>"]:::critic
-        Step4 -->|Branch Pruned| Step4B["↺ Dynamic Backtracking<br><b>Pivot to Hypothesis H2</b>"]:::backtrack
-    end
+    Step4["Step 4: Critique & Backtracking - NeMo Critic Refutes H1 (0ms CDC Delay)"]:::critic
+    Step4 -->|Branch Pruned| Step4B
     
-    subgraph S5 ["Step 5: Deep Cross-Silo Correlation"]
-        Step4B --> Step5["🌐 Zetaris 3-Silo Federated Join (MCP)<br><i>ERP ⨝ CloudTrail ⨝ Contracts</i>"]:::executor
-        Step5 --> Step6["🌐 Bright Data External Intel (MCP)<br><i>Scrape Cyprus Company Registry: 89% Shell</i>"]:::executor
-    end
+    Step4B["Step 4B: Dynamic Backtracking - Immediate Pivot to Hypothesis H2"]:::backtrack
+    Step4B --> Step5
     
-    subgraph S6 ["Step 6: Evidence Verification"]
-        Step6 --> Step7["🛡️ NVIDIA NeMo Guardrail<br><b>Grounding Score: 94% | Safety Verified</b>"]:::critic
-    end
+    Step5["Step 5: Deep Correlation - Zetaris 3-Silo Join (ERP + CloudTrail + Contracts)"]:::executor
+    Step5 --> Step6
     
-    subgraph S7 ["Step 7: Governance & HITL Approval"]
-        Step7 --> Step8["⚡ Meterless Cost Audit<br><i>2,846 Tokens | $0.00824 Cost | 1.65% Budget</i>"]:::gov
-        Step8 --> Action["✅ Verified Remediation Executed<br><b>Halted $443,000 ACH Outflow | AG-UI Signoff</b>"]:::gov
-    end
+    Step6["Step 6: External Intelligence - Bright Data OSINT Scrape (89% Shell Company)"]:::executor
+    Step6 --> Step7
+    
+    Step7["Step 7: Evidence Verification - NVIDIA NeMo Guardrail (94% Grounding Score)"]:::critic
+    Step7 --> Step8
+    
+    Step8["Step 8: Governance & Cost Audit - Meterless (2,846 Tokens / $0.00824 USD)"]:::gov
+    Step8 --> Action
+    
+    Action["Remediation Executed: Halted $443,000 ACH Outflow (AG-UI Human Gate)"]:::gov
 ```
 
 ---
@@ -268,7 +266,6 @@ synapse_reason/
         ├── mcp_server.py      # Anthropic Model Context Protocol (MCP) tool registry
         ├── a2a_agent_cards.py # Google Agent2Agent (A2A) with Signed Agent Cards
         └── ag_ui_stream.py    # CopilotKit Agent-User Interaction Protocol (AG-UI)
-        └── ag_ui_stream.py    # CopilotKit Agent-User Interaction Protocol (AG-UI)
 ```
 
 ---
@@ -285,4 +282,4 @@ synapse_reason/
 ---
 
 ## ⚖️ License
-MIT License. Created by Yuvan for Open Agent Hackathon 2026.
+[PolyForm Noncommercial License 1.0.0](LICENSE). Free for open inspection, study, research, and hackathon evaluation. Commercial use requires prior written permission or a commercial license from Yuvan Shankar (`yuvanshankar.m007@gmail.com`).
