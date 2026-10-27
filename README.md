@@ -211,6 +211,14 @@ python -m streamlit run app.py
 python cli.py
 ```
 
+### 5. Run Automated Verification & Resilience Test Suite
+```bash
+python test_edge_cases.py      # 10-point comprehensive edge-case resilience suite (100% pass)
+python test_engine.py          # Core non-linear reasoning loop test
+python test_mesh.py            # Bi-directional multi-agent mesh consensus test
+python benchmark_architecture.py # MCP query cache & speculative concurrency benchmark
+```
+
 ---
 
 ## 🤝 Sponsor Technologies Integrated
@@ -231,30 +239,38 @@ Detailed documentation and code locations available in [**`SPONSORS.md`**](SPONS
 synapse_reason/
 ├── .cursorrules               # Cursor AI rules enforcing non-linear reasoning & protocols
 ├── .env.example               # Clean environment variable template
+├── AGENTS.md                  # Meterless AGENTS.md open specification conformance
 ├── README.md                  # Flagship hackathon README with Mermaid diagram & scoring
 ├── SPONSORS.md                # Comprehensive Sponsor Technology Explanation
 ├── SLIDES.md                  # 8-Slide presentation deck script
 ├── DEMO_VIDEO_SCRIPT.md       # 2.5-minute video recording script
 ├── requirements.txt           # Minimal, conflict-free dependencies
 ├── config.py                  # Runtime configuration (SAMPLE_MODE & live keys)
-├── app.py                     # Streamlit interactive dashboard & trace viewer
+├── app.py                     # Streamlit 9-tab interactive dashboard & trace viewer
 ├── cli.py                     # Standalone CLI runner with UTF-8 safe logs
-├── test_engine.py             # Rapid test verification script
+├── test_edge_cases.py         # 10-point comprehensive resilience test suite (100% pass)
+├── test_engine.py             # Rapid non-linear engine verification script
+├── test_mesh.py               # Bi-directional multi-agent mesh consensus test
+├── benchmark_architecture.py  # MCP cache & speculative concurrency benchmark
 ├── data/                      # 3 enterprise silos + episodic memory
 │   ├── erp_transactions.csv   # SAP S/4HANA financial disbursements
 │   ├── cloud_audit_logs.json  # AWS CloudTrail & Okta authentication logs
 │   ├── vendor_contracts.json  # Coupa procurement SLA limits & verified bank routing
 │   └── episodic_memory.json   # Persistent historical incident case bank
 └── core/                      # Cognitive engine modules
-    ├── memory.py              # Working Memory scratchpad + Episodic Case Store
+    ├── memory.py              # Working Memory + Episodic Case Store + Reflexion Deltas
     ├── zetaris_federator.py   # Zetaris Data Virtualization & Federated SQL engine
-    ├── meterless_governor.py  # Meterless real-time token, cost & budget governance
+    ├── meterless_governor.py  # Meterless Scout Intent, H-MEM Pyramid & Cost Governance
     ├── nvidia_engine.py       # NVIDIA NIM reasoning & NeMo Guardrails critic
     ├── brightdata_tool.py     # Bright Data external intelligence scraper
     ├── reasoning_engine.py    # Non-linear Planner <-> Executor <-> Evaluator graph
+    ├── mesh_synthesizer.py    # Bi-Directional Multi-Agent Mesh & Consensus Arbiter
+    ├── render_swarm_observatory.py # Concept 1: Three.js WebGL 3D Swarm Observatory
+    ├── render_3d_lattice.py   # Concept 2: 4-Stratum Cognitive Lattice Engine
     └── protocols/             # The GenAI Works 2026 Tri-Protocol Stack
         ├── mcp_server.py      # Anthropic Model Context Protocol (MCP) tool registry
         ├── a2a_agent_cards.py # Google Agent2Agent (A2A) with Signed Agent Cards
+        └── ag_ui_stream.py    # CopilotKit Agent-User Interaction Protocol (AG-UI)
         └── ag_ui_stream.py    # CopilotKit Agent-User Interaction Protocol (AG-UI)
 ```
 

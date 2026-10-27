@@ -187,17 +187,15 @@ if run_clicked or "last_result" in st.session_state:
         cache_metrics = result.get("mcp_cache_metrics", {"hit_rate_pct": 0.0})
         st.metric("MCP Cache Hits", f"{cache_metrics['hit_rate_pct']}%", delta="79% Faster")
 
-    # Main Tabs
-    tab_lattice, tab_trace, tab_3d, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
-        "🌌 3D Holographic Cognitive Lattice",
-        "🔬 Cognitive Trace & Backtracking Graph",
-        "🪐 3D Swarm Observatory (Cyclic Mesh)",
-        "🕸️ Bi-Directional Mesh & Consensus Arbiter",
-        "🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)",
-        "🌐 Zetaris Data Fabric Virtualization",
-        "⚡ Meterless Token & Cost Telemetry",
-        "🛡️ Remediation Action Center",
-        "💾 Dual Memory & Case Recall"
+    # Main Tabs - Unified Cognitive Lattice Framework
+    tab_lattice, tab_trace, tab_swarm, tab_fabric, tab_meterless, tab_actions, tab_memory = st.tabs([
+        "🌌 3D Cognitive Lattice",
+        "🔬 Non-Linear Reasoning Trace",
+        "👥 Dynamic Agent Swarm & Dialectical Consensus",
+        "🌐 Virtual Ground-Truth Data Fabric",
+        "⚡ Token & Cost Governance",
+        "🛡️ Autonomous Remediation Center",
+        "💾 Episodic Memory & Case Precedents"
     ])
 
     # TAB: 3D HOLOGRAPHIC COGNITIVE LATTICE (Z-AXIS REASONING STRATA)
@@ -236,11 +234,11 @@ if run_clicked or "last_result" in st.session_state:
             st.markdown("##### ⚖️ Breakthrough 3: Order-Theoretic Lattice")
             lattice_meta = result.get("counterfactual_lattice", {}).get("lattice_theory", {})
             st.markdown(f"""
-            * **Meet ($\wedge$, Greatest Lower Bound)**:  
+            * **Meet ($\\wedge$, Greatest Lower Bound)**:  
               `{lattice_meta.get('meet_glwb', 'Zetaris Ground Truth Invariants')}`
-            * **Join ($\vee$, Least Upper Bound)**:  
+            * **Join ($\\vee$, Least Upper Bound)**:  
               `{lattice_meta.get('join_lub', 'Synthesized Global Remediation State')}`
-            * **Epistemic Distance Vectors ($\Delta Z$)**:  
+            * **Epistemic Distance Vectors ($\\Delta Z$)**:  
               SRE: `0.03` | SEC: `0.02` | FIN: `0.04` | Anomaly: `0.94 (Critical)`
             """)
 

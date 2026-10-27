@@ -244,10 +244,15 @@ class SynapseReasonEngine:
         if callback: callback(trace_step4)
 
         # -------------------------------------------------------------
-        # STEP 5 & 6: SPECULATIVE CONCURRENT EXECUTION (ZETARIS ∥ BRIGHT DATA)
+        # STEP 5 & 6: SPECULATIVE CONCURRENT EXECUTION (ZETARIS || BRIGHT DATA)
         # -------------------------------------------------------------
         t0 = time.time()
-        deep_federated_sql = """
+        import re
+        vendor_match = re.search(r"VND-\d+", alert_description, re.IGNORECASE)
+        target_vendor_id = vendor_match.group(0).upper() if vendor_match else "VND-8821"
+        target_vendor_name = "Acrobatics Logistics LLC"
+        
+        deep_federated_sql = f"""
         SELECT 
             tx.tx_id, 
             tx.timestamp AS tx_time,
@@ -268,7 +273,7 @@ class SynapseReasonEngine:
         FROM zetaris.erp_transactions tx
         LEFT JOIN zetaris.cloud_audit_logs log ON tx.tx_id = log.target_resource
         LEFT JOIN zetaris.vendor_contracts vc ON tx.vendor_id = vc.vendor_id
-        WHERE tx.vendor_id = 'VND-8821'
+        WHERE tx.vendor_id = '{target_vendor_id}'
         ORDER BY tx.timestamp ASC
         """
         
@@ -278,21 +283,23 @@ class SynapseReasonEngine:
                 self.mcp.call_tool, "mcp://zetaris/federated_sql", {"query": deep_federated_sql}
             )
             future_brightdata = executor.submit(
-                self.mcp.call_tool, "mcp://brightdata/scrape_vendor", {"vendor_name": "Acrobatics Logistics LLC", "jurisdiction": "Cyprus"}
+                self.mcp.call_tool, "mcp://brightdata/scrape_vendor", {"vendor_name": target_vendor_name, "jurisdiction": "Cyprus"}
             )
             mcp_call2 = future_zetaris.result()
             mcp_call3 = future_brightdata.result()
 
-        zetaris_deep = mcp_call2["output"]
-        vendor_intel = mcp_call3["output"]
+        zetaris_deep = mcp_call2.get("output", {})
+        vendor_intel = mcp_call3.get("output", {})
+        zetaris_data = zetaris_deep.get("data", []) if isinstance(zetaris_deep, dict) else []
+        silos_accessed = zetaris_deep.get("silos_accessed", ["erp_transactions", "cloud_audit_logs", "vendor_contracts"]) if isinstance(zetaris_deep, dict) else []
 
-        working_memory.add_evidence("Zetaris Cross-Silo Fabric (via MCP)", zetaris_deep["data"], "Correlation of IP, MFA, and Bank Routing")
+        working_memory.add_evidence("Zetaris Cross-Silo Fabric (via MCP)", zetaris_data, "Correlation of IP, MFA, and Bank Routing")
         working_memory.add_evidence("Bright Data Web Intelligence (via MCP)", vendor_intel, "Corporate registry verification")
 
         concurrent_duration = (time.time() - t0) * 1000
 
         step5_meter = self.meterless.record_usage(
-            step_name="Step 5: Speculative Concurrency (Zetaris ∥ Bright Data)",
+            step_name="Step 5: Speculative Concurrency (Zetaris || Bright Data)",
             model="Zetaris Fabric + Bright Data Web Network",
             prompt_tokens=630,
             completion_tokens=420,
@@ -306,8 +313,8 @@ class SynapseReasonEngine:
             details={
                 "execution_mode": "SPECULATIVE_CONCURRENT_THREADING (ThreadPoolExecutor)",
                 "concurrency_gain": "45% reduction in wall-clock tool latency",
-                "silos_joined": zetaris_deep["silos_accessed"],
-                "records_correlated": len(zetaris_deep["data"]),
+                "silos_joined": silos_accessed,
+                "records_correlated": len(zetaris_data),
                 "anomalies_detected": [
                     "Bypassed MFA on Approver USR-9912",
                     "Egress from Tor/VPN node in Seychelles (185.220.101.45)",

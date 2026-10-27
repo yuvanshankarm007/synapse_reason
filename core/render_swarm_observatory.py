@@ -237,10 +237,32 @@ def generate_swarm_observatory_html(height=600):
         </div>
 
         <script>
-            // Scene, Camera, Renderer Setup
+            // Offline / CDN Availability Fallback Guard
             const container = document.getElementById('canvas-container');
-            const scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x020617, 0.0018);
+            if (typeof THREE === 'undefined') {{
+                container.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#94a3b8; text-align:center; padding:30px; background:#070a13;">
+                        <div style="font-size:3rem; margin-bottom:12px;">🌌</div>
+                        <h3 style="color:#38bdf8; font-size:1.3rem; margin-bottom:8px;">3D Neural Swarm Observatory (Three.js WebGL)</h3>
+                        <p style="max-width:550px; font-size:0.88rem; line-height:1.6; color:#cbd5e1; margin-bottom:16px;">
+                            WebGL 3D engine loads Three.js via CDN for 60 FPS GPU rendering. When running in strictly air-gapped / offline environments, you can switch to the <b>4-Stratum Cognitive Lattice</b> view which runs 100% locally with zero external CDN dependencies.
+                        </p>
+                        <div style="display:inline-flex; gap:12px; background:rgba(30,41,59,0.7); border:1px solid rgba(56,189,248,0.3); padding:10px 18px; border-radius:8px; font-size:0.8rem;">
+                            <span style="color:#38bdf8;">⚡ Core: Nemotron (0,0,0)</span>
+                            <span style="color:#a855f7;">🌐 Fabric: Zetaris (Z=-1)</span>
+                            <span style="color:#22c55e;">🛡️ Guardrail: NeMo (Z=+1)</span>
+                            <span style="color:#f59e0b;">🔮 Counterfactual: (Z=+2)</span>
+                        </div>
+                    </div>
+                `;
+            }} else {{
+                initSwarmObservatory();
+            }}
+
+            function initSwarmObservatory() {{
+                // Scene, Camera, Renderer Setup
+                const scene = new THREE.Scene();
+                scene.fog = new THREE.FogExp2(0x020617, 0.0018);
 
             const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
             camera.position.set(0, 180, 420);
@@ -633,6 +655,7 @@ def generate_swarm_observatory_html(height=600):
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             }});
+        }}
         </script>
     </body>
     </html>

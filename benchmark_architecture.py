@@ -5,6 +5,13 @@ Compares Cold vs Warm Cached Runs, Concurrency Latency, and Reflexion Delta Prun
 import time
 import sys
 from pathlib import Path
+
+if sys.platform.startswith("win"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from core.reasoning_engine import SynapseReasonEngine
@@ -21,10 +28,10 @@ def run_benchmark():
     cold_time = (time.time() - t0) * 1000
     
     print(f"\n[Run 1 - Cold / Initial Execution]")
-    print(f"  • Latency:          {cold_time:.2f} ms")
-    print(f"  • MCP Cache Stats:  {res1['mcp_cache_metrics']}")
-    print(f"  • Meterless Tokens: {res1['meterless_audit']['total_tokens']}")
-    print(f"  • Meterless Cost:   ${res1['meterless_audit']['total_cost_usd']}")
+    print(f"  * Latency:          {cold_time:.2f} ms")
+    print(f"  * MCP Cache Stats:  {res1['mcp_cache_metrics']}")
+    print(f"  * Meterless Tokens: {res1['meterless_audit']['total_tokens']}")
+    print(f"  * Meterless Cost:   ${res1['meterless_audit']['total_cost_usd']}")
 
     # Run 2: Warm execution (MCP memoization cache active)
     t1 = time.time()
@@ -32,10 +39,10 @@ def run_benchmark():
     warm_time = (time.time() - t1) * 1000
 
     print(f"\n[Run 2 - Warm / MCP Cached Execution]")
-    print(f"  • Latency:          {warm_time:.2f} ms")
-    print(f"  • MCP Cache Stats:  {res2['mcp_cache_metrics']}")
-    print(f"  • Latency Reduction:{((cold_time - warm_time) / cold_time * 100):.1f}% faster")
-    print(f"  • MCP Cache Hits:   {res2['mcp_cache_metrics']['hits']} / {res2['mcp_cache_metrics']['hits'] + res2['mcp_cache_metrics']['misses']} ({res2['mcp_cache_metrics']['hit_rate_pct']}%)")
+    print(f"  * Latency:          {warm_time:.2f} ms")
+    print(f"  * MCP Cache Stats:  {res2['mcp_cache_metrics']}")
+    print(f"  * Latency Reduction:{((cold_time - warm_time) / cold_time * 100):.1f}% faster")
+    print(f"  * MCP Cache Hits:   {res2['mcp_cache_metrics']['hits']} / {res2['mcp_cache_metrics']['hits'] + res2['mcp_cache_metrics']['misses']} ({res2['mcp_cache_metrics']['hit_rate_pct']}%)")
     print("=" * 60)
 
 if __name__ == "__main__":

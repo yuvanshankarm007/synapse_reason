@@ -127,12 +127,16 @@ class EpisodicMemory:
         matches = []
         cand_lower = candidate_hypothesis.lower()
         for p in self.refuted_patterns:
-            if "replication" in cand_lower or "sync" in cand_lower:
+            h_type = p.get("hypothesis_type", "").lower()
+            if h_type in cand_lower or cand_lower in h_type or "replication" in cand_lower or "sync" in cand_lower:
                 matches.append(p)
         return matches
 
     def record_causal_refutation(self, hypothesis_type: str, condition: str, lesson: str):
         """Stores Reflexion Causal Delta to prevent future redundant exploration"""
+        for p in self.refuted_patterns:
+            if p.get("hypothesis_type") == hypothesis_type and p.get("disproving_condition") == condition:
+                return
         self.refuted_patterns.append({
             "hypothesis_type": hypothesis_type,
             "disproving_condition": condition,
@@ -140,7 +144,16 @@ class EpisodicMemory:
         })
 
     def record_new_case(self, new_case: Dict[str, Any]):
-        self.cases.append(new_case)
+        case_id = new_case.get("case_id")
+        existing_idx = None
+        for i, c in enumerate(self.cases):
+            if c.get("case_id") == case_id:
+                existing_idx = i
+                break
+        if existing_idx is not None:
+            self.cases[existing_idx] = new_case
+        else:
+            self.cases.append(new_case)
         try:
             with open(self.memory_file, "w", encoding="utf-8") as f:
                 json.dump(self.cases, f, indent=2)

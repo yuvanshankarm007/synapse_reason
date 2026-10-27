@@ -98,7 +98,10 @@ class MCPToolRegistry:
         # Cache Miss - Execute Handler
         self.cache_stats["misses"] += 1
         handler = self.tools[tool_uri]["handler"]
-        result = handler(arguments)
+        try:
+            result = handler(arguments)
+        except Exception as e:
+            result = {"status": "ERROR", "error": str(e), "data": [], "row_count": 0}
         duration_ms = (time.time() - t_start) * 1000
 
         if use_cache:
@@ -108,10 +111,11 @@ class MCPToolRegistry:
                 "original_duration_ms": duration_ms
             }
 
+        is_error = isinstance(result, dict) and result.get("status") == "ERROR"
         return {
             "protocol": "MCP (Model Context Protocol)",
             "tool_uri": tool_uri,
-            "status": "SUCCESS",
+            "status": "ERROR" if is_error else "SUCCESS",
             "from_cache": False,
             "cache_hit": False,
             "output": result
