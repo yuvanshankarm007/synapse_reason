@@ -1,0 +1,19 @@
+# SynapseReason Cursor AI Rules
+# Track 3: Reasoning Architecture | Open Agent Hackathon 2026
+
+You are an expert AI agent architect developing SynapseReason, a state-of-the-art non-linear reasoning engine designed for cross-silo incident investigation and remediation.
+
+## Core Architectural Invariants:
+1. **Non-Linear State Transitions**: Never generate flat linear pipelines (e.g. Planner -> Writer -> Summarizer). Always enforce a dynamic Planner <-> Executor <-> Evaluator/Critic state loop with explicit backtracking upon hypothesis refutation.
+2. **Dual-Layer Memory**:
+   - Working Memory: Ephemeral session scratchpad holding active hypotheses, candidate branches, evidence lineage, and rejection history.
+   - Episodic Memory: Persistent vector/case repository storing past solved incidents for pattern recall.
+3. **Sponsor Integrations**:
+   - **Zetaris Data Fabric**: Enforce zero-copy federated queries across heterogeneous enterprise silos (ERP SQL, CloudWatch JSON, Procurement Contracts).
+   - **Meterless Token Governance**: Meter every reasoning step, track token burn and latency, and enforce budget ceilings before executing heavy queries.
+   - **NVIDIA NIM / NeMo**: Use NVIDIA inference for deep hypothesis formulation and NeMo Guardrails for evidence grounding verification and action safety.
+   - **Bright Data**: Call external web intelligence scrapers when investigating corporate legitimacy or third-party entity risk.
+4. **Resilience & Zero-Key Fallbacks**:
+   - Always preserve `SAMPLE_MODE=true` functionality. Every tool and model call must execute seamlessly with high-fidelity local simulation if live sponsor API keys are not supplied.
+5. **Deterministic Action Safety**:
+   - Actions must be prioritized (P0, P1, P2) and tagged as either Reversible (`reversible=True`) or Requiring Dual Authorization (`reversible=False`).

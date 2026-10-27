@@ -1,0 +1,79 @@
+[
+  {
+    "case_id": "EP-2025-089",
+    "incident_type": "SESSION_HIJACK_CREDENTIAL_STUFFING",
+    "description": "Unauthorized finance approval from foreign exit node with disabled MFA. Attacker initiated multiple disbursements just under auto-freeze thresholds.",
+    "key_indicators": [
+      "non_mfa_login",
+      "tor_vpn_ip",
+      "rapid_successive_disbursements",
+      "unregistered_bank_routing"
+    ],
+    "resolution_playbook": "IMMEDIATE_SESSION_REVOCATION_AND_ACH_REVERSAL",
+    "confirmed_root_cause": "Session token stolen via info-stealer malware on approver workstation."
+  },
+  {
+    "case_id": "EP-2025-114",
+    "incident_type": "DATABASE_REPLICATION_SYNC_LAG",
+    "description": "Apparent discrepancy where transactions appeared in ERP but were missing in the clearinghouse ledger. Initially suspected data corruption or rogue insertion.",
+    "key_indicators": [
+      "replica_lag_seconds_high",
+      "consistent_mfa_login",
+      "known_office_ip",
+      "valid_po_hash"
+    ],
+    "resolution_playbook": "NO_ACTION_WAIT_FOR_REPLICA_CATCHUP",
+    "confirmed_root_cause": "Cross-region network partition delayed CDC pipeline by 14 minutes."
+  },
+  {
+    "case_id": "EP-2026-031",
+    "incident_type": "VENDOR_INVOICING_DUPLICATION",
+    "description": "Automated billing retry loop re-submitted identical batch payments after transient HTTP 504 timeout.",
+    "key_indicators": [
+      "identical_idempotency_key",
+      "same_vendor_id",
+      "identical_subsecond_timestamps"
+    ],
+    "resolution_playbook": "MERGE_DUPLICATES_AND_ISSUE_CREDIT_MEMO",
+    "confirmed_root_cause": "Misconfigured webhook retry policy without exponential backoff."
+  },
+  {
+    "case_id": "EP-2026-4491",
+    "incident_type": "SESSION_HIJACK_AND_SHELL_VENDOR_FRAUD",
+    "description": "Resolved anomaly for INC-4491. Verified routing diversion and Tor login.",
+    "key_indicators": [
+      "tor_vpn_ip",
+      "mfa_bypassed",
+      "contract_cap_exceeded",
+      "bank_routing_mismatch"
+    ],
+    "resolution_playbook": "IMMEDIATE_SESSION_REVOCATION_AND_ACH_HALT",
+    "confirmed_root_cause": "Session token compromise combined with rogue vendor disbursement submission."
+  },
+  {
+    "case_id": "EP-2026-4491",
+    "incident_type": "SESSION_HIJACK_AND_SHELL_VENDOR_FRAUD",
+    "description": "Resolved anomaly for INC-4491. Verified routing diversion and Tor login.",
+    "key_indicators": [
+      "tor_vpn_ip",
+      "mfa_bypassed",
+      "contract_cap_exceeded",
+      "bank_routing_mismatch"
+    ],
+    "resolution_playbook": "IMMEDIATE_SESSION_REVOCATION_AND_ACH_HALT",
+    "confirmed_root_cause": "Session token compromise combined with rogue vendor disbursement submission."
+  },
+  {
+    "case_id": "EP-2026-4491",
+    "incident_type": "SESSION_HIJACK_AND_SHELL_VENDOR_FRAUD",
+    "description": "Resolved anomaly for INC-4491. Verified routing diversion and Tor login.",
+    "key_indicators": [
+      "tor_vpn_ip",
+      "mfa_bypassed",
+      "contract_cap_exceeded",
+      "bank_routing_mismatch"
+    ],
+    "resolution_playbook": "IMMEDIATE_SESSION_REVOCATION_AND_ACH_HALT",
+    "confirmed_root_cause": "Session token compromise combined with rogue vendor disbursement submission."
+  }
+]

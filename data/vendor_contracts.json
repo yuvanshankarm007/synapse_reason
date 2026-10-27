@@ -1,0 +1,54 @@
+[
+  {
+    "vendor_id": "VND-8821",
+    "legal_name": "Acrobatics Logistics LLC",
+    "contract_status": "PROBATIONARY",
+    "registered_country": "Cyprus",
+    "single_tx_limit_usd": 50000.00,
+    "monthly_cap_usd": 100000.00,
+    "verified_bank_routing": "011000015",
+    "verified_bank_account_last4": "1199",
+    "tax_id": "CY-9948201",
+    "onboarding_date": "2026-08-15",
+    "risk_score": 78
+  },
+  {
+    "vendor_id": "VND-1044",
+    "legal_name": "CloudScale Infrastructure Inc.",
+    "contract_status": "ACTIVE_VERIFIED",
+    "registered_country": "United States",
+    "single_tx_limit_usd": 250000.00,
+    "monthly_cap_usd": 1000000.00,
+    "verified_bank_routing": "121000358",
+    "verified_bank_account_last4": "4019",
+    "tax_id": "US-4491029",
+    "onboarding_date": "2023-01-10",
+    "risk_score": 12
+  },
+  {
+    "vendor_id": "VND-5519",
+    "legal_name": "Global Secure Systems Corp.",
+    "contract_status": "ACTIVE_VERIFIED",
+    "registered_country": "United Kingdom",
+    "single_tx_limit_usd": 500000.00,
+    "monthly_cap_usd": 2000000.00,
+    "verified_bank_routing": "111000025",
+    "verified_bank_account_last4": "9102",
+    "tax_id": "GB-2291040",
+    "onboarding_date": "2024-05-19",
+    "risk_score": 15
+  },
+  {
+    "vendor_id": "VND-7711",
+    "legal_name": "OfficeWorld Supplies Ltd.",
+    "contract_status": "ACTIVE_VERIFIED",
+    "registered_country": "United States",
+    "single_tx_limit_usd": 10000.00,
+    "monthly_cap_usd": 30000.00,
+    "verified_bank_routing": "026009593",
+    "verified_bank_account_last4": "3310",
+    "tax_id": "US-1192834",
+    "onboarding_date": "2021-03-01",
+    "risk_score": 5
+  }
+]

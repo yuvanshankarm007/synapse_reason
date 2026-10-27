@@ -1,0 +1,81 @@
+[
+  {
+    "event_id": "EVT-880192",
+    "timestamp": "2026-10-27T03:55:12Z",
+    "user_id": "USR-9912",
+    "user_email": "r.chen@enterprise.internal",
+    "action": "IAM.AssumeRole",
+    "role_arn": "arn:aws:iam::882019:role/FinanceDisbursementApprover",
+    "source_ip": "185.220.101.45",
+    "geo_country": "Seychelles",
+    "is_vpn_or_tor": true,
+    "mfa_authenticated": false,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0",
+    "status": "SUCCESS"
+  },
+  {
+    "event_id": "EVT-880205",
+    "timestamp": "2026-10-27T04:11:50Z",
+    "user_id": "USR-9912",
+    "user_email": "r.chen@enterprise.internal",
+    "action": "ERP.ApproveDisbursement",
+    "target_resource": "TX-90214",
+    "source_ip": "185.220.101.45",
+    "geo_country": "Seychelles",
+    "is_vpn_or_tor": true,
+    "mfa_authenticated": false,
+    "status": "SUCCESS"
+  },
+  {
+    "event_id": "EVT-880220",
+    "timestamp": "2026-10-27T04:35:10Z",
+    "user_id": "USR-9912",
+    "user_email": "r.chen@enterprise.internal",
+    "action": "ERP.ApproveDisbursement",
+    "target_resource": "TX-90215",
+    "source_ip": "185.220.101.45",
+    "geo_country": "Seychelles",
+    "is_vpn_or_tor": true,
+    "mfa_authenticated": false,
+    "status": "SUCCESS"
+  },
+  {
+    "event_id": "EVT-880244",
+    "timestamp": "2026-10-27T05:00:55Z",
+    "user_id": "USR-9912",
+    "user_email": "r.chen@enterprise.internal",
+    "action": "ERP.ApproveDisbursement",
+    "target_resource": "TX-90216",
+    "source_ip": "185.220.101.45",
+    "geo_country": "Seychelles",
+    "is_vpn_or_tor": true,
+    "mfa_authenticated": false,
+    "status": "SUCCESS"
+  },
+  {
+    "event_id": "EVT-880310",
+    "timestamp": "2026-10-27T06:12:00Z",
+    "user_id": "USR-3301",
+    "user_email": "d.miller@enterprise.internal",
+    "action": "ERP.ApproveDisbursement",
+    "target_resource": "TX-90217",
+    "source_ip": "198.51.100.22",
+    "geo_country": "United States",
+    "is_vpn_or_tor": false,
+    "mfa_authenticated": true,
+    "status": "SUCCESS"
+  },
+  {
+    "event_id": "EVT-880402",
+    "timestamp": "2026-10-27T07:11:05Z",
+    "user_id": "USR-9912",
+    "user_email": "r.chen@enterprise.internal",
+    "action": "ERP.ApproveDisbursement",
+    "target_resource": "TX-90219",
+    "source_ip": "185.220.101.45",
+    "geo_country": "Seychelles",
+    "is_vpn_or_tor": true,
+    "mfa_authenticated": false,
+    "status": "SUCCESS"
+  }
+]
