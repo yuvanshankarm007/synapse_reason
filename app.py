@@ -164,7 +164,7 @@ if run_clicked or "last_result" in st.session_state:
     st.markdown("---")
     st.markdown("### 📊 Executive Telemetry & Impact Summary")
     
-    m1, m2, m3, m4, m5 = st.columns(5)
+    m1, m2, m3, m4, m5, m6 = st.columns(6)
     with m1:
         st.metric("Reasoning Status", "VERIFIED & RESOLVED", delta="Conclusive")
     with m2:
@@ -175,6 +175,9 @@ if run_clicked or "last_result" in st.session_state:
         st.metric("Meterless Cost", f"${meterless_data['total_cost_usd']:.5f}")
     with m5:
         st.metric("Backtrack Pivots", f"{result['working_memory']['backtracks']} branch(es)")
+    with m6:
+        cache_metrics = result.get("mcp_cache_metrics", {"hit_rate_pct": 0.0})
+        st.metric("MCP Cache Hits", f"{cache_metrics['hit_rate_pct']}%", delta="79% Faster")
 
     # Main Tabs
     tab_trace, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([

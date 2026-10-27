@@ -2,6 +2,7 @@
 Shared Memory Architecture for Track 3:
 1. Working Memory (Active session scratchpad, branch history, hypothesis state, rejection logs)
 2. Episodic Memory (Historical incident cases, anomaly patterns, precedent recall)
+3. Reflexion Causal Delta Memory (Negative precedents, refuted hypothesis patterns)
 """
 import json
 from typing import List, Dict, Any, Optional
@@ -80,10 +81,18 @@ class WorkingMemory:
 
 
 class EpisodicMemory:
-    """Persistent Case Memory for Precedent Retrieval & Pattern Learning"""
+    """Persistent Case Memory & Reflexion Causal Delta Memory"""
     def __init__(self, memory_file: Optional[str] = None):
         self.memory_file = memory_file or (DATA_DIR / "episodic_memory.json")
         self.cases: List[Dict[str, Any]] = self._load()
+        # Reflexion Negative Delta Buffer (Refuted Hypothesis Knowledge)
+        self.refuted_patterns: List[Dict[str, Any]] = [
+            {
+                "hypothesis_type": "DATABASE_REPLICATION_SYNC_LAG",
+                "disproving_condition": "0ms CDC pipeline lag and sequential real-time timestamps",
+                "counterfactual_lesson": "Do not treat high-value sequential settlement queues as sync lag if writing node is healthy."
+            }
+        ]
 
     def _load(self) -> List[Dict[str, Any]]:
         try:
@@ -112,6 +121,23 @@ class EpisodicMemory:
 
         scored_cases.sort(key=lambda x: x[0], reverse=True)
         return [c for score, c in scored_cases[:limit] if score > 0] or self.cases[:limit]
+
+    def recall_causal_refutations(self, candidate_hypothesis: str) -> List[Dict[str, Any]]:
+        """Reflexion Retrieval: returns known failure conditions for a hypothesis type"""
+        matches = []
+        cand_lower = candidate_hypothesis.lower()
+        for p in self.refuted_patterns:
+            if "replication" in cand_lower or "sync" in cand_lower:
+                matches.append(p)
+        return matches
+
+    def record_causal_refutation(self, hypothesis_type: str, condition: str, lesson: str):
+        """Stores Reflexion Causal Delta to prevent future redundant exploration"""
+        self.refuted_patterns.append({
+            "hypothesis_type": hypothesis_type,
+            "disproving_condition": condition,
+            "counterfactual_lesson": lesson
+        })
 
     def record_new_case(self, new_case: Dict[str, Any]):
         self.cases.append(new_case)
