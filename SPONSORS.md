@@ -5,22 +5,22 @@ SynapseReason was engineered from Day 1 around the unified synergies of **Zetari
 
 ---
 
-## 1. 🌐 Zetaris: Networked Data Virtualization Fabric
+## 1. 🌐 Zetaris: AI Data Harness & AgentFlow Virtualization
 - **The Problem:** Modern enterprise risk investigations fail because data is locked in disparate silos (SAP ERP SQL tables, AWS CloudTrail JSON access streams, Coupa procurement contract registries). Centralizing this data in batch ETL pipelines takes hours or days, causing millions in delayed fraud losses.
 - **Architectural Role in SynapseReason:**
-  - Zetaris serves as the **unified virtual data fabric** for the agent.
-  - Rather than copying data, the agent issues zero-copy federated SQL queries that span ERP transactions, IAM audit logs, and vendor registries in real time.
+  - **Zetaris AI Data Harness:** Serves as the **in-place data virtualization harness** for the agent. Instead of moving or copying data, the agent queries heterogeneous enterprise databases right where they live.
+  - **Zetaris AgentFlow:** Connects our specialized autonomous sub-agents directly to distributed network data nodes with custom row-level access control policies.
   - **Code Implementation:** Implemented in [`core/zetaris_federator.py`](core/zetaris_federator.py). The agent invokes `execute_federated_query()` to execute cross-silo SQL joins (`erp_transactions` ⨝ `cloud_audit_logs` ⨝ `vendor_contracts`) on demand during hypothesis testing.
 
 ---
 
-## 2. ⚡ Meterless: Real-Time Token & Cost Governance Engine
-- **The Problem:** Unbounded agent loops, repeated retries, and high-depth reasoning trees can rapidly incur runaway cloud and LLM API costs. Autonomous agents in production require hard budget ceilings and financial observability.
+## 2. ⚡ Meterless: Context Engines (Scout Intent + H-MEM + Cost Governance)
+- **The Problem:** Unbounded agent loops, repeated retries, and high-depth reasoning trees can rapidly incur runaway cloud and LLM API costs. Autonomous agents in production require hard budget ceilings, intent verification, and hierarchical memory.
 - **Architectural Role in SynapseReason:**
-  - Meterless provides **step-by-step token and financial governance** across the reasoning graph.
-  - Every hypothesis formulated, federated query executed, and guardrail check performed is metered in real-time with exact USD cost attribution.
-  - If reasoning cost approaches the pre-configured budget ceiling (e.g. `$0.50`), Meterless flags a throttle alert and directs the Planner to execute lean heuristic fallback paths.
-  - **Code Implementation:** Implemented in [`core/meterless_governor.py`](core/meterless_governor.py). Generates a complete cryptographic-grade audit receipt in Step 8.
+  - **Scout Intent Engine:** Classifies raw alert signals, assesses risk tiers (P0/P1), and issues **signed execution contracts** before any tool is triggered.
+  - **H-MEM (Hierarchical Memory Pyramid):** Employs a 3-tier memory pyramid (short-term buffer, working memory scratchpad, and long-term episodic storage with cryptographic provenance hashes).
+  - **Cost & Token Governance:** Meters every hypothesis formulated, federated query executed, and guardrail check performed in real-time with exact USD cost attribution and hard budget ceiling enforcement ($0.50 cap).
+  - **Code Implementation:** Implemented in [`core/meterless_governor.py`](core/meterless_governor.py). Conforms to the open [`AGENTS.md`](AGENTS.md) specification.
 
 ---
 
