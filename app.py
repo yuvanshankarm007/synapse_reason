@@ -102,9 +102,53 @@ st.markdown("""
 with st.sidebar:
     st.image("https://img.shields.io/badge/Track_3-Reasoning_Architecture-blueviolet?style=for-the-badge", use_container_width=True)
     st.title("Lattice Control")
-    st.markdown("**Open Agent Hackathon 2026**")
-    st.caption("Organized by GenAI Works")
+    st.markdown("**Open Agent Hackathon 2026** &mdash; *GenAI Works*")
     
+    st.markdown("---")
+    # ⚙️ RUNTIME PARAMETERS (Moved to Top for Easy Visibility)
+    st.markdown("### ⚙️ Runtime Parameters")
+    execution_mode = st.radio(
+        "Execution Mode:",
+        [
+            "🟢 SAMPLE_MODE (Zero-Keys / Judge Instant)",
+            "⚡ LIVE_MODE (NVIDIA NIM Live API)"
+        ],
+        index=0 if config.SAMPLE_MODE else 1,
+        help="SAMPLE_MODE runs zero-key deterministic simulations for hackathon judges. LIVE_MODE connects to live NVIDIA NIM cloud endpoints."
+    )
+    config.SAMPLE_MODE = "SAMPLE_MODE" in execution_mode
+    
+    if not config.SAMPLE_MODE:
+        st.info("⚡ **Live Cloud Mode Enabled:** Engine queries live NVIDIA NIM endpoints (`https://integrate.api.nvidia.com/v1`).")
+        user_api_key = st.text_input(
+            "NVIDIA NIM API Key:",
+            value=config.NVIDIA_API_KEY,
+            type="password",
+            placeholder="nvapi-...",
+            help="Paste your personal NVIDIA NIM API key here (or store in .env)."
+        )
+        if user_api_key:
+            config.NVIDIA_API_KEY = user_api_key.strip()
+            os.environ["NVIDIA_API_KEY"] = user_api_key.strip()
+        
+        has_valid_key = bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY)
+        if has_valid_key:
+            st.success("🔑 Live NIM API Key Verified")
+        else:
+            st.warning("⚠️ No `nvapi-` key detected. Live calls will fallback to local core if unauthenticated.")
+    else:
+        st.success("🟢 **Sample Mode Active:** 100% reproducible, zero-setup, instant evaluations for hackathon judges.")
+
+    budget_cap = st.slider(
+        "Meterless Budget Cap ($ USD):",
+        min_value=0.10,
+        max_value=2.00,
+        value=float(config.METERLESS_BUDGET_CAP_USD),
+        step=0.05,
+        help="Hard spending limit per reasoning investigation enforced by Meterless."
+    )
+    config.METERLESS_BUDGET_CAP_USD = budget_cap
+
     st.markdown("---")
     st.subheader("🌌 4-Stratum Lattice Space")
     st.markdown("""
@@ -122,18 +166,6 @@ with st.sidebar:
     - **AG-UI**: Full-duplex human approval gates
     """)
 
-    st.markdown("---")
-    st.subheader("⚙️ Runtime Parameters")
-    execution_mode = st.radio(
-        "Execution Mode",
-        ["SAMPLE_MODE (Zero-Keys / Judge Instant)", "LIVE_MODE (NVIDIA NIM Live API)"],
-        index=0
-    )
-    config.SAMPLE_MODE = "SAMPLE_MODE" in execution_mode
-    
-    budget_cap = st.slider("Meterless Budget Cap ($ USD)", min_value=0.10, max_value=2.00, value=0.50, step=0.05)
-    config.METERLESS_BUDGET_CAP_USD = budget_cap
-
 # Header Banner
 col_h1, col_h2 = st.columns([3, 1])
 with col_h1:
@@ -141,7 +173,8 @@ with col_h1:
     st.markdown('<div class="sub-header">3D Cognitive Lattice Architecture & Autonomous Remediation</div>', unsafe_allow_html=True)
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
-    st.success("🟢 Ready | 4-Stratum Lattice Online")
+    mode_badge = "🟢 SAMPLE MODE (Zero-Key)" if config.SAMPLE_MODE else "⚡ LIVE NIM API"
+    st.success(f"{mode_badge} | Online")
 
 # Universal Domain Architecture Lens & Target Selector
 st.markdown("#### 🌐 Cognitive Architecture Domain Lens")
