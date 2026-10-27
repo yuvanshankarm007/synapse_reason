@@ -16,6 +16,11 @@ sys.path.insert(0, str(BASE_DIR))
 
 from core.reasoning_engine import SynapseReasonEngine
 from core.zetaris_federator import ZetarisFederator
+from core.mesh_synthesizer import BiDirectionalMeshSynthesizer
+from core.protocols.mcp_server import MCPToolRegistry
+from core.protocols.a2a_agent_cards import A2AOrchestrator
+from core.meterless_governor import MeterlessGovernor
+from core.brightdata_tool import BrightDataScraper
 import config
 
 # Page Configuration
@@ -180,8 +185,9 @@ if run_clicked or "last_result" in st.session_state:
         st.metric("MCP Cache Hits", f"{cache_metrics['hit_rate_pct']}%", delta="79% Faster")
 
     # Main Tabs
-    tab_trace, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
+    tab_trace, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
         "🔬 Cognitive Trace & Backtracking Graph",
+        "🕸️ Bi-Directional Mesh & Consensus Arbiter",
         "🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)",
         "🌐 Zetaris Data Fabric Virtualization",
         "⚡ Meterless Token & Cost Telemetry",
@@ -207,6 +213,73 @@ if run_clicked or "last_result" in st.session_state:
             with st.expander(f"Step {step['step_number']} [{step_type}]: {step['title']}", expanded=True):
                 st.markdown(f'<span class="{badge_class}">{step_type}</span> &nbsp; <b>Time:</b> {step["timestamp"]}', unsafe_allow_html=True)
                 st.json(step["details"])
+
+    # TAB: BI-DIRECTIONAL MESH & SIMULTANEOUS ARBITER
+    with tab_mesh:
+        st.markdown("#### 🕸️ Bi-Directional Multi-Agent Mesh with Simultaneous Synthesis")
+        st.info("💡 **Unlike traditional architectures where data flows one way (DAG or Linear Chains)**, this architecture broadcasts tasks across multiple agents in parallel, employs a simultaneous arbiter tool to cross-examine outputs in flight, and routes bi-directional feedback loops *backward* to refute hypotheses without restarting.")
+
+        st.markdown("##### 📐 Bi-Directional Mesh Topology (Non-DAG):")
+        st.code("""
+flowchart LR
+    User(["👤 Human Risk Officer"]) <-->|AG-UI Full Duplex| Arbiter{{"⚖️ Simultaneous Consensus Arbiter"}}
+    
+    Arbiter <-->|A2A Task / Feedback| SRE["💻 SRE Agent (Replication Health)"]
+    Arbiter <-->|A2A Task / Feedback| SEC["🛡️ Security Agent (IAM & Tor Access)"]
+    Arbiter <-->|A2A Task / Feedback| FIN["💰 FinOps Agent (Contracts & Routing)"]
+    
+    SRE <-->|MCP Federated Queries| Zetaris[("🌐 Zetaris Data Fabric")]
+    SEC <-->|MCP Federated Queries| Zetaris
+    FIN <-->|MCP OSINT Scrapes| BrightData[("🌐 Bright Data Network")]
+        """, language="mermaid")
+
+        # Live Mesh Execution
+        zetaris_mesh = ZetarisFederator()
+        brightdata_mesh = BrightDataScraper()
+        mcp_mesh = MCPToolRegistry(zetaris_mesh, brightdata_mesh)
+        a2a_mesh = A2AOrchestrator()
+        meterless_mesh = MeterlessGovernor()
+        mesh_synthesizer = BiDirectionalMeshSynthesizer(mcp_mesh, a2a_mesh, meterless_mesh)
+        
+        mesh_res = mesh_synthesizer.execute_mesh_consensus(incident_id, alert_description)
+
+        col_m1, col_m2, col_m3 = st.columns(3)
+        with col_m1:
+            st.metric("Agents Fanned Out", mesh_res["agents_consulted"])
+        with col_m2:
+            st.metric("Bi-Directional Loops", f"{mesh_res['bi_directional_feedback_loops']} loop(s)")
+        with col_m3:
+            st.metric("Consensus Score", f"{int(mesh_res['consensus_score'] * 100)}%")
+
+        st.markdown("##### 👥 Parallel Fanned-Out Agent Perspectives:")
+        c_p1, c_p2, c_p3 = st.columns(3)
+        with c_p1:
+            p_sre = mesh_res["agent_perspectives"][0]
+            st.markdown(f"**💻 {p_sre['name']}**")
+            st.caption(f"Domain: {p_sre['domain']}")
+            st.write(f"*Status:* `{p_sre['hypothesis']}`")
+            st.write(f"*Confidence:* **{int(p_sre['initial_confidence']*100)}%**")
+        with c_p2:
+            p_sec = mesh_res["agent_perspectives"][1]
+            st.markdown(f"**🛡️ {p_sec['name']}**")
+            st.caption(f"Domain: {p_sec['domain']}")
+            st.write(f"*Hypothesis:* {p_sec['hypothesis']}")
+            st.write(f"*Confidence:* **{int(p_sec['initial_confidence']*100)}%**")
+        with c_p3:
+            p_fin = mesh_res["agent_perspectives"][2]
+            st.markdown(f"**💰 {p_fin['name']}**")
+            st.caption(f"Domain: {p_fin['domain']}")
+            st.write(f"*Hypothesis:* {p_fin['hypothesis']}")
+            st.write(f"*Confidence:* **{int(p_fin['initial_confidence']*100)}%**")
+
+        st.markdown("##### 🔄 Bi-Directional Disproving Feedback Loops (Backward Flow):")
+        for fb in mesh_res["bi_directional_feedback"]:
+            st.warning(f"**Backward Feedback $\\rightarrow$ `{fb['target_agent']}`**: {fb['feedback_type']} | {fb['counter_evidence']}")
+
+        st.markdown("##### 🏆 Compiled Unified Consensus Decision:")
+        st.success(mesh_res["unified_root_cause"])
+        st.markdown("**Synthesized Action Plan:**")
+        st.dataframe(pd.DataFrame(mesh_res["actions_compiled"]), use_container_width=True)
 
     # TAB 2: TRI-PROTOCOL STACK (MCP + A2A + AG-UI)
     with tab_protocols:
