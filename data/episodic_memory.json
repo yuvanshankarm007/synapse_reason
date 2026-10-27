@@ -39,16 +39,15 @@
   },
   {
     "case_id": "EP-2026-CUSTOM-702",
-    "incident_type": "SESSION_HIJACK_AND_SHELL_VENDOR_FRAUD",
-    "description": "Resolved anomaly for INC-CUSTOM-702. Verified routing diversion and Tor login.",
+    "incident_type": "SYSTEMIC_STRUCTURAL_ALIGNMENT",
+    "description": "Resolved anomaly for INC-CUSTOM-702: where should I go to watch latest movies",
     "key_indicators": [
-      "tor_vpn_ip",
-      "mfa_bypassed",
-      "contract_cap_exceeded",
-      "bank_routing_mismatch"
+      "domain_general_research",
+      "backtrack_verified",
+      "nemo_grounded"
     ],
-    "resolution_playbook": "IMMEDIATE_SESSION_REVOCATION_AND_ACH_HALT",
-    "confirmed_root_cause": "Session token compromise combined with rogue vendor disbursement submission."
+    "resolution_playbook": "AUTONOMOUS_GENERAL_RESEARCH_PLAYBOOK",
+    "confirmed_root_cause": "Empirical literature synthesis for 'where should I go to watch latest movies' demonstrates that passive status quo inertia fails to resolve multi-vari"
   },
   {
     "case_id": "EP-2026-4491",
@@ -84,7 +83,7 @@
       "nemo_grounded"
     ],
     "resolution_playbook": "AUTONOMOUS_GENERAL_RESEARCH_PLAYBOOK",
-    "confirmed_root_cause": "Empirical literature synthesis for '' demonstrates that passive status quo inertia fails to resolve multi-variable dependencies. Optimal trajectory ac"
+    "confirmed_root_cause": "In direct response to '': The optimal approach is to break down your core constraints (time, budget, preferences), benchmark verified primary options "
   },
   {
     "case_id": "EP-2026-INV-50-STOCK",
@@ -96,7 +95,7 @@
       "nemo_grounded"
     ],
     "resolution_playbook": "AUTONOMOUS_FINANCE_INVESTMENT_PLAYBOOK",
-    "confirmed_root_cause": "Empirical financial data conclusively refutes investing \u20b950 in speculative penny stocks due to 91.8% historical ruin probability and 15\u201330% brokerage "
+    "confirmed_root_cause": "Empirical financial data conclusively refutes investing micro-capital (such as \u20b950) in speculative penny stocks due to 91.8% historical ruin probabili"
   },
   {
     "case_id": "EP-2026-MENTAL-101",
@@ -136,8 +135,20 @@
   },
   {
     "case_id": "EP-2026-CUSTOM-CLI",
+    "incident_type": "SYSTEMIC_STRUCTURAL_ALIGNMENT",
+    "description": "Resolved anomaly for INC-CUSTOM-CLI: what is the best strategy to organize a hackathon team",
+    "key_indicators": [
+      "domain_general_research",
+      "backtrack_verified",
+      "nemo_grounded"
+    ],
+    "resolution_playbook": "AUTONOMOUS_GENERAL_RESEARCH_PLAYBOOK",
+    "confirmed_root_cause": "In direct response to 'what is the best strategy to organize a hackathon team': The optimal approach is to break down your core constraints (time, bud"
+  },
+  {
+    "case_id": "EP-2026-INV-101",
     "incident_type": "MICRO_CAPITAL_ALLOCATION_STRATEGY",
-    "description": "Resolved anomaly for INC-CUSTOM-CLI: which stocks should I invest in with 50 rupees",
+    "description": "Resolved anomaly for INV-101: Which stocks or assets should I invest in with 50 rupees (Micro-Capital Allocati",
     "key_indicators": [
       "domain_finance_investment",
       "backtrack_verified",

@@ -80,8 +80,8 @@ def main():
     print("=" * 80)
     for act in result["actions"]:
         print(f"  [{act['priority']}] {act['action']} -> {act['target']}")
-        print(f"       Reason: {act['reason']}")
-        print(f"       Reversible: {act['reversible']}\n")
+        print(f"       Reason: {act.get('reason', '')}")
+        print(f"       Reversible: {act.get('reversible', True)}\n")
 
     audit = result["meterless_audit"]
     print("-" * 80)

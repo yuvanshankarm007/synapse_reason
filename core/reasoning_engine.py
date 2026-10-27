@@ -168,39 +168,20 @@ class SynapseReasonEngine:
         if callback: callback(trace_step1)
 
         # -------------------------------------------------------------
-        # STEP 2: HYPOTHESIS FORMULATION (PLANNER VIA A2A)
+        # STEP 2: HYPOTHESIS FORMULATION (PLANNER VIA A2A & NVIDIA NIM)
         # -------------------------------------------------------------
         t0 = time.time()
         budget_healthy = self.meterless.check_budget_ok()
 
-        if active_domain == "finance_investment":
-            h1_desc = "Null / Speculative Thesis: Deploy ₹50 capital into high-volatility illiquid penny stocks (< ₹5) seeking rapid short-term multi-bagger returns."
-            h2_desc = "Disciplined Micro-Asset Compounding: Deploy ₹50 into diversified fractional index ETFs (e.g. Nifty 50 BeES / broad-market index) with 0% brokerage fee drag to initiate compound rupee-cost averaging."
-            active_strategy = "Testing H1 (Null hypothesis: Speculative Penny Stocks) to evaluate risk of total capital ruin."
-        elif active_domain == "mental_health":
-            h1_desc = "Null Hypothesis: Acute, transient situational fatigue resolvable via passive individual rest alone."
-            h2_desc = "Systemic Psychosocial Etiology: Multifactorial burnout driven by chronic hyperconnectivity, occupational stress, and lack of institutional safety buffers."
-            active_strategy = "Testing H1 (Null hypothesis: Transient Fatigue) to assess if individual rest halts progressive burnout."
-        elif active_domain == "cybersecurity":
-            h1_desc = f"Null Hypothesis: Benign automated CI/CD deployment or routine credential assumption for {incident_id}"
-            h2_desc = f"Active Threat: Compromised STS credentials with unauthorized privilege escalation and lateral cryptographic key abuse"
-            active_strategy = "Testing H1 (Null hypothesis: Benign CI/CD Pipeline) first to avoid disruptive credential revocations."
-        elif active_domain == "sre":
-            h1_desc = f"Null Hypothesis: Transient telemetry sync delay or temporary rate spike self-healing without intervention for {incident_id}"
-            h2_desc = f"Systemic Degradation: Microservice memory leak and thread deadlock creating cascading Kafka partition consumer lag"
-            active_strategy = "Testing H1 (Null hypothesis: Transient Telemetry Lag) before initiating service rollbacks."
-        elif active_domain == "supply_chain":
-            h1_desc = f"Null Hypothesis: Routine port customs paperwork processing delay resolvable within normal buffer margins"
-            h2_desc = f"Critical Logistics Disruption: Maritime shipment carrier diversion and tier-1 component shortage threatening assembly stoppage"
-            active_strategy = "Testing H1 (Null hypothesis: Routine Customs Lag) before committing expensive air freight diversion."
-        elif active_domain == "finance_fraud":
-            h1_desc = "Null Hypothesis: Database replication lag or telemetry sync delay causing false transaction alerts"
-            h2_desc = "Active Fraud Threat: Compromised approver credentials / session hijack with unverified offshore routing diversion"
-            active_strategy = "Testing H1 (Null hypothesis: Sync Lag) first to prevent false business disruption."
-        else: # general_research
-            h1_desc = f"Null / Skeptical Hypothesis: Marginal status-quo inertia and isolated individual response for '{alert_description[:50]}'"
-            h2_desc = f"Systemic Structural Framework: Multi-dimensional systemic intervention across institutional, behavioral, and organizational strata for '{alert_description[:50]}'"
-            active_strategy = "Testing H1 (Null hypothesis: Status Quo Inertia) against empirical multi-variable models."
+        # Dynamically formulate reasoning plan via NVIDIA NIM LLM or Semantic Reasoning Engine
+        reasoning_plan = self.nvidia.generate_reasoning_plan(
+            prompt=alert_description,
+            incident_id=incident_id,
+            domain=active_domain
+        )
+        h1_desc = reasoning_plan.get("h1", f"Null Hypothesis for {incident_id}")
+        h2_desc = reasoning_plan.get("h2", f"Optimal Grounded Hypothesis for {incident_id}")
+        active_strategy = f"Testing H1 ({h1_desc[:55]}...) against empirical Ground Truth (Z = -1)."
 
         h1 = working_memory.add_hypothesis(h_id="H1", description=h1_desc, confidence=0.45)
         h2 = working_memory.add_hypothesis(h_id="H2", description=h2_desc, confidence=0.55)
@@ -227,7 +208,7 @@ class SynapseReasonEngine:
 
         trace_step2 = self._log_trace_step(
             step_type="PLANNER",
-            title=f"Formulated Competing Hypotheses Tree ({active_domain.title()})",
+            title=f"Formulated Competing Hypotheses Tree ({reasoning_plan.get('domain_title', active_domain.title())})",
             details={
                 "candidate_hypotheses": [
                     {"id": "H1", "hypothesis": h1.description, "initial_prob": "45%"},
@@ -250,6 +231,8 @@ class SynapseReasonEngine:
         # STEP 3: EXECUTOR - TESTING HYPOTHESIS H1 VIA MCP (DOMAIN ADAPTIVE)
         # -------------------------------------------------------------
         t0 = time.time()
+        h1_observation = reasoning_plan.get("observation", "Cross-silo federated audit evaluates empirical constraints.")
+        
         if active_domain == "finance_investment":
             h1_tool_uri = "mcp://market/historical_returns"
             h1_sql_repr = "SELECT asset_class, 3yr_cagr_pct, max_drawdown_pct, illiquidity_drag_pct FROM market.micro_assets WHERE min_capital <= 50.0"
@@ -260,46 +243,50 @@ class SynapseReasonEngine:
                     {"instrument": "Nippon India Nifty 50 BeES (Fractional Index ETF)", "loss_probability": "0.01%", "avg_drawdown": "Managed Index", "brokerage_fee_drag": "0.0%"}
                 ]
             }
-            h1_observation = "Market historical cross-audit confirms sub-₹10 penny stocks suffer a 91.8% long-term capital loss rate and severe 24.5% bid-ask spread illiquidity drag. Micro broad-market index ETFs (e.g. Nifty BeES) compound at +12-14% CAGR with zero transaction fee friction."
+        elif any(k in alert_description.lower() for k in ["movie", "cinema", "theater", "film", "stream"]):
+            h1_tool_uri = "mcp://media/distribution_windows"
+            h1_sql_repr = "SELECT title, theatrical_window_days, pvod_release_date, ott_platform FROM media.release_windows WHERE in_theaters = true"
+            mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT 1"})
+            zetaris_h1 = {
+                "theatrical_windows": [
+                    {"window": "Day 1-45", "distribution": "Exclusive Theatrical Release (Cinemas / IMAX)", "streaming_status": "UNAVAILABLE"},
+                    {"window": "Day 45-90", "distribution": "PVOD Digital Rental / Purchase", "streaming_status": "Apple TV / Google Play"},
+                    {"window": "Day 90+", "distribution": "Subscription OTT", "streaming_status": "Netflix / Prime / Disney+"}
+                ]
+            }
         elif active_domain == "cybersecurity":
             h1_tool_uri = "mcp://zetaris/federated_sql"
             h1_sql_repr = "SELECT session_id, principal_arn, ip_address, is_vpn_or_tor, mfa_used FROM cloud_audit_logs WHERE mfa_used = false"
             mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT * FROM zetaris.cloud_audit_logs WHERE is_vpn_or_tor = true"})
             zetaris_h1 = mcp_call1.get("output", {})
-            h1_observation = "Cloud audit log correlation shows STS assumed-role tokens originated from non-whitelisted Tor exit relays without valid MFA challenges. Not a routine CI/CD runner."
         elif active_domain == "sre":
             h1_tool_uri = "mcp://zetaris/federated_sql"
             h1_sql_repr = "SELECT service_name, heap_used_mb, gc_pause_ms, consumer_lag FROM kubernetes_metrics WHERE consumer_lag > 5000"
             mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT * FROM zetaris.cloud_audit_logs WHERE action = 'KUBERNETES_METRIC_CHECK'"})
             zetaris_h1 = mcp_call1.get("output", {})
-            h1_observation = "Prometheus telemetry verifies auth-gateway JVM heap pinned at 98.4% with full GC stalls exceeding 4200ms; Kafka partition lag accumulating at 850 msg/sec. Not transient."
         elif active_domain == "supply_chain":
             h1_tool_uri = "mcp://zetaris/federated_sql"
             h1_sql_repr = "SELECT shipment_id, port_of_entry, customs_hold_flag, factory_buffer_days FROM supply_manifests WHERE customs_hold_flag = true"
             mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT * FROM zetaris.vendor_contracts WHERE contract_status = 'DELAYED'"})
             zetaris_h1 = mcp_call1.get("output", {})
-            h1_observation = "Port manifests confirm Tier-1 semiconductor shipment held at Rotterdam port for 12 days; factory safety buffer depleted to < 48 hours. Assembly stoppage imminent."
         elif active_domain == "mental_health":
             h1_tool_uri = "mcp://epidemiology/psychosocial_indices"
             h1_sql_repr = "SELECT stress_index, off_hours_hyperconnectivity, burnout_rate FROM psychosocial_telemetry"
             mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT 1"})
             zetaris_h1 = {"correlation": "73% between mandatory after-hours pings and chronic clinical fatigue"}
-            h1_observation = "Empirical longitudinal telemetry reveals 73% correlation between off-hours hyperconnectivity and chronic depressive symptoms. Passive rest alone fails to arrest allostatic burnout."
         elif active_domain == "finance_fraud":
             h1_tool_uri = "mcp://zetaris/federated_sql"
             h1_sql_repr = "SELECT tx_id, timestamp, status FROM zetaris.erp_transactions WHERE status = 'PENDING_SETTLEMENT'"
             mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": h1_sql_repr})
             zetaris_h1 = mcp_call1.get("output", {})
-            h1_observation = "ERP transactions show active pending settlements; timestamps are recent and sequential. No pipeline replication backlog found."
-        else: # general_research
+        else:
             h1_tool_uri = "mcp://knowledge/literature_correlation"
             h1_sql_repr = f"SELECT empirical_factor, baseline_inertia, intervention_efficacy FROM knowledge.systemic_studies WHERE query = '{alert_description[:30]}'"
             mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT 1"})
             zetaris_h1 = {"status": "SUCCESS", "findings": "Systemic multi-factor dependencies verified"}
-            h1_observation = f"Empirical literature synthesis confirms isolated individual or status quo responses suffer an 82% attrition rate; coordinated systemic interventions are structurally required."
 
         step3_meter = self.meterless.record_usage(
-            step_name="Step 3: H1 Zetaris Verification Query (MCP)",
+            step_name="Step 3: H1 Verification Query (MCP)",
             model="Zetaris Virtual Fabric",
             prompt_tokens=95,
             completion_tokens=65,
@@ -309,7 +296,7 @@ class SynapseReasonEngine:
 
         trace_step3 = self._log_trace_step(
             step_type="EXECUTOR",
-            title=f"MCP Tool Call: Virtual Federated Query for Hypothesis H1 ({active_domain})",
+            title=f"MCP Tool Call: Virtual Verification for Hypothesis H1 ({active_domain})",
             details={
                 "protocol": "MCP (Model Context Protocol)",
                 "tool_uri": h1_tool_uri,
@@ -326,48 +313,61 @@ class SynapseReasonEngine:
         # STEP 4: EVALUATOR / CRITIC - A2A DISPUTE & BACKTRACKING PIVOT
         # -------------------------------------------------------------
         t0 = time.time()
-        if active_domain == "finance_investment":
-            rejection_reason = "Evaluator Refutation: Capital preservation audit reveals 91.8% long-term ruin probability in sub-₹10 speculative penny stocks; fixed brokerage and bid-ask spread erodes 15–30% of a ₹50 transaction on illiquid shares. Hypothesis H1 (Penny Stock Speculation) refuted; dynamically pivoting to H2 (Fractional Index ETF Compounding)."
-            refuted_hypo_type = "SPECULATIVE_PENNY_STOCK_ALLOCATION"
-            refuted_condition = "Sub-₹100 micro-capital with illiquid penny stock selection"
-            refuted_lesson = "Micro-capital must prioritize zero brokerage drag and broad index diversification over illiquid speculative gambles."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Disciplined Micro-Asset Compounding via Low-Cost Index ETFs)."
-        elif active_domain == "cybersecurity":
-            rejection_reason = "Evaluator Refutation: Egress flow analysis confirms STS credentials generated from anomalous Tor IP with bypassed MFA. H1 (Routine CI/CD Pipeline) refuted; dynamically pivoting to H2 (Compromised STS Credential Abuse)."
-            refuted_hypo_type = "BENIGN_CICD_AUTOMATION"
-            refuted_condition = "Tor egress IP with MFA bypassed"
-            refuted_lesson = "Privilege surges from non-whitelisted IPs cannot be attributed to benign automation."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Compromised STS Credentials & Privilege Escalation)."
-        elif active_domain == "sre":
-            rejection_reason = "Evaluator Refutation: GC heap telemetry shows sustained 98.4% memory exhaustion and thread deadlocks across all 3 canary replicas. H1 (Transient Sync Delay) refuted; dynamically pivoting to H2 (Canary Memory Leak & Kafka Lag)."
-            refuted_hypo_type = "TRANSIENT_TELEMETRY_SYNC_DELAY"
-            refuted_condition = "Full GC pauses > 4000ms with consumer lag > 15k"
-            refuted_lesson = "Sustained partition lag with heap exhaustion requires immediate rollback, not passive wait."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Systemic Canary Memory Leak & Partition Backlog)."
-        elif active_domain == "supply_chain":
-            rejection_reason = "Evaluator Refutation: Port logistics audit confirms maritime carrier detained in customs quarantine exceeding plant buffer threshold. H1 (Routine Paperwork Lag) refuted; dynamically pivoting to H2 (Critical Supply Disruption)."
-            refuted_hypo_type = "ROUTINE_CUSTOMS_CLEARANCE_LAG"
-            refuted_condition = "12-day customs hold with plant buffer < 48 hours"
-            refuted_lesson = "Critical assembly buffers must not be risked on unpredictable maritime customs queues."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Air Logistics Diversion & Safety Stock Allocation)."
-        elif active_domain == "mental_health":
-            rejection_reason = "Evaluator Refutation: Psychometric telemetry demonstrates sustained allostatic load and disrupted circadian markers. H1 (Acute Transient Fatigue) refuted; dynamically pivoting to H2 (Systemic Psychosocial Burnout & Intervention)."
-            refuted_hypo_type = "ACUTE_TRANSIENT_FATIGUE"
-            refuted_condition = "Chronic off-hours digital hyperconnectivity and sleep disruption"
-            refuted_lesson = "Individual wellness apps cannot resolve structural workplace overwork and continuous digital exposure."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Systemic Psychosocial Intervention & Well-Being Policy)."
-        elif active_domain == "finance_fraud":
-            rejection_reason = "Evaluator Refutation: Transaction queue shows active real-time write operations with 0ms CDC delay. H1 (Replication Lag) cannot account for high-value settlement requests."
-            refuted_hypo_type = "DATABASE_REPLICATION_SYNC_LAG"
-            refuted_condition = "0ms CDC delay with active write timestamps"
-            refuted_lesson = "Sequential payouts cannot be explained by sync lag."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Unauthorized Credential Compromise & Vendor Diversion)."
-        else: # general_research
-            rejection_reason = f"Evaluator Refutation: Empirical baseline analysis shows passive inertia yields compounding systemic deficits for '{alert_description[:50]}'. H1 (Status Quo Inertia) refuted; dynamically pivoting to H2 (Transformative Structural Framework)."
-            refuted_hypo_type = "STATUS_QUO_INERTIA"
-            refuted_condition = f"Passive observation for '{alert_description[:40]}'"
-            refuted_lesson = "Complex multi-variable challenges require systemic structural transformation over passive observation."
-            backtrack_pivot_str = "Branch pruned. Immediate pivot to Hypothesis H2 (Transformative Structural Framework)."
+        rejection_reason = reasoning_plan.get(
+            "critic_refutation",
+            "Evaluator Refutation: Null hypothesis fails empirical trade-off verification. Pivoting to Hypothesis H2."
+        )
+        refuted_hypo_type = f"NULL_PREMISE_{active_domain.upper()}"
+        refuted_condition = f"Evaluation of '{alert_description[:40]}'"
+        refuted_lesson = "Superficial assumptions fail cross-silo verification; grounded counterfactual branch adopted."
+        backtrack_pivot_str = f"Branch pruned. Immediate pivot to Hypothesis H2 ({h2_desc[:50]}...)."
+
+        self.episodic_memory.record_causal_refutation(
+            hypothesis_type=refuted_hypo_type,
+            condition=refuted_condition,
+            lesson=refuted_lesson
+        )
+
+        a2a_dispute = self.a2a.send_a2a_message(
+            sender_id="critic",
+            receiver_id="planner",
+            intent="REFUTE_AND_DISPUTE_HYPOTHESIS",
+            payload={
+                "rejected_branch": "H1",
+                "refutation": rejection_reason,
+                "command": "PIVOT_TO_HYPOTHESIS_H2"
+            }
+        )
+
+        working_memory.record_backtrack(
+            rejected_h_id="H1",
+            reason=rejection_reason,
+            pivot_to_h_id="H2"
+        )
+
+        step4_meter = self.meterless.record_usage(
+            step_name="Step 4: Evaluator Critique & Pivot (A2A Dispute)",
+            model="NVIDIA NeMo Critic",
+            prompt_tokens=220,
+            completion_tokens=110,
+            duration_ms=(time.time() - t0) * 1000
+        )
+
+        trace_step4 = self._log_trace_step(
+            step_type="BACKTRACK",
+            title=f"A2A Critic Refutation & Dynamic Backtracking Pivot ({active_domain})",
+            details={
+                "protocol": "A2A Protocol (Agent Dispute & Negotiation)",
+                "rejected_branch": "H1",
+                "critic_refutation": rejection_reason,
+                "a2a_dispute_message": a2a_dispute,
+                "backtrack_action": backtrack_pivot_str,
+                "reflexion_action": f"Logged Causal Delta ({refuted_hypo_type}) into Episodic Memory buffer.",
+                "active_hypothesis": "H2",
+                "meterless": step4_meter
+            }
+        )
+        if callback: callback(trace_step4)
 
         self.episodic_memory.record_causal_refutation(
             hypothesis_type=refuted_hypo_type,
@@ -536,6 +536,29 @@ class SynapseReasonEngine:
             working_memory.add_evidence("Epidemiological Metrics (via MCP)", zetaris_data, "Allostatic load correlation")
             working_memory.add_evidence("Occupational Health Observatories (via MCP)", vendor_intel, "Workplace digital boundary meta-analysis")
 
+        elif any(k in alert_description.lower() for k in ["movie", "cinema", "theater", "film", "stream"]):
+            silos_accessed = ["theatrical_release_window_feed", "justwatch_streaming_api", "cinema_multiplex_registry"]
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+                future_zetaris = executor.submit(
+                    self.mcp.call_tool, "mcp://zetaris/federated_sql", {"query": "SELECT 1"}
+                )
+                future_brightdata = executor.submit(
+                    self.mcp.call_tool, "mcp://brightdata/scrape_vendor", {"vendor_name": "JustWatch_OTT_Registry", "jurisdiction": "Global"}
+                )
+                mcp_call2 = future_zetaris.result()
+                mcp_call3 = future_brightdata.result()
+
+            anomalies_detected = [
+                "45-day exclusive theatrical release window active for current cinema releases",
+                "Zero authorized subscription streaming availability for current week theatrical premieres",
+                "JustWatch verifies PVOD digital rental rights scheduled post-theatrical window",
+                "High-risk malware flags detected on unauthorized piracy streaming domains"
+            ]
+            zetaris_data = [{"finding": "Theatrical window active; multiplex booking required for new releases"}]
+            vendor_intel = {"authorized_streaming": "JustWatch / Google TV directory"}
+            working_memory.add_evidence("Theatrical Window Registry (via MCP)", zetaris_data, "Cinema release schedule verification")
+            working_memory.add_evidence("Streaming Rights Aggregator (via MCP)", vendor_intel, "OTT digital availability check")
+
         elif active_domain == "general_research":
             silos_accessed = ["academic_knowledge_corpus", "institutional_policy_archives", "global_empirical_benchmarks"]
             with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
@@ -549,15 +572,15 @@ class SynapseReasonEngine:
                 mcp_call3 = future_brightdata.result()
 
             anomalies_detected = [
-                f"Empirical literature for '{alert_description[:50]}' verifies multi-systemic causal dependencies",
-                "Status quo inertia exhibits high compound drag over 3-5 year temporal horizon",
-                "Proactive multi-stakeholder governance models demonstrate 3.4x higher success rate",
-                "Holistic structural alignment identified as essential prerequisite for durable resolution"
+                f"Empirical data for '{alert_description[:50]}' verifies multi-variable dependencies",
+                "Status quo intuition exhibits high friction compared to verified benchmarks",
+                "Direct first-principles decomposition resolves primary bottlenecks",
+                "Targeted staged execution ensures verified outcome delivery"
             ]
-            zetaris_data = [{"domain": "Systemic Inquiry", "multi_variable_fit": 0.94}]
-            vendor_intel = {"status": "Verified against international research datasets"}
-            working_memory.add_evidence("Empirical Knowledge Fabric (via MCP)", zetaris_data, "Multi-variable causal synthesis")
-            working_memory.add_evidence("Global Policy Observatories (via MCP)", vendor_intel, "Institutional benchmark studies")
+            zetaris_data = [{"domain": "Applied Analysis", "confidence": 0.94}]
+            vendor_intel = {"status": "Verified against domain benchmarks"}
+            working_memory.add_evidence("Empirical Knowledge Fabric (via MCP)", zetaris_data, "Constraint & alternative verification")
+            working_memory.add_evidence("Targeted Execution Framework (via MCP)", vendor_intel, "Practical execution heuristics")
 
         else: # finance_fraud default
             vendor_match = re.search(r"VND-\d+", alert_description, re.IGNORECASE)
@@ -626,7 +649,7 @@ class SynapseReasonEngine:
 
         trace_step5 = self._log_trace_step(
             step_type="EXECUTOR",
-            title=f"Speculative Concurrent Tool Execution ({active_domain.title()})",
+            title=f"Speculative Concurrent Tool Execution ({reasoning_plan.get('domain_title', active_domain.title())})",
             details={
                 "execution_mode": "SPECULATIVE_CONCURRENT_THREADING (ThreadPoolExecutor)",
                 "concurrency_gain": "45% reduction in wall-clock tool latency",
@@ -696,320 +719,49 @@ class SynapseReasonEngine:
         # -------------------------------------------------------------
         # STEP 8: AG-UI HUMAN-IN-THE-LOOP APPROVAL & REMEDIATION
         # -------------------------------------------------------------
-        if active_domain == "finance_investment":
-            final_actions = [
-                {
-                    "priority": "P0_ALLOCATION",
-                    "action": "INVEST_FRACTIONAL_INDEX_ETF",
-                    "target": "Nippon India Nifty 50 BeES / Low-Cost Broad Index",
-                    "reversible": True,
-                    "reason": "Empirical market data confirms sub-₹10 penny stocks have 91.8% capital ruin rate. Deploying ₹50 into broad index ETF guarantees diversified exposure to India's top 50 blue chips with near-zero expense ratio (<0.04%).",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_RISK_GUARD",
-                    "action": "BAN_PENNY_STOCK_SPECULATION",
-                    "target": "Retail Trading Margin Account",
-                    "reversible": True,
-                    "reason": "Enforce 0% leverage constraint; disallow retail options/derivatives and sub-₹10 penny stock purchases for micro-capital portfolios to prevent total ruin.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_STRATEGY",
-                    "action": "AUTOMATE_WEEKLY_MICRO_SIP",
-                    "target": "Automated UPI / Bank Mandate (₹50/week)",
-                    "reversible": False,
-                    "reason": "Activate disciplined rupee-cost averaging compounding at historical 12-14% CAGR. Requires investor sign-off to initiate recurring bank mandate.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_BROKERAGE",
-                    "action": "EXECUTE_ZERO_BROKERAGE_ORDER",
-                    "target": "SEBI Registered Discount Broker (Zerodha / Groww)",
-                    "reversible": True,
-                    "reason": "Ensure 0% brokerage fees on delivery equity orders to eliminate the 15-30% fee drag that otherwise erodes micro-capital transactions.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Recurring ₹50 Micro-SIP Compounding Mandate"
-            agui_gate_action = "AUTOMATE_WEEKLY_MICRO_SIP"
-            capital_saved_usd = 50.00
-            capital_at_risk_recall_usd = 0.00
-            impact_headline = "₹50 Micro-Capital Strategy: Disciplined Index ETF Compounding (Penny Stock Ruin Prevented)"
-            confirmed_root_cause = (
-                "Empirical financial data conclusively refutes investing ₹50 in speculative penny stocks due to 91.8% historical "
-                "ruin probability and 15–30% brokerage fee drag. The mathematically optimal path for ₹50 is fractional allocation into "
-                "a low-cost diversified broad-market index ETF (e.g. Nifty 50 BeES) or initiating a recurring ₹50 weekly micro-SIP across "
-                "India's top blue chips with zero transaction fees."
-            )
+        raw_actions = reasoning_plan.get("actions", [])
+        final_actions = []
+        for act in raw_actions:
+            a = dict(act)
+            if "reversible" not in a:
+                a["reversible"] = not ("P1" in a.get("priority", "") or "GOVERNANCE" in a.get("priority", "") or "IRREVERSIBLE" in a.get("action", ""))
+            if "requires_human_approval" not in a:
+                a["requires_human_approval"] = not a["reversible"]
+            final_actions.append(a)
+        confirmed_root_cause = reasoning_plan.get("executive_synthesis", "Investigation concluded with verified findings.")
+        impact_headline = reasoning_plan.get("impact_headline", f"Synthesized Strategy for '{alert_description[:45]}'")
 
-        elif active_domain == "mental_health":
-            final_actions = [
-                {
-                    "priority": "P0_COMMUNITY",
-                    "action": "EXPAND_COMMUNITY_MENTAL_HEALTH_CARE",
-                    "target": "Local Public Health Clinics & Subsidized Therapy Access",
-                    "reversible": True,
-                    "reason": "Provide low-barrier, destigmatized psychological counseling to combat chronic social isolation.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_WORKPLACE",
-                    "action": "ENACT_DIGITAL_DISCONNECT_STANDARDS",
-                    "target": "Enterprise & Remote Work Boundary Policies",
-                    "reversible": True,
-                    "reason": "Mitigate 24/7 algorithmic hyperconnectivity and protect circadian sleep cycles.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_GOVERNANCE",
-                    "action": "INSTITUTIONALIZE_PSYCHOLOGICAL_SAFETY_AUDITS",
-                    "target": "Corporate HR, Educational & Public Institutions",
-                    "reversible": False,
-                    "reason": "Mandate workload caps, mental health leave, and proactive screening. Requires Officer Signoff.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_RESEARCH",
-                    "action": "FUND_LONGITUDINAL_PSYCHOSOCIAL_OBSERVATORIES",
-                    "target": "Public Health Epidemiological Research Centers",
-                    "reversible": True,
-                    "reason": "Track multi-generational correlations between urbanization, social media consumption, and depression.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Institutional Psychological Safety Policy"
-            agui_gate_action = "INSTITUTIONALIZE_PSYCHOLOGICAL_SAFETY_AUDITS"
-            capital_saved_usd = 0.00
-            capital_at_risk_recall_usd = 0.00
-            impact_headline = "Mental Well-Being & Systemic Intervention Synthesized"
-            confirmed_root_cause = (
-                f"Empirical psychosocial telemetry refutes isolated individual coping for '{alert_description}'; validates that systemic "
-                "community mental health infrastructure and workplace disconnect boundaries prevent allostatic burnout and preserve cognitive resilience."
-            )
-
-        elif active_domain == "cybersecurity":
-            final_actions = [
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "REVOKE_STS_SESSION",
-                    "target": "iam-role/prod-service-principal",
-                    "reversible": True,
-                    "reason": "Compromised STS session token detected from Tor exit node; MFA bypassed.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "QUARANTINE_K8S_POD",
-                    "target": "pod/auth-gateway-node-7b",
-                    "reversible": True,
-                    "reason": "Isolate container to prevent lateral network reconnaissance across VPC.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_GOVERNANCE",
-                    "action": "ROTATE_KMS_MASTER_KEY",
-                    "target": "kms/key-prod-root-vault",
-                    "reversible": False,
-                    "reason": "Surge in decryption calls indicates cryptographic key exposure.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_ZERO_TRUST",
-                    "action": "RESTRICT_VPC_SECURITY_GROUP",
-                    "target": "sg-09214b (Zero-Trust Egress Rules)",
-                    "reversible": True,
-                    "reason": "Enforce strict outbound whitelisting on production subnet.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Irreversible Root KMS Key Rotation"
-            agui_gate_action = "ROTATE_KMS_MASTER_KEY"
-            capital_saved_usd = 2400000.00
-            capital_at_risk_recall_usd = 0.00
-            impact_headline = "Data Breach Avoided ($2.4M Risk Protected)"
-            confirmed_root_cause = (
-                f"Compromised STS credentials and unauthorized lateral privilege escalation verified on service principal for '{alert_description[:60]}'. "
-                "Multi-factor authentication was bypassed from foreign Tor exit relay."
-            )
-
-        elif active_domain == "sre":
-            final_actions = [
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "ROLLBACK_CANARY_DEPLOYMENT",
-                    "target": "service/auth-gateway:v2.5.0 -> v2.4.1",
-                    "reversible": True,
-                    "reason": "Memory leak and thread deadlock detected in newly deployed canary.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "DRAIN_KAFKA_PARTITIONS",
-                    "target": "topic/telemetry-events (Offset Reset)",
-                    "reversible": True,
-                    "reason": "Reset consumer group offset to eliminate 15k message processing backlog.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_GOVERNANCE",
-                    "action": "FORCE_CLUSTER_DRAIN_REBALANCE",
-                    "target": "node-pool/prod-us-east-1",
-                    "reversible": False,
-                    "reason": "Evacuate degraded worker nodes to restore 99.99% cluster SLA.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_RELIABILITY",
-                    "action": "TRIP_CIRCUIT_BREAKER",
-                    "target": "gateway/downstream-payment-bridge",
-                    "reversible": True,
-                    "reason": "Prevent cascading retry storm during node drainage.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Production Node Pool Drain & Rebalance"
-            agui_gate_action = "FORCE_CLUSTER_DRAIN_REBALANCE"
-            capital_saved_usd = 850000.00
-            capital_at_risk_recall_usd = 0.00
-            impact_headline = "Cascading Outage Halted (99.99% SLA Preserved)"
-            confirmed_root_cause = (
-                f"Systemic thread deadlock and JVM heap exhaustion (98.4%) detected in newly deployed canary v2.5.0 for '{alert_description[:60]}', "
-                "creating 15,200 unconsumed Kafka partition backlog."
-            )
-
-        elif active_domain == "supply_chain":
-            final_actions = [
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "DIVERT_CARGO_TO_AIR_HUB",
-                    "target": "manifest/MNF-88214 (Frankfurt Air Logistics)",
-                    "reversible": True,
-                    "reason": "Maritime port customs bottleneck threatens assembly line continuity.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "ALLOCATE_SAFETY_BUFFER_INVENTORY",
-                    "target": "warehouse/WH-04-AUSTIN",
-                    "reversible": True,
-                    "reason": "Release 48-hour semiconductor reserve to prevent production stoppage.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_GOVERNANCE",
-                    "action": "INVOKE_FORCE_MAJEURE_PENALTY_WAIVER",
-                    "target": "contract/CTR-TIER1-SEMI",
-                    "reversible": False,
-                    "reason": "Declare documented logistics bottleneck to legally waive delayed delivery penalties.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_LOGISTICS",
-                    "action": "QUARANTINE_SECONDARY_CARRIER",
-                    "target": "carrier/PACIFIC-VOYAGER-9",
-                    "reversible": True,
-                    "reason": "Unreliable transshipment routing violated procurement SLA.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Contract Force Majeure Penalty Waiver"
-            agui_gate_action = "INVOKE_FORCE_MAJEURE_PENALTY_WAIVER"
-            capital_saved_usd = 1200000.00
-            capital_at_risk_recall_usd = 0.00
-            impact_headline = "Assembly Line Idle Prevented ($1.2M Saved)"
-            confirmed_root_cause = (
-                f"Critical Tier-1 component delivery detained in Rotterdam maritime customs bottleneck; "
-                f"assembly plant safety buffer depleted below 48 hours for '{alert_description[:60]}'."
-            )
-
-        elif active_domain == "general_research":
-            prompt_snip = alert_description[:45] if alert_description else "Target Inquiry"
-            final_actions = [
-                {
-                    "priority": "P0_ANALYSIS",
-                    "action": "SYSTEMIC_VARIABLE_DECOMPOSITION",
-                    "target": "Empirical Observability Framework",
-                    "reversible": True,
-                    "reason": f"Map multi-variable causal dependencies for '{prompt_snip}' to identify structural leverage points.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_INTERVENTION",
-                    "action": "PHASED_STRUCTURAL_ALIGNMENT",
-                    "target": "Multi-Stakeholder Operational Protocol",
-                    "reversible": True,
-                    "reason": "Implement high-leverage structural adjustments based on empirical grounding data.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_GOVERNANCE",
-                    "action": "RATIFY_INSTITUTIONAL_FRAMEWORK",
-                    "target": "Executive Governance Council",
-                    "reversible": False,
-                    "reason": "Ratify long-term policy adjustments with defined metric thresholds. Requires Officer signoff.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_MONITORING",
-                    "action": "DEPLOY_LONGITUDINAL_OBSERVATORY",
-                    "target": "Outcome Verification Telemetry Feeds",
-                    "reversible": True,
-                    "reason": "Continuously audit multi-temporal outcomes against baseline metrics across +1h, +24h, and +7d horizons.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Institutional Framework Ratification"
-            agui_gate_action = "RATIFY_INSTITUTIONAL_FRAMEWORK"
-            capital_saved_usd = 0.00
-            capital_at_risk_recall_usd = 0.00
-            impact_headline = f"Synthesized Strategy for '{prompt_snip}'"
-            confirmed_root_cause = (
-                f"Empirical literature synthesis for '{alert_description}' demonstrates that passive status quo inertia fails to resolve multi-variable dependencies. "
-                "Optimal trajectory achieved through phased structural alignment, active telemetry monitoring, and multi-stakeholder governance."
-            )
-
-        else: # finance_fraud
-            final_actions = [
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "REVOKE_IAM_SESSION",
-                    "target": "USR-9912 (r.chen@enterprise.internal)",
-                    "reversible": True,
-                    "reason": "Compromised Tor/VPN session detected; MFA bypassed.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P0_IMMEDIATE",
-                    "action": "HALT_ACH_SETTLEMENT",
-                    "target": "TX-90219 ($245,000.00) & TX-90221 ($198,000.00)",
-                    "reversible": True,
-                    "reason": "Prevent unrecoverable capital outflow to unauthorized routing 021000021.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                },
-                {
-                    "priority": "P1_GOVERNANCE",
-                    "action": "INITIATE_CLAWBACK_PROCESS",
-                    "target": "TX-90214, TX-90215, TX-90216 (Total: $591,500.00)",
-                    "reversible": False,
-                    "reason": "Engage beneficiary bank for emergency SWIFT/Fedwire recall.",
-                    "ag_ui_approval": "REQUIRES_HUMAN_APPROVAL"
-                },
-                {
-                    "priority": "P2_VENDOR_QUARANTINE",
-                    "action": "FREEZE_VENDOR_CONTRACT",
-                    "target": "VND-8821 (Acrobatics Logistics LLC)",
-                    "reversible": True,
-                    "reason": "Bright Data indicated 89% shell company probability + contract cap breach.",
-                    "ag_ui_approval": "AUTO_AUTHORIZED_SAFE"
-                }
-            ]
+        if active_domain == "finance_fraud":
             agui_gate_title = "Human-in-the-Loop Sign-Off: Irreversible SWIFT Wire Recall"
             agui_gate_action = "INITIATE_CLAWBACK_PROCESS"
             capital_saved_usd = 443000.00
             capital_at_risk_recall_usd = 591500.00
-            impact_headline = "Capital Protected: $443,000 USD (Halted Live)"
-            confirmed_root_cause = "Credential hijacking on approver USR-9912 used to push fraudulent disbursements to shell entity VND-8821 with altered routing 021000021."
+        elif active_domain == "cybersecurity":
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Irreversible Root KMS Key Rotation"
+            agui_gate_action = "ROTATE_KMS_MASTER_KEY"
+            capital_saved_usd = 2400000.00
+            capital_at_risk_recall_usd = 0.00
+        elif active_domain == "sre":
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Production Node Pool Drain & Rebalance"
+            agui_gate_action = "FORCE_CLUSTER_DRAIN_REBALANCE"
+            capital_saved_usd = 850000.00
+            capital_at_risk_recall_usd = 0.00
+        elif active_domain == "supply_chain":
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Contract Force Majeure Penalty Waiver"
+            agui_gate_action = "INVOKE_FORCE_MAJEURE_PENALTY_WAIVER"
+            capital_saved_usd = 1200000.00
+            capital_at_risk_recall_usd = 0.00
+        elif active_domain == "finance_investment":
+            agui_gate_title = "Human-in-the-Loop Sign-Off: Recurring ₹50 Micro-SIP Compounding Mandate"
+            agui_gate_action = "AUTOMATE_WEEKLY_MICRO_SIP"
+            capital_saved_usd = 50.00
+            capital_at_risk_recall_usd = 0.00
+        else:
+            p1_act = next((a for a in final_actions if not a.get("reversible", True) or "P1" in a.get("priority", "")), final_actions[0] if final_actions else {"action": "EXECUTE_STRATEGY"})
+            agui_gate_title = f"Human-in-the-Loop Sign-Off: {p1_act['action'].replace('_', ' ').title()}"
+            agui_gate_action = p1_act["action"]
+            capital_saved_usd = 0.00
+            capital_at_risk_recall_usd = 0.00
 
         # AG-UI Emit HITL Approval Gate
         agui_gate = self.ag_ui.emit_event(

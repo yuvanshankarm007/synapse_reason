@@ -173,8 +173,16 @@ with col_h1:
     st.markdown('<div class="sub-header">3D Cognitive Lattice Architecture & Autonomous Remediation</div>', unsafe_allow_html=True)
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
-    mode_badge = "🟢 SAMPLE MODE (Zero-Key)" if config.SAMPLE_MODE else "⚡ LIVE NIM API"
-    st.success(f"{mode_badge} | Online")
+    has_valid_key = bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY)
+    if config.SAMPLE_MODE:
+        st.success("🟢 SAMPLE MODE (Zero-Key) | Active")
+    elif has_valid_key:
+        st.success("⚡ LIVE NIM API | Online")
+    else:
+        st.warning("⚠️ LIVE MODE (No Key - Local)")
+
+if not config.SAMPLE_MODE and not has_valid_key:
+    st.warning("⚠️ **Live Mode is enabled without an NVIDIA API Key.** SynapseReason is operating via its local semantic engine. To query live NVIDIA NIM 70B models in real-time, enter your free `nvapi-...` key in the top-left sidebar (obtainable instantly from [build.nvidia.com](https://build.nvidia.com)).")
 
 # Universal Domain Architecture Lens & Target Selector
 st.markdown("#### 🌐 Cognitive Architecture Domain Lens")
