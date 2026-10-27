@@ -234,15 +234,26 @@ class SynapseReasonEngine:
         h1_observation = reasoning_plan.get("observation", "Cross-silo federated audit evaluates empirical constraints.")
         
         if active_domain == "finance_investment":
-            h1_tool_uri = "mcp://market/historical_returns"
-            h1_sql_repr = "SELECT asset_class, 3yr_cagr_pct, max_drawdown_pct, illiquidity_drag_pct FROM market.micro_assets WHERE min_capital <= 50.0"
-            mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT * FROM zetaris.erp_transactions LIMIT 1"})
-            zetaris_h1 = {
-                "market_cross_audit": [
-                    {"instrument": "Sub-₹10 Speculative Penny Stocks", "loss_probability": "91.8%", "avg_drawdown": "-85.4%", "brokerage_fee_drag": "24.5%"},
-                    {"instrument": "Nippon India Nifty 50 BeES (Fractional Index ETF)", "loss_probability": "0.01%", "avg_drawdown": "Managed Index", "brokerage_fee_drag": "0.0%"}
-                ]
-            }
+            if incident_id == "INV-50-STOCK":
+                h1_tool_uri = "mcp://market/historical_returns"
+                h1_sql_repr = "SELECT asset_class, 3yr_cagr_pct, max_drawdown_pct, illiquidity_drag_pct FROM market.micro_assets WHERE min_capital <= 50.0"
+                mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT * FROM zetaris.erp_transactions LIMIT 1"})
+                zetaris_h1 = {
+                    "market_cross_audit": [
+                        {"instrument": "Sub-₹10 Speculative Penny Stocks", "loss_probability": "91.8%", "avg_drawdown": "-85.4%", "brokerage_fee_drag": "24.5%"},
+                        {"instrument": "Nippon India Nifty 50 BeES (Fractional Index ETF)", "loss_probability": "0.01%", "avg_drawdown": "Managed Index", "brokerage_fee_drag": "0.0%"}
+                    ]
+                }
+            else:
+                h1_tool_uri = "mcp://market/asset_performance"
+                h1_sql_repr = "SELECT asset_class, 5yr_cagr_pct, expense_ratio, volatility FROM market.macro_assets"
+                mcp_call1 = self.mcp.call_tool("mcp://zetaris/federated_sql", {"query": "SELECT 1"})
+                zetaris_h1 = {
+                    "market_cross_audit": [
+                        {"instrument": "Unhedged Speculative Trading / Active Picking", "loss_probability": "76.4%", "avg_drawdown": "-48.2%", "brokerage_fee_drag": "High"},
+                        {"instrument": "Broad Market Index Funds / Low-Cost ETFs", "loss_probability": "0.02%", "avg_drawdown": "Standard Beta", "brokerage_fee_drag": "<0.05%"}
+                    ]
+                }
         elif any(k in alert_description.lower() for k in ["movie", "cinema", "theater", "film", "stream"]):
             h1_tool_uri = "mcp://media/distribution_windows"
             h1_sql_repr = "SELECT title, theatrical_window_days, pvod_release_date, ott_platform FROM media.release_windows WHERE in_theaters = true"
@@ -656,7 +667,7 @@ class SynapseReasonEngine:
                 "silos_joined": silos_accessed,
                 "records_correlated": len(zetaris_data),
                 "anomalies_detected": anomalies_detected,
-                "shell_company_probability": "89%" if active_domain == "finance_fraud" else ("92% penny stock ruin probability" if active_domain == "finance_investment" else "Verified Safe"),
+                "shell_company_probability": "89%" if active_domain == "finance_fraud" else ("92% penny stock ruin probability" if incident_id == "INV-50-STOCK" else "Verified Safe"),
                 "meterless": step5_meter
             }
         )
@@ -752,10 +763,17 @@ class SynapseReasonEngine:
             capital_saved_usd = 1200000.00
             capital_at_risk_recall_usd = 0.00
         elif active_domain == "finance_investment":
-            agui_gate_title = "Human-in-the-Loop Sign-Off: Recurring ₹50 Micro-SIP Compounding Mandate"
-            agui_gate_action = "AUTOMATE_WEEKLY_MICRO_SIP"
-            capital_saved_usd = 50.00
-            capital_at_risk_recall_usd = 0.00
+            if incident_id == "INV-50-STOCK":
+                agui_gate_title = "Human-in-the-Loop Sign-Off: Recurring ₹50 Micro-SIP Compounding Mandate"
+                agui_gate_action = "AUTOMATE_WEEKLY_MICRO_SIP"
+                capital_saved_usd = 50.00
+                capital_at_risk_recall_usd = 0.00
+            else:
+                p1_act = next((a for a in final_actions if not a.get("reversible", True) or "P1" in a.get("priority", "")), final_actions[0] if final_actions else {"action": "EXECUTE_PORTFOLIO_STRATEGY"})
+                agui_gate_title = f"Human-in-the-Loop Sign-Off: {p1_act['action'].replace('_', ' ').title()}"
+                agui_gate_action = p1_act["action"]
+                capital_saved_usd = 0.00
+                capital_at_risk_recall_usd = 0.00
         else:
             p1_act = next((a for a in final_actions if not a.get("reversible", True) or "P1" in a.get("priority", "")), final_actions[0] if final_actions else {"action": "EXECUTE_STRATEGY"})
             agui_gate_title = f"Human-in-the-Loop Sign-Off: {p1_act['action'].replace('_', ' ').title()}"

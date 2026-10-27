@@ -124,7 +124,7 @@ with st.sidebar:
     engine_choices = []
     if ollama_online:
         engine_choices.append("🟢 Local Real-Time LLM (Ollama: Zero-Key)")
-    engine_choices.append("⚡ Cloud Live NIM (NVIDIA LLaMA-3.1-70B)")
+    engine_choices.append("⚡ Cloud Live NIM (NVIDIA Nemotron 30B / LLaMA)")
     engine_choices.append("🧪 Benchmark Core (Reproducible CI/CD Mode)")
 
     default_idx = 0 if ollama_online else (0 if not config.SAMPLE_MODE else len(engine_choices)-1)
@@ -166,7 +166,7 @@ with st.sidebar:
             os.environ["NVIDIA_API_KEY"] = user_api_key.strip()
         has_valid_key = bool(config.NVIDIA_API_KEY and "nvapi-" in config.NVIDIA_API_KEY)
         if has_valid_key:
-            st.success("🔑 Live NIM API Key Verified (meta/llama-3.1-70b-instruct)")
+            st.success("🔑 Live NIM API Key Verified (nvidia/nemotron-3.5-lightning-30b-a3b)")
         else:
             st.warning("⚠️ Enter your free `nvapi-...` key above to query live 70B models.")
 

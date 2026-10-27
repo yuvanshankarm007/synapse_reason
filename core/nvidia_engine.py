@@ -46,7 +46,7 @@ class NvidiaEngine:
         if self.api_key and "nvapi-" in self.api_key and self.provider in ("auto", "nvidia"):
             self.active_provider_type = "nvidia"
             self.base_url = "https://integrate.api.nvidia.com/v1"
-            self.model = self.model or "meta/llama-3.1-70b-instruct"
+            self.model = self.model or "nvidia/nemotron-3.5-lightning-30b-a3b"
             self.active_routed_model = self.model
             self.is_live = True
             self.discover_available_models()
@@ -131,6 +131,7 @@ class NvidiaEngine:
 
         # Static catalog fallback
         self.discovered_models = [
+            {"id": "nvidia/nemotron-3.5-lightning-30b-a3b", "owned_by": "nvidia", "capabilities": ["deep_reasoning", "synthetic_dialogue"]},
             {"id": "nvidia/llama-3.1-nemotron-70b-instruct", "owned_by": "nvidia", "capabilities": ["deep_reasoning", "synthetic_dialogue"]},
             {"id": "meta/llama-3.1-70b-instruct", "owned_by": "meta", "capabilities": ["instruction_following", "multi_turn_analysis"]},
             {"id": "meta/llama-3.1-8b-instruct", "owned_by": "meta", "capabilities": ["high_speed_triage", "low_latency"]},
@@ -143,6 +144,7 @@ class NvidiaEngine:
         """Ranks and selects the highest-performing model from the discovered models list"""
         preferred_priority = [
             self.model,
+            "nvidia/nemotron-3.5-lightning-30b-a3b",
             "nvidia/llama-3.1-nemotron-70b-instruct",
             "meta/llama-3.1-70b-instruct",
             "nvidia/nemotron-4-340b-instruct",
@@ -153,7 +155,7 @@ class NvidiaEngine:
                 self.active_routed_model = pref
                 return
         for m_id in model_ids:
-            if any(k in m_id.lower() for k in ["nemotron", "70b", "r1", "instruct"]):
+            if any(k in m_id.lower() for k in ["nemotron", "30b", "70b", "r1", "instruct"]):
                 self.active_routed_model = m_id
                 return
         self.active_routed_model = model_ids[0] if model_ids else self.model
@@ -190,20 +192,22 @@ class NvidiaEngine:
                     response = httpx.post(f"{self.base_url}/chat/completions", headers=headers, json=payload, timeout=90.0)
                     if response.status_code == 200:
                         data = response.json()
-                        content = data["choices"][0]["message"]["content"]
+                        msg = data["choices"][0]["message"]
+                        content = (msg.get("content") or msg.get("reasoning_content") or "").strip()
                         usage = data.get("usage", {})
                         duration_ms = (time.time() - start_time) * 1000
                         return {
                             "content": content,
                             "prompt_tokens": usage.get("prompt_tokens", len(system_prompt.split()) + len(user_prompt.split())),
-                            "completion_tokens": usage.get("completion_tokens", len(content.split())),
+                            "completion_tokens": usage.get("completion_tokens", len(content.split()) if content else 0),
                             "model": cur_model,
                             "discovered_models": discovered_ids,
                             "model_discovery_status": "VERIFIED_BEFORE_ROUTING",
                             "duration_ms": duration_ms,
                             "engine": f"Real-Time LLM Inference ({cur_model} via {self.active_provider_type.upper()})"
                         }
-                    elif response.status_code == 404:
+                    else:
+                        print(f"[NvidiaEngine] Live request returned status {response.status_code} on {cur_model}: {response.text[:180]}")
                         continue
                 except Exception as e:
                     print(f"[NvidiaEngine] Live request error on {cur_model}: {e}")
@@ -317,8 +321,8 @@ class NvidiaEngine:
                         return extracted
 
         # 2. DETERMINISTIC BENCHMARK CORES (For Automated CI/CD & Offline Resilience Tests)
-        # Investing / Micro-Capital / Stocks / Rupee
-        if incident_id in ("INV-50-STOCK",) or domain == "finance_investment":
+        # Investing / Micro-Capital / Stocks / Rupee (INV-50-STOCK Benchmark Test Case)
+        if incident_id in ("INV-50-STOCK",):
             return {
                 "domain_title": "Micro-Capital Allocation & Wealth Compounding",
                 "h1": "Null / Speculative Thesis: Deploy micro-capital into high-volatility illiquid penny stocks (< ₹5) seeking rapid short-term multi-bagger returns.",

@@ -20,7 +20,7 @@ SAMPLE_MODE = os.getenv("SAMPLE_MODE", "false").lower() in ("true", "1", "yes")
 # Sponsor API Configurations
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY", "")
 NVIDIA_BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
-NVIDIA_MODEL = os.getenv("NVIDIA_MODEL", "meta/llama-3.1-70b-instruct")
+NVIDIA_MODEL = os.getenv("NVIDIA_MODEL", "nvidia/nemotron-3.5-lightning-30b-a3b")
 
 # Ollama Local LLM Configuration (Real-time dynamic generation, zero keys required)
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434/v1")
