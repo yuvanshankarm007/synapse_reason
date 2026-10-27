@@ -93,4 +93,4 @@
 - **Tri-Protocol Mastery:** Full implementation of MCP, A2A (Signed Agent Cards), and AG-UI (HITL gates).
 - **100% Sponsor Integration:** Zetaris, Meterless, NVIDIA NIM, Bright Data, and Cursor.
 - **Zero-Key Out-of-the-Box:** Runs with 1-click via `SAMPLE_MODE=true` for instant judge evaluation.
-- **Try it now:** `streamlit run app.py` or `python cli.py`
+- **Try it now:** `python -m streamlit run app.py` or `python cli.py`

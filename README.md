@@ -144,7 +144,7 @@ pip install -r requirements.txt
 
 ### 3. Launch Interactive Web Dashboard
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
 ```
 *Open your browser to `http://localhost:8501`. Click **"🚀 Run Non-Linear Reasoning Loop"** to explore the dynamic trace visualizer, Tri-Protocol inspector, Zetaris virtual query console, Meterless cost burn charts, and remediation action center.*
 
