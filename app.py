@@ -17,10 +17,12 @@ sys.path.insert(0, str(BASE_DIR))
 from core.reasoning_engine import SynapseReasonEngine
 from core.zetaris_federator import ZetarisFederator
 from core.mesh_synthesizer import BiDirectionalMeshSynthesizer
+from core.render_3d_lattice import generate_3d_lattice_html
 from core.protocols.mcp_server import MCPToolRegistry
 from core.protocols.a2a_agent_cards import A2AOrchestrator
 from core.meterless_governor import MeterlessGovernor
 from core.brightdata_tool import BrightDataScraper
+import streamlit.components.v1 as components
 import config
 
 # Page Configuration
@@ -185,8 +187,9 @@ if run_clicked or "last_result" in st.session_state:
         st.metric("MCP Cache Hits", f"{cache_metrics['hit_rate_pct']}%", delta="79% Faster")
 
     # Main Tabs
-    tab_trace, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
+    tab_trace, tab_3d, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
         "🔬 Cognitive Trace & Backtracking Graph",
+        "🌌 3D Holographic Cognitive Lattice",
         "🕸️ Bi-Directional Mesh & Consensus Arbiter",
         "🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)",
         "🌐 Zetaris Data Fabric Virtualization",
@@ -213,6 +216,14 @@ if run_clicked or "last_result" in st.session_state:
             with st.expander(f"Step {step['step_number']} [{step_type}]: {step['title']}", expanded=True):
                 st.markdown(f'<span class="{badge_class}">{step_type}</span> &nbsp; <b>Time:</b> {step["timestamp"]}', unsafe_allow_html=True)
                 st.json(step["details"])
+
+    # TAB: 3D HOLOGRAPHIC COGNITIVE LATTICE
+    with tab_3d:
+        st.markdown("#### 🌌 3D Holographic Cognitive Lattice (Spatial Multi-Agent Graph)")
+        st.info("💡 **Moving Beyond 2D Flat Graphs:** In a 3D cognitive architecture, the **Z-Axis** represents **Meta-Cognitive Abstraction & Time Horizons** (Z-1: Ground Truth Data Silos $\\leftrightarrow$ Z0: Domain Agent Consensus Mesh $\\leftrightarrow$ Z+1: Meta-Arbiter & Guardrails). Drag your mouse on the 3D canvas to rotate and inspect the spatial topology in real time.")
+        
+        # Embed interactive HTML5 / Canvas 3D Lattice
+        components.html(generate_3d_lattice_html(height=520), height=530)
 
     # TAB: BI-DIRECTIONAL MESH & SIMULTANEOUS ARBITER
     with tab_mesh:
