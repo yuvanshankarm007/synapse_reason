@@ -22,20 +22,20 @@ import config
 
 def main():
     parser = argparse.ArgumentParser(description="SynapseReason Autonomous Reasoning CLI")
-    parser.add_argument("--domain", "-d", default="auto", choices=["auto", "cybersecurity", "sre", "supply_chain", "finance_fraud", "custom"], help="Operating Domain Lens")
-    parser.add_argument("--incident", "-i", default="INC-4491", help="Incident ID (e.g. INC-4491 or INC-CUSTOM-001)")
+    parser.add_argument("--domain", "-d", default="auto", choices=["auto", "cybersecurity", "sre", "supply_chain", "finance_fraud", "finance_investment", "mental_health", "custom"], help="Operating Domain Lens")
+    parser.add_argument("--incident", "-i", default=None, help="Incident ID (e.g. INC-4491, INV-50-STOCK, or INC-CUSTOM-001)")
     parser.add_argument("--prompt", "-p", default=None, help="Custom enterprise incident prompt / threat description")
     parser.add_argument("ad_hoc_prompt", nargs="*", default=[], help="Optional ad-hoc prompt tokens")
     args = parser.parse_args()
 
-    incident_id = args.incident
     if args.prompt:
         alert = args.prompt
+        incident_id = args.incident or "INC-CUSTOM-CLI"
     elif args.ad_hoc_prompt:
         alert = " ".join(args.ad_hoc_prompt)
-        if incident_id == "INC-4491":
-            incident_id = "INC-CUSTOM-CLI"
+        incident_id = args.incident or "INC-CUSTOM-CLI"
     else:
+        incident_id = args.incident or "INC-4491"
         alert = "High-Volume disbursement anomaly on vendor VND-8821 with sequential rapid approvals"
 
     print("=" * 80)

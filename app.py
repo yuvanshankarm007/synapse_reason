@@ -153,10 +153,11 @@ domain_selection = st.radio(
         "💻 Cloud Infrastructure & Autonomous SRE",
         "📦 Supply Chain & Global Logistics",
         "💰 Enterprise Financial Forensics & Risk",
+        "📈 Capital Allocation & Wealth Strategy",
         "✍️ Universal Custom Domain (Type Anything)"
     ],
     horizontal=True,
-    index=3
+    index=4
 )
 
 # Map radio option to engine domain key
@@ -165,6 +166,7 @@ domain_key_map = {
     "💻 Cloud Infrastructure & Autonomous SRE": "sre",
     "📦 Supply Chain & Global Logistics": "supply_chain",
     "💰 Enterprise Financial Forensics & Risk": "finance_fraud",
+    "📈 Capital Allocation & Wealth Strategy": "finance_investment",
     "✍️ Universal Custom Domain (Type Anything)": "custom"
 }
 selected_domain_key = domain_key_map[domain_selection]
@@ -209,6 +211,16 @@ elif selected_domain_key == "finance_fraud":
     incident_id = fin_choice.split(":")[0].strip()
     alert_description = fin_choice.split(":")[1].strip()
 
+elif selected_domain_key == "finance_investment":
+    inv_options = [
+        "INV-101: Which stocks or assets should I invest in with 50 rupees (Micro-Capital Allocation)?",
+        "INV-204: ₹500/Month Systematic Rupee-Cost Averaging Portfolio vs High-Yield Debt",
+        "INV-308: Retail Equity Allocation: Penny Stock High-Beta Speculation vs Nifty 50 Index ETF"
+    ]
+    inv_choice = st.selectbox("Choose a Capital Allocation & Micro-Investing Benchmark:", inv_options)
+    incident_id = inv_choice.split(":")[0].strip()
+    alert_description = inv_choice.split(":")[1].strip()
+
 else: # Universal Custom Domain
     col_c1, col_c2 = st.columns([1, 3])
     with col_c1:
@@ -222,19 +234,19 @@ else: # Universal Custom Domain
             "Incident Alert & Threat Telemetry Description",
             value=st.session_state.get(
                 "custom_desc_val",
-                "High-frequency privileged API token issuance detected across foreign egress nodes with concurrent attempts to modify clearinghouse routing tables."
+                "which stocks should I invest in with 50 rupees"
             ),
             height=70,
             help="Type ANY custom enterprise anomaly, threat scenario, or prompt here."
         )
 
     # Quick template buttons to spark ideas
-    st.markdown("💡 **Quick Enterprise Threat Templates (Click to fill):**")
-    t1, t2, t3 = st.columns(3)
+    st.markdown("💡 **Quick Enterprise Threat & Prompt Templates (Click to fill):**")
+    t1, t2, t3, t4 = st.columns(4)
     with t1:
-        if st.button("🔑 API Token Exfiltration"):
-            st.session_state["custom_id_val"] = "INC-8812-API"
-            st.session_state["custom_desc_val"] = "API Gateway High-Frequency Authorization Spikes on Foreign Nodes with anomalous bearer token reuse."
+        if st.button("📈 ₹50 Stock Allocation"):
+            st.session_state["custom_id_val"] = "INV-50-STOCK"
+            st.session_state["custom_desc_val"] = "which stocks should I invest in with 50 rupees"
             st.rerun()
     with t2:
         if st.button("🛡️ IAM Privilege Escalation"):
@@ -242,6 +254,11 @@ else: # Universal Custom Domain
             st.session_state["custom_desc_val"] = "Unauthorized IAM Privilege Escalation detected on service principal with abnormal KMS key decryption surge."
             st.rerun()
     with t3:
+        if st.button("💻 Kafka Partition Lag"):
+            st.session_state["custom_id_val"] = "SRE-502-KAFKA"
+            st.session_state["custom_desc_val"] = "Cascading microservice crash loops with 15,200 unconsumed message partition lag on telemetry-events."
+            st.rerun()
+    with t4:
         if st.button("💰 SWIFT Payroll Diversion"):
             st.session_state["custom_id_val"] = "INC-9931-PAY"
             st.session_state["custom_desc_val"] = "Batch payroll disbursement diverted to unverified offshore IBAN following session cookie reuse without MFA."

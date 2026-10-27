@@ -272,6 +272,43 @@ def test_edge_case_11_model_discovery_before_routing():
     assert completion["model_discovery_status"] == "VERIFIED_BEFORE_ROUTING"
     print(f"  -> PASSED: Discovered {len(models)} models before routing to '{engine.active_routed_model}'.")
 
+
+def test_edge_case_12_dynamic_multi_domain_semantic_routing():
+    print("\n[Edge Case 12] Testing Dynamic Multi-Domain Semantic Routing & Prompt Tailoring...")
+    engine = SynapseReasonEngine()
+
+    # 1. Micro-Capital / Stock Investment Prompt
+    res_stock = engine.run_investigation(
+        incident_id="INV-50-STOCK",
+        alert_description="which stocks should I invest in with 50 rupees"
+    )
+    assert res_stock["domain"] == "finance_investment", f"Expected finance_investment but got {res_stock['domain']}"
+    assert "INVEST_FRACTIONAL_INDEX_ETF" in [a["action"] for a in res_stock["actions"]], "Must recommend fractional index ETF"
+    assert "BAN_PENNY_STOCK_SPECULATION" in [a["action"] for a in res_stock["actions"]], "Must ban speculative penny stocks"
+    assert "Rupee" in res_stock["impact_headline"] or "₹50" in res_stock["impact_headline"], "Headline must reflect ₹50 micro-capital strategy"
+    # Verify no template bleed-through
+    assert "PAY_TRANSPARENCY" not in str(res_stock["actions"]), "No gender pay parity bleed-through"
+    assert "CDC delay" not in res_stock["confirmed_root_cause"], "No CDC database delay bleed-through"
+
+    # 2. Mental Health Prompt
+    res_mental = engine.run_investigation(
+        incident_id="MENTAL-101",
+        alert_description="Severe developer burnout and depressive anxiety following chronic off-hours pings"
+    )
+    assert res_mental["domain"] == "mental_health", f"Expected mental_health but got {res_mental['domain']}"
+    assert "EXPAND_COMMUNITY_MENTAL_HEALTH_CARE" in [a["action"] for a in res_mental["actions"]]
+
+    # 3. SRE Prompt
+    res_sre = engine.run_investigation(
+        incident_id="SRE-502",
+        alert_description="Kafka partition consumer lag exceeding 15k records with pod crash loops"
+    )
+    assert res_sre["domain"] == "sre", f"Expected sre but got {res_sre['domain']}"
+    assert "ROLLBACK_CANARY_DEPLOYMENT" in [a["action"] for a in res_sre["actions"]]
+
+    print("  -> PASSED: Semantic routing, hypothesis trees, and action plans 100% coherent across domains.")
+
+
 def run_all_edge_case_tests():
     print("=" * 65)
     print("SYNAPSEREASON COMPREHENSIVE EDGE-CASE VERIFICATION SUITE")
@@ -288,9 +325,10 @@ def run_all_edge_case_tests():
     test_edge_case_9_mesh_synthesizer_degraded_inputs()
     test_edge_case_10_3d_generators_offline_integrity()
     test_edge_case_11_model_discovery_before_routing()
+    test_edge_case_12_dynamic_multi_domain_semantic_routing()
     
     print("\n" + "=" * 65)
-    print("ALL 11 EDGE-CASE RESILIENCE TESTS PASSED SUCCESSFULLY (100%)")
+    print("ALL 12 EDGE-CASE RESILIENCE TESTS PASSED SUCCESSFULLY (100%)")
     print("=" * 65)
 
 
