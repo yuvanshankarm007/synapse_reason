@@ -359,6 +359,7 @@ if run_clicked or "last_result" in st.session_state:
               `{lattice_meta.get('join_lub', 'Synthesized Global Remediation State')}`
             * **Epistemic Distance Vectors ($\\Delta Z$)**:  
               SRE: `0.03` | SEC: `0.02` | FIN: `0.04` | Anomaly: `0.94 (Critical)`
+            """)
 
         st.markdown("---")
         st.markdown("##### 🌐 Universal Multi-Domain Adaptability Matrix")
@@ -399,7 +400,6 @@ if run_clicked or "last_result" in st.session_state:
             }
         ])
         st.dataframe(matrix_df, use_container_width=True, hide_index=True)
-            """)
 
     # TAB 1: COGNITIVE TRACE
     with tab_trace:
