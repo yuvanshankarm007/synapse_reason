@@ -369,6 +369,11 @@ class SynapseReasonEngine:
         if callback: callback(trace_step7)
 
         # -------------------------------------------------------------
+        # STEP 7.5: 3D COGNITIVE LATTICE COUNTERFACTUAL MULTIVERSE SIMULATION (Z = +2)
+        # -------------------------------------------------------------
+        lattice_sim = self.nvidia.simulate_counterfactual_lattice(incident_id, alert_description, working_memory.accumulated_evidence)
+
+        # -------------------------------------------------------------
         # STEP 8: AG-UI HUMAN-IN-THE-LOOP APPROVAL & REMEDIATION
         # -------------------------------------------------------------
         final_actions = [
@@ -455,6 +460,7 @@ class SynapseReasonEngine:
             "actions": final_actions,
             "meterless_audit": meterless_receipt,
             "mcp_cache_metrics": mcp_cache_stats,
+            "counterfactual_lattice": lattice_sim,
             "protocols": {
                 "mcp_tools": self.mcp.list_tools(),
                 "a2a_agent_cards": self.a2a.get_agent_cards(),

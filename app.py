@@ -18,6 +18,7 @@ from core.reasoning_engine import SynapseReasonEngine
 from core.zetaris_federator import ZetarisFederator
 from core.mesh_synthesizer import BiDirectionalMeshSynthesizer
 from core.render_swarm_observatory import generate_swarm_observatory_html
+from core.render_3d_lattice import generate_3d_lattice_html
 from core.protocols.mcp_server import MCPToolRegistry
 from core.protocols.a2a_agent_cards import A2AOrchestrator
 from core.meterless_governor import MeterlessGovernor
@@ -187,9 +188,10 @@ if run_clicked or "last_result" in st.session_state:
         st.metric("MCP Cache Hits", f"{cache_metrics['hit_rate_pct']}%", delta="79% Faster")
 
     # Main Tabs
-    tab_trace, tab_3d, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
+    tab_lattice, tab_trace, tab_3d, tab_mesh, tab_protocols, tab_zetaris, tab_meterless, tab_actions, tab_memory = st.tabs([
+        "🌌 3D Holographic Cognitive Lattice",
         "🔬 Cognitive Trace & Backtracking Graph",
-        "🌌 3D Swarm Observatory (Concept 1: Cyclic Mesh)",
+        "🪐 3D Swarm Observatory (Cyclic Mesh)",
         "🕸️ Bi-Directional Mesh & Consensus Arbiter",
         "🔌 Tri-Protocol Stack (MCP | A2A | AG-UI)",
         "🌐 Zetaris Data Fabric Virtualization",
@@ -197,6 +199,50 @@ if run_clicked or "last_result" in st.session_state:
         "🛡️ Remediation Action Center",
         "💾 Dual Memory & Case Recall"
     ])
+
+    # TAB: 3D HOLOGRAPHIC COGNITIVE LATTICE (Z-AXIS REASONING STRATA)
+    with tab_lattice:
+        st.markdown("#### 🌌 The 3D Cognitive Lattice Architecture: Non-Linear Spatial Reasoning")
+        st.info(
+            "💡 **Moving Beyond 1D Linear Chains and 2D Planar Meshes:** "
+            "In this 3D Cognitive Lattice, the **Z-Axis is not a cosmetic visual**—it represents "
+            "**Meta-Cognitive Abstraction, Temporal Horizons, and Counterfactual Simulation**. "
+            "Higher-order meta-agents observe downward across the entire vertical stack, while ground-truth data anchors the bottom plane."
+        )
+
+        # 3D Interactive WebGL / Canvas Lattice Viewer
+        components.html(generate_3d_lattice_html(height=620), height=635)
+
+        # Architectural Breakthroughs Deep-Dive
+        col_l1, col_l2, col_l3 = st.columns(3)
+        with col_l1:
+            st.markdown("##### 📐 Breakthrough 1: Cross-Strata Observation")
+            st.markdown("""
+            * **Top Stratum (Z = +1)**: NeMo Arbiter observes both the FinOps/SRE agents ($Z = 0$) and the raw Zetaris Ground Truth ($Z = -1$) simultaneously.
+            * **Zero Chat Hops**: Instantly detects contradictions between agent hypotheses and database reality without intermediate inter-agent lag.
+            * **Cost Ceiling**: Meterless governance enforces budget caps before queries dispatch.
+            """)
+
+        with col_l2:
+            st.markdown("##### 🌐 Breakthrough 2: Counterfactual Multiverse ($Z = +2$)")
+            st.markdown("""
+            * **Branch α (Optimal Safe)**: Kill Tor session + 24-hr settlement hold &rarr; **$0 Loss, Low Disruption**.
+            * **Branch β (Surgical)**: Out-of-band user re-auth + journal rollback &rarr; **$0 Loss, Medium Disruption**.
+            * **Branch γ (Unchecked)**: Allow transaction settlement &rarr; **$443,000 Loss (Irreversible)**.
+            * **Scrubbing Horizon**: Drag the slider from `+0h` to `+7d` in the 3D viewer to inspect projected world-states.
+            """)
+
+        with col_l3:
+            st.markdown("##### ⚖️ Breakthrough 3: Order-Theoretic Lattice")
+            lattice_meta = result.get("counterfactual_lattice", {}).get("lattice_theory", {})
+            st.markdown(f"""
+            * **Meet ($\wedge$, Greatest Lower Bound)**:  
+              `{lattice_meta.get('meet_glwb', 'Zetaris Ground Truth Invariants')}`
+            * **Join ($\vee$, Least Upper Bound)**:  
+              `{lattice_meta.get('join_lub', 'Synthesized Global Remediation State')}`
+            * **Epistemic Distance Vectors ($\Delta Z$)**:  
+              SRE: `0.03` | SEC: `0.02` | FIN: `0.04` | Anomaly: `0.94 (Critical)`
+            """)
 
     # TAB 1: COGNITIVE TRACE
     with tab_trace:
