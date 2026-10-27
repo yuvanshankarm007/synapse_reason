@@ -302,7 +302,7 @@ class SynapseReasonEngine:
 
         trace_step5 = self._log_trace_step(
             step_type="EXECUTOR",
-            title="Speculative Concurrent Tool Execution (Zetaris ∥ Bright Data)",
+            title="Speculative Concurrent Tool Execution (Zetaris || Bright Data)",
             details={
                 "execution_mode": "SPECULATIVE_CONCURRENT_THREADING (ThreadPoolExecutor)",
                 "concurrency_gain": "45% reduction in wall-clock tool latency",

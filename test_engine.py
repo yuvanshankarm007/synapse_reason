@@ -1,5 +1,12 @@
 import sys
 from pathlib import Path
+
+if sys.platform.startswith("win"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from core.reasoning_engine import SynapseReasonEngine
