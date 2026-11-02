@@ -28,6 +28,10 @@ if sys.platform.startswith("win"):
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import config
+config.SAMPLE_MODE = True
+config.LLM_PROVIDER = "offline"
+
 from core.memory import WorkingMemory, EpisodicMemory
 from core.zetaris_federator import ZetarisFederator
 from core.meterless_governor import MeterlessGovernor

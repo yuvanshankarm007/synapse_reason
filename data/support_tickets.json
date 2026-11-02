@@ -1,0 +1,54 @@
+[
+  {
+    "ticket_id": "TICK-7701",
+    "customer_name": "Acrobatics Logistics LLC",
+    "customer_tier": "ENTERPRISE_PLATINUM",
+    "sla_deadline_hours": 1.0,
+    "priority": "P0_CRITICAL",
+    "title": "Wire TX-90214 settlement delay - missing clearing confirmation",
+    "description": "Our finance desk has not received ACH/Fedwire clearing for $184,500.00 disbursement approved at 04:12 UTC. Escalating to emergency SLA breach protocol.",
+    "related_tx_id": "TX-90214",
+    "assigned_team": "Financial Operations & Security",
+    "status": "ESCALATED_SRE",
+    "created_at": "2026-10-27T04:25:00Z"
+  },
+  {
+    "ticket_id": "TICK-7702",
+    "customer_name": "Global Secure Systems",
+    "customer_tier": "ENTERPRISE_GOLD",
+    "sla_deadline_hours": 4.0,
+    "priority": "P1_HIGH",
+    "title": "Disbursement approved outside scheduled batch window",
+    "description": "Automated security alert: PO-44005 settled during non-standard early morning maintenance cycle without secondary dual-control key sign-off.",
+    "related_tx_id": "TX-90218",
+    "assigned_team": "Compliance & Audit",
+    "status": "INVESTIGATING",
+    "created_at": "2026-10-27T06:45:00Z"
+  },
+  {
+    "ticket_id": "TICK-7703",
+    "customer_name": "Acrobatics Logistics LLC",
+    "customer_tier": "ENTERPRISE_PLATINUM",
+    "sla_deadline_hours": 1.0,
+    "priority": "P0_CRITICAL",
+    "title": "Critical: Consecutive high-value transfers blocked at settlement gateway",
+    "description": "Transactions TX-90215 ($192k) and TX-90216 ($215k) are flagged in PENDING_SETTLEMENT state. Risk score exceeds threshold 85.",
+    "related_tx_id": "TX-90216",
+    "assigned_team": "Fraud Forensics SWAT",
+    "status": "OPEN",
+    "created_at": "2026-10-27T07:15:00Z"
+  },
+  {
+    "ticket_id": "TICK-7704",
+    "customer_name": "OfficeWorld Supplies",
+    "customer_tier": "STANDARD",
+    "sla_deadline_hours": 24.0,
+    "priority": "P2_LOW",
+    "title": "Routine PO-44012 reconciliation query",
+    "description": "Standard recurring replenishment invoice for Facilities department ($1,250.00). Reconciliation matching verified.",
+    "related_tx_id": "TX-90220",
+    "assigned_team": "Accounts Payable",
+    "status": "RESOLVED",
+    "created_at": "2026-10-27T08:05:00Z"
+  }
+]

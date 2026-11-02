@@ -1,0 +1,142 @@
+[
+  {
+    "invariant_id": "INV-CYBER-01",
+    "domain": "cybersecurity",
+    "antecedent_indicators": [
+      "tor_exit_node",
+      "bypassed_mfa",
+      "kms_decrypt_surge"
+    ],
+    "consequent_root_cause": "Microservice STS token compromise with active exfiltration intent",
+    "optimal_action": "QUARANTINE_POD_AND_REVOKE_STS_TOKEN",
+    "empirical_support_count": 48,
+    "certainty_factor": 0.99,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-SRE-01",
+    "domain": "sre",
+    "antecedent_indicators": [
+      "canary_deployment",
+      "jvm_heap_exhaustion",
+      "kafka_consumer_lag"
+    ],
+    "consequent_root_cause": "Canary deployment thread deadlock and connection pool exhaustion",
+    "optimal_action": "AUTOMATED_CANARY_ROLLBACK_AND_PARTITION_DRAIN",
+    "empirical_support_count": 36,
+    "certainty_factor": 0.98,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-FIN-01",
+    "domain": "finance_fraud",
+    "antecedent_indicators": [
+      "unregistered_bank_routing",
+      "amount_exceeding_ceiling",
+      "offshore_ip"
+    ],
+    "consequent_root_cause": "Session hijacking of approver credentials for shell vendor embezzlement",
+    "optimal_action": "FREEZE_CREDENTIALS_AND_HALT_ACH_SETTLEMENT",
+    "empirical_support_count": 52,
+    "certainty_factor": 0.99,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-WEALTH-01",
+    "domain": "finance_investment",
+    "antecedent_indicators": [
+      "micro_capital_under_1000",
+      "penny_stock_speculation",
+      "promoter_hype"
+    ],
+    "consequent_root_cause": "Statistically guaranteed ruin from illiquidity, bid-ask spread, and pump-and-dump",
+    "optimal_action": "ALLOCATE_FRACTIONAL_INDEX_ETF_AND_ZERO_BROKERAGE_SIP",
+    "empirical_support_count": 64,
+    "certainty_factor": 0.97,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-SUPPLY-01",
+    "domain": "supply_chain",
+    "antecedent_indicators": [
+      "customs_detention_rotterdam",
+      "buffer_under_48h",
+      "critical_wafers"
+    ],
+    "consequent_root_cause": "Maritime port customs congestion threatening automotive factory line shutdown",
+    "optimal_action": "AIR_FREIGHT_EXPRESS_DIVERSION_AND_SAFETY_BUFFER_ALLOCATION",
+    "empirical_support_count": 19,
+    "certainty_factor": 0.95,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-HEALTH-01",
+    "domain": "mental_health",
+    "antecedent_indicators": [
+      "chronic_sleep_deprivation",
+      "24_7_availability",
+      "hyperconnectivity"
+    ],
+    "consequent_root_cause": "Severe occupational burnout and cognitive exhaustion requiring systemic boundary",
+    "optimal_action": "MANDATE_DIGITAL_DISCONNECT_AND_LOW_BARRIER_COUNSELING",
+    "empirical_support_count": 27,
+    "certainty_factor": 0.96,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-LANG-01",
+    "domain": "education_language",
+    "antecedent_indicators": [
+      "silent_grammar_memorization",
+      "affective_filter_block",
+      "speech_hesitancy"
+    ],
+    "consequent_root_cause": "Inhibition of motor-speech neural pathways due to analytical rule translation",
+    "optimal_action": "15_MIN_DAILY_AUDIO_SHADOWING_AND_ORAL_SELF_NARRATION",
+    "empirical_support_count": 39,
+    "certainty_factor": 0.97,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-DEV-01",
+    "domain": "software_engineering",
+    "antecedent_indicators": [
+      "python_script_slow",
+      "nested_loops",
+      "cpu_bound"
+    ],
+    "consequent_root_cause": "Inefficient pure-Python loop interpretation on numeric array transformations",
+    "optimal_action": "DETERMINISTIC_CPROFILE_AND_SIMD_VECTORIZATION",
+    "empirical_support_count": 33,
+    "certainty_factor": 0.98,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-CAR-01",
+    "domain": "career_leadership",
+    "antecedent_indicators": [
+      "startup_offer_vs_bigtech",
+      "unvested_equity_valuation",
+      "illiquidity_risk"
+    ],
+    "consequent_root_cause": "Headline paper valuation ignores 70-85% startup illiquidity and dilution discounts",
+    "optimal_action": "RISK_ADJUSTED_EXPECTED_VALUE_MODELING_AND_DISCOUNTED_CASH_FLOW",
+    "empirical_support_count": 21,
+    "certainty_factor": 0.95,
+    "discovered_at": "2026-11-02 18:13:55"
+  },
+  {
+    "invariant_id": "INV-GEN-01",
+    "domain": "general_research",
+    "antecedent_indicators": [
+      "recent_cinema_release",
+      "streaming_query",
+      "exclusive_window"
+    ],
+    "consequent_root_cause": "Active 45-day theatrical exhibition window legally precludes legitimate OTT streaming",
+    "optimal_action": "DIRECT_TO_VERIFIED_TICKETING_AND_WARN_AGAINST_PIRACY",
+    "empirical_support_count": 18,
+    "certainty_factor": 0.96,
+    "discovered_at": "2026-11-02 18:13:55"
+  }
+]

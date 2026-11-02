@@ -1,4 +1,5 @@
-streamlit>=1.30.0
-pandas>=2.0.0
-httpx>=0.25.0
-python-dotenv>=1.0.0
+streamlit>=1.30.0,<2.0.0
+pandas>=2.0.0,<4.0.0
+httpx>=0.25.0,<1.0.0
+python-dotenv>=1.0.0,<2.0.0
+python-pptx>=1.0.0,<2.0.0  # Optional: For slide deck generation in generate_presentation.py

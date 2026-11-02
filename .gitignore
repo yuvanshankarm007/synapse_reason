@@ -26,6 +26,8 @@ wheels/
 # Environment secrets (Crucial: never commit API keys!)
 .env
 .env.local
+.venv/
+*.bak
 
 # Streamlit
 .streamlit/

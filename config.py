@@ -4,14 +4,26 @@ Supports seamless switching between SAMPLE_MODE (zero keys needed) and LIVE_MODE
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
 # Base Directory Paths
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 
-# Load .env if present
-load_dotenv(BASE_DIR / ".env")
+# Load .env if present (with zero-dependency fallback)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env")
+except ImportError:
+    env_file = BASE_DIR / ".env"
+    if env_file.exists():
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k, v = k.strip(), v.strip().strip('"').strip("'")
+                    if k not in os.environ:
+                        os.environ[k] = v
 
 # Runtime Execution Mode
 # If SAMPLE_MODE is True, use high-fidelity benchmark simulator for automated tests
@@ -36,7 +48,10 @@ ZETARIS_API_KEY = os.getenv("ZETARIS_API_KEY", "zetaris_live_sample_token_7721")
 # Meterless Serverless Cost, Token & Budget Governance
 METERLESS_ENDPOINT = os.getenv("METERLESS_ENDPOINT", "https://api.meterless.io/v1/telemetry")
 METERLESS_API_KEY = os.getenv("METERLESS_API_KEY", "meterless_live_sample_token_8892")
-METERLESS_BUDGET_CAP_USD = float(os.getenv("METERLESS_BUDGET_CAP_USD", "0.50")) # Max $0.50 per investigation
+try:
+    METERLESS_BUDGET_CAP_USD = float(os.getenv("METERLESS_BUDGET_CAP_USD", "0.50") or 0.50)
+except (ValueError, TypeError):
+    METERLESS_BUDGET_CAP_USD = 0.50
 
 # Bright Data Web Scraping / SERP Bounty Endpoint
 BRIGHTDATA_API_KEY = os.getenv("BRIGHTDATA_API_KEY", "brightdata_sample_token_1092")

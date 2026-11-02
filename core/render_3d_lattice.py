@@ -13,6 +13,9 @@ Renders a self-contained, high-performance 3D spatial agent graph with:
 - Dynamic particle pulse physics along 3D edges
 """
 
+from functools import lru_cache
+
+@lru_cache(maxsize=8)
 def generate_3d_lattice_html(width=980, height=620):
     html_code = f"""
     <!DOCTYPE html>

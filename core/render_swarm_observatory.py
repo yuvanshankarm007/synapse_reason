@@ -8,6 +8,9 @@ Visualizes the living 3D multi-agent constellation:
 - Interactive holographic HUD showing live A2A cards, Meterless tokens, and latency
 """
 
+from functools import lru_cache
+
+@lru_cache(maxsize=8)
 def generate_swarm_observatory_html(height=600):
     html_code = f"""
     <!DOCTYPE html>

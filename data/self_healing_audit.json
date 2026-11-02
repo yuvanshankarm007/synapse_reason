@@ -1,0 +1,570 @@
+[
+  {
+    "healing_id": "HEAL-RUN-1793607339314",
+    "timestamp": "2026-11-02 13:45:39",
+    "initial_health_index": 100.0,
+    "final_health_index": 100.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-39429",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:45:39",
+        "duration_ms": 0.68,
+        "details": {
+          "cases_count": 45
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-39430",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:45:39",
+        "duration_ms": 0.93,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-39431",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:45:39",
+        "duration_ms": 0.02,
+        "details": {
+          "mcp_entries_cleared": 0,
+          "plan_entries_cleared": 0
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-39431",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:45:39",
+        "duration_ms": 0.01,
+        "details": {
+          "was_throttled": false,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-39431",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:45:39",
+        "duration_ms": 0.02,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "SYSTEM_RESTORED_100_HEALTHY"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793607592293",
+    "timestamp": "2026-11-02 13:49:52",
+    "initial_health_index": 100.0,
+    "final_health_index": 90.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-92617",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:49:52",
+        "duration_ms": 0.9,
+        "details": {
+          "cases_count": 46
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-92618",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:49:52",
+        "duration_ms": 1.14,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-92619",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:49:52",
+        "duration_ms": 0.07,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-92619",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:49:52",
+        "duration_ms": 0.02,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-92619",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:49:52",
+        "duration_ms": 0.04,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "UNRESOLVED_REQUIRES_INVESTIGATION"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793607619566",
+    "timestamp": "2026-11-02 13:50:20",
+    "initial_health_index": 100.0,
+    "final_health_index": 90.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-19819",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:50:19",
+        "duration_ms": 0.94,
+        "details": {
+          "cases_count": 46
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-19820",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:50:19",
+        "duration_ms": 1.1,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-19821",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:50:19",
+        "duration_ms": 0.05,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-19821",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:50:19",
+        "duration_ms": 0.01,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-19821",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:50:19",
+        "duration_ms": 0.04,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "UNRESOLVED_REQUIRES_INVESTIGATION"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793607668316",
+    "timestamp": "2026-11-02 13:51:08",
+    "initial_health_index": 100.0,
+    "final_health_index": 100.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-68651",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:51:08",
+        "duration_ms": 0.85,
+        "details": {
+          "cases_count": 46
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-68652",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:51:08",
+        "duration_ms": 1.39,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-68654",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:51:08",
+        "duration_ms": 0.12,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-68654",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:51:08",
+        "duration_ms": 0.02,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-68654",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:51:08",
+        "duration_ms": 0.04,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "SYSTEM_RESTORED_100_HEALTHY"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793607755245",
+    "timestamp": "2026-11-02 13:52:35",
+    "initial_health_index": 100.0,
+    "final_health_index": 100.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-55571",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:52:35",
+        "duration_ms": 0.94,
+        "details": {
+          "cases_count": 46
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-55572",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:52:35",
+        "duration_ms": 1.19,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-55573",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:52:35",
+        "duration_ms": 0.06,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-55573",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:52:35",
+        "duration_ms": 0.02,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-55573",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:52:35",
+        "duration_ms": 0.03,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "SYSTEM_RESTORED_100_HEALTHY"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793607804190",
+    "timestamp": "2026-11-02 13:53:24",
+    "initial_health_index": 100.0,
+    "final_health_index": 100.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-4517",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:53:24",
+        "duration_ms": 1.1,
+        "details": {
+          "cases_count": 46
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-4518",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:53:24",
+        "duration_ms": 1.2,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-4519",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:53:24",
+        "duration_ms": 0.07,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-4519",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:53:24",
+        "duration_ms": 0.01,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-4519",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 13:53:24",
+        "duration_ms": 0.04,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "SYSTEM_RESTORED_100_HEALTHY"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793623399558",
+    "timestamp": "2026-11-02 18:13:20",
+    "initial_health_index": 100.0,
+    "final_health_index": 100.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-99845",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:19",
+        "duration_ms": 0.39,
+        "details": {
+          "cases_count": 51
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-99845",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:19",
+        "duration_ms": 0.44,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-99845",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:19",
+        "duration_ms": 0.03,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-99845",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:19",
+        "duration_ms": 0.01,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-99845",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:19",
+        "duration_ms": 0.02,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "SYSTEM_RESTORED_100_HEALTHY"
+  },
+  {
+    "healing_id": "HEAL-RUN-1793623435531",
+    "timestamp": "2026-11-02 18:13:56",
+    "initial_health_index": 100.0,
+    "final_health_index": 100.0,
+    "actions_executed": [
+      {
+        "action_id": "HEAL-MEM-35880",
+        "target_subsystem": "Episodic Memory",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "Episodic memory JSON validated intact (no repair required).",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:55",
+        "duration_ms": 0.77,
+        "details": {
+          "cases_count": 51
+        }
+      },
+      {
+        "action_id": "HEAL-SILO-35881",
+        "target_subsystem": "Zetaris 5-Silo Virtual Data Fabric",
+        "anomaly_detected": "None detected",
+        "remediation_applied": "All 5 data silos verified operational.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:55",
+        "duration_ms": 0.85,
+        "details": {
+          "verified_silos_count": 5
+        }
+      },
+      {
+        "action_id": "HEAL-CACHE-35881",
+        "target_subsystem": "MCP & Reasoning Plan Caches",
+        "anomaly_detected": "Potential cache staleness or memoization drift",
+        "remediation_applied": "Purged all in-memory query and plan caches to force fresh deterministic evaluations.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:55",
+        "duration_ms": 0.05,
+        "details": {
+          "mcp_entries_cleared": 6,
+          "plan_entries_cleared": 1
+        }
+      },
+      {
+        "action_id": "HEAL-GOV-35881",
+        "target_subsystem": "Meterless Budget Governor",
+        "anomaly_detected": "Budget throttle active",
+        "remediation_applied": "Reset throttle lock and re-synchronized budget cap with runtime ceiling.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:55",
+        "duration_ms": 0.01,
+        "details": {
+          "was_throttled": true,
+          "restored_budget_cap_usd": 0.5
+        }
+      },
+      {
+        "action_id": "HEAL-A2A-35881",
+        "target_subsystem": "A2A Agent Card Registry",
+        "anomaly_detected": "None (Nominal)",
+        "remediation_applied": "A2A registry verified with 10 active cryptographic agent cards.",
+        "status": "SUCCESS",
+        "timestamp": "2026-11-02 18:13:55",
+        "duration_ms": 0.03,
+        "details": {
+          "active_agent_cards": 10
+        }
+      }
+    ],
+    "overall_status": "SYSTEM_RESTORED_100_HEALTHY"
+  }
+]
